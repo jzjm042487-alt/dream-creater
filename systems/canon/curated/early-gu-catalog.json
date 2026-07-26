@@ -1,0 +1,1713 @@
+{
+  "schemaVersion": 1,
+  "sourceSha256": "e48d91ad4d7b62fb60986050e735ffe634bc552d797945114d7e46034202708e",
+  "scope": "Manually verified Gu relevant to the Qing Mao Mountain opening and the progression boundary through rank three. Rank-four Nine Eyes Liquor Worm is retained only to close the documented Liquor Worm chain.",
+  "evidencePolicy": "Facts are paraphrased. Evidence stores chapter and source-line locators only; no novel prose is copied.",
+  "records": [
+    {
+      "id": "canon_gu_hope",
+      "name": "希望蛊",
+      "rank": {
+        "value": null,
+        "certainty": "not-stated-in-located-passage"
+      },
+      "scopeTag": "opening-ritual",
+      "roles": [
+        "aperture-opening"
+      ],
+      "form": "A luminous swarm found in the flower sea around the clan spirit spring.",
+      "abilities": [
+        "Hope Gu enter a candidate as the candidate advances through spirit-pressure.",
+        "Their light opens the aperture and becomes the light membrane that keeps the new aperture stable.",
+        "The quantity responding to a candidate is used by onlookers as an early aptitude signal."
+      ],
+      "acquisition": [
+        {
+          "type": "clan-ritual",
+          "locationId": "canon_location_gu_yue_village",
+          "summary": "Received during the Gu Yue clan aperture-awakening ceremony rather than captured as ordinary loot."
+        }
+      ],
+      "feeding": {
+        "status": "not-applicable-after-ritual",
+        "summary": "The located passage presents the participating Hope Gu as expended into the aperture membrane."
+      },
+      "refinement": [],
+      "development": [],
+      "limitations": [
+        "Not treated as a normal reusable combat or cultivation inventory Gu in the opening."
+      ],
+      "evidence": [
+        {
+          "chapterId": "v01-s005",
+          "sourceLines": [
+            386,
+            425
+          ],
+          "facts": [
+            "flower-sea appearance",
+            "entry into candidate",
+            "aperture-opening response"
+          ]
+        },
+        {
+          "chapterId": "v01-s006",
+          "sourceLines": [
+            439,
+            450
+          ],
+          "facts": [
+            "light membrane formation",
+            "ritual completion"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "canon_gu_moonlight",
+      "name": "月光蛊",
+      "rank": {
+        "value": 1,
+        "certainty": "explicit"
+      },
+      "scopeTag": "demo-core",
+      "roles": [
+        "ranged-attack",
+        "clan-symbol"
+      ],
+      "form": "A light, translucent blue crescent about the size of a jade pendant.",
+      "abilities": [
+        "Produces a blue moonblade for ranged cutting attacks.",
+        "Acts as the foundation of the Gu Yue clan's common moon-series refinement routes."
+      ],
+      "acquisition": [
+        {
+          "type": "clan-allocation",
+          "locationId": "canon_location_gu_yue_village",
+          "summary": "New Gu Yue students normally choose one from the academy Gu room as a vital Gu candidate."
+        }
+      ],
+      "feeding": {
+        "status": "known",
+        "summary": "Consumes four moon-orchid petals per day, split into morning and evening feedings."
+      },
+      "refinement": [
+        {
+          "ingredients": [
+            "canon_gu_moonlight",
+            "canon_gu_little_light",
+            "canon_gu_little_light"
+          ],
+          "resultId": "canon_gu_moon_glow",
+          "certainty": "explicit"
+        },
+        {
+          "ingredients": [
+            "canon_gu_moonlight",
+            "canon_gu_whirlwind"
+          ],
+          "resultId": "canon_gu_moonwhirl",
+          "certainty": "explicit"
+        },
+        {
+          "ingredients": [
+            "canon_gu_moonlight",
+            "canon_gu_trace_stone"
+          ],
+          "resultId": "canon_gu_moon_scar",
+          "certainty": "explicit"
+        },
+        {
+          "ingredients": [
+            "canon_gu_moonlight",
+            "canon_gu_jade_skin"
+          ],
+          "resultId": "canon_gu_moon_raiment",
+          "certainty": "explicit"
+        }
+      ],
+      "development": [
+        "The source presents multiple mutually exclusive rank-two branches rather than one mandatory linear upgrade."
+      ],
+      "limitations": [
+        "A single moonblade costs roughly one tenth of Fang Yuan's primeval essence in the cited opening-state example.",
+        "Its base attack, range and trajectory depend strongly on the chosen rank-two branch."
+      ],
+      "evidence": [
+        {
+          "chapterId": "v01-s008",
+          "sourceLines": [
+            588,
+            598
+          ],
+          "facts": [
+            "rank",
+            "form",
+            "academy supply",
+            "Gu Yue specialty"
+          ]
+        },
+        {
+          "chapterId": "v01-s023",
+          "sourceLines": [
+            1732,
+            1750
+          ],
+          "facts": [
+            "feeding amount",
+            "feeding cost"
+          ]
+        },
+        {
+          "chapterId": "v01-s106",
+          "sourceLines": [
+            8291,
+            8299
+          ],
+          "facts": [
+            "rank-two branches"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "canon_gu_little_light",
+      "name": "小光蛊",
+      "rank": {
+        "value": 1,
+        "certainty": "explicit-by-opening-inventory-context"
+      },
+      "scopeTag": "demo-core",
+      "roles": [
+        "attack-support"
+      ],
+      "form": "After refinement it can reside as a milky-white five-pointed-star mark on the hand.",
+      "abilities": [
+        "When activated with Moonlight Gu, doubles the moonblade's size and attack in the cited configuration.",
+        "Serves as an ingredient in Moon Glow Gu."
+      ],
+      "acquisition": [
+        {
+          "type": "clan-allocation",
+          "locationId": "canon_location_gu_yue_village",
+          "summary": "Fang Yuan selects one from five available in the academy Gu room."
+        }
+      ],
+      "feeding": {
+        "status": "not-located"
+      },
+      "refinement": [
+        {
+          "ingredients": [
+            "canon_gu_moonlight",
+            "canon_gu_little_light",
+            "canon_gu_little_light"
+          ],
+          "resultId": "canon_gu_moon_glow",
+          "certainty": "explicit"
+        }
+      ],
+      "development": [],
+      "limitations": [
+        "The cited passage says adding a second separate Little Light Gu does not stack the same support bonus; refinement into Moon Glow Gu is required for the stronger result."
+      ],
+      "evidence": [
+        {
+          "chapterId": "v01-s062",
+          "sourceLines": [
+            4658,
+            4661
+          ],
+          "facts": [
+            "academy acquisition"
+          ]
+        },
+        {
+          "chapterId": "v01-s070",
+          "sourceLines": [
+            5255,
+            5262
+          ],
+          "facts": [
+            "hand mark",
+            "Moonlight support effect"
+          ]
+        },
+        {
+          "chapterId": "v01-s106",
+          "sourceLines": [
+            8291,
+            8294
+          ],
+          "facts": [
+            "refinement formula",
+            "non-stacking support"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "canon_gu_wine_worm",
+      "name": "酒虫",
+      "rank": {
+        "value": 1,
+        "certainty": "explicit"
+      },
+      "scopeTag": "demo-core",
+      "roles": [
+        "cultivation",
+        "hidden-route-guide"
+      ],
+      "form": "A plump pearl-white silkworm-like creature with a faint wine fragrance.",
+      "abilities": [
+        "Refines rank-one green-copper primeval essence upward by one minor stage.",
+        "Can compensate for a lower current cultivation stage during essence use, but does not change aperture aptitude."
+      ],
+      "acquisition": [
+        {
+          "type": "lure-track-discovery",
+          "locationId": "canon_location_flower_wine_inheritance",
+          "summary": "Strong green-bamboo wine lures it from cover; after it drinks and slows, following it reveals the rock fissure leading to the Flower Wine Monk remains."
+        }
+      ],
+      "feeding": {
+        "status": "known",
+        "summary": "One jar of green-bamboo wine sustains it for four days. Inferior rice or turbid wine works only in much larger daily quantities."
+      },
+      "refinement": [
+        {
+          "ingredients": [
+            "canon_gu_wine_worm",
+            "canon_gu_wine_worm",
+            "canon_material_sour_wine",
+            "canon_material_sweet_wine",
+            "canon_material_bitter_wine",
+            "canon_material_spicy_wine"
+          ],
+          "resultId": "canon_gu_four_flavors_liquor_worm",
+          "certainty": "explicit"
+        }
+      ],
+      "development": [
+        "Rank two: Four Flavors Liquor Worm.",
+        "Rank three: Seven Fragrances Liquor Worm.",
+        "Rank four: Nine Eyes Liquor Worm.",
+        "The located source explicitly says the known chain has no rank-five continuation."
+      ],
+      "limitations": [
+        "Rare and harder to refine than Moonlight Gu.",
+        "Its cultivation value is constrained by rank; each stage only refines matching-rank essence.",
+        "Keeping it creates a recurring alcohol expense and can expose its origin if openly displayed in Gu Yue village."
+      ],
+      "evidence": [
+        {
+          "chapterId": "v01-s013",
+          "sourceLines": [
+            970,
+            1012
+          ],
+          "facts": [
+            "green-bamboo-wine lure",
+            "search setup"
+          ]
+        },
+        {
+          "chapterId": "v01-s014",
+          "sourceLines": [
+            1042,
+            1125
+          ],
+          "facts": [
+            "form",
+            "tracking behavior",
+            "inheritance route",
+            "capture"
+          ]
+        },
+        {
+          "chapterId": "v01-s017",
+          "sourceLines": [
+            1278,
+            1319
+          ],
+          "facts": [
+            "essence refinement",
+            "refinement difficulty",
+            "secrecy risk"
+          ]
+        },
+        {
+          "chapterId": "v01-s023",
+          "sourceLines": [
+            1735,
+            1750
+          ],
+          "facts": [
+            "feeding"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "canon_gu_four_flavors_liquor_worm",
+      "name": "四味酒虫",
+      "rank": {
+        "value": 2,
+        "certainty": "explicit"
+      },
+      "scopeTag": "demo-progression",
+      "roles": [
+        "cultivation"
+      ],
+      "form": "A larger Liquor Worm whose body cycles through red, blue, green and yellow.",
+      "abilities": [
+        "Refines rank-two red-steel primeval essence upward by one minor stage."
+      ],
+      "acquisition": [
+        {
+          "type": "refinement",
+          "summary": "Made from two rank-one Wine Worms and sour, sweet, bitter and spicy wines."
+        }
+      ],
+      "feeding": {
+        "status": "not-located-in-curated-pass"
+      },
+      "refinement": [
+        {
+          "ingredients": [
+            "canon_gu_wine_worm",
+            "canon_gu_wine_worm",
+            "canon_material_sour_wine",
+            "canon_material_sweet_wine",
+            "canon_material_bitter_wine",
+            "canon_material_spicy_wine"
+          ],
+          "resultId": "canon_gu_four_flavors_liquor_worm",
+          "certainty": "explicit"
+        },
+        {
+          "ingredients": [
+            "canon_gu_four_flavors_liquor_worm",
+            "canon_gu_four_flavors_liquor_worm",
+            "canon_material_seven_fragrances"
+          ],
+          "resultId": "canon_gu_seven_fragrances_liquor_worm",
+          "certainty": "explicit"
+        }
+      ],
+      "development": [
+        "Refines onward to Seven Fragrances Liquor Worm at rank three."
+      ],
+      "limitations": [
+        "The cited successful refinement consumed more than four hundred primeval stones and carried failure risk, including death or severe damage to an ingredient Gu."
+      ],
+      "evidence": [
+        {
+          "chapterId": "v01-s107",
+          "sourceLines": [
+            8376,
+            8388
+          ],
+          "facts": [
+            "ingredients",
+            "cultivation dependency"
+          ]
+        },
+        {
+          "chapterId": "v01-s121",
+          "sourceLines": [
+            9703,
+            9738
+          ],
+          "facts": [
+            "refinement procedure",
+            "form",
+            "effect",
+            "cost and failure risk"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "canon_gu_seven_fragrances_liquor_worm",
+      "name": "七香酒虫",
+      "rank": {
+        "value": 3,
+        "certainty": "explicit"
+      },
+      "scopeTag": "rank-three-boundary",
+      "roles": [
+        "cultivation"
+      ],
+      "form": "Not described in the located curated passage.",
+      "abilities": [
+        "Refines rank-three white-silver primeval essence upward by one minor stage."
+      ],
+      "acquisition": [
+        {
+          "type": "refinement",
+          "summary": "Made from two Four Flavors Liquor Worms and seven fragrant materials."
+        }
+      ],
+      "feeding": {
+        "status": "not-located"
+      },
+      "refinement": [
+        {
+          "ingredients": [
+            "canon_gu_four_flavors_liquor_worm",
+            "canon_gu_four_flavors_liquor_worm",
+            "canon_material_seven_fragrances"
+          ],
+          "resultId": "canon_gu_seven_fragrances_liquor_worm",
+          "certainty": "explicit"
+        },
+        {
+          "ingredients": [
+            "canon_gu_seven_fragrances_liquor_worm",
+            "canon_gu_seven_fragrances_liquor_worm",
+            "canon_material_nine_hundred_beast_king_eyes"
+          ],
+          "resultId": "canon_gu_nine_eyes_liquor_worm",
+          "certainty": "explicit"
+        }
+      ],
+      "development": [
+        "Refines onward to Nine Eyes Liquor Worm at rank four."
+      ],
+      "limitations": [
+        "Requires two completed rank-two cultivation Gu, making the chain resource-heavy and failure-sensitive."
+      ],
+      "evidence": [
+        {
+          "chapterId": "v02-s127",
+          "sourceLines": [
+            29818,
+            29837
+          ],
+          "facts": [
+            "rank",
+            "effect",
+            "recipe",
+            "failure risk"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "canon_gu_nine_eyes_liquor_worm",
+      "name": "九眼酒虫",
+      "rank": {
+        "value": 4,
+        "certainty": "explicit"
+      },
+      "scopeTag": "future-reference-only",
+      "roles": [
+        "cultivation"
+      ],
+      "form": "A pearl-white silkworm form with nine differently colored gem-like eyes around its head.",
+      "abilities": [
+        "Refines rank-four yellow-gold primeval essence upward by one minor stage."
+      ],
+      "acquisition": [
+        {
+          "type": "refinement",
+          "summary": "Made from two Seven Fragrances Liquor Worms and nine eyes taken from hundred-beast kings."
+        }
+      ],
+      "feeding": {
+        "status": "not-located"
+      },
+      "refinement": [],
+      "development": [
+        "The located source states that this Liquor Worm line has no rank-five continuation."
+      ],
+      "limitations": [
+        "Cannot benefit a rank-three Gu Master until rank four is reached."
+      ],
+      "evidence": [
+        {
+          "chapterId": "v02-s127",
+          "sourceLines": [
+            29818,
+            29845
+          ],
+          "facts": [
+            "rank",
+            "effect",
+            "recipe",
+            "form",
+            "end of line"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "canon_gu_white_boar",
+      "name": "白豕蛊",
+      "rank": {
+        "value": 1,
+        "certainty": "explicit"
+      },
+      "scopeTag": "demo-core",
+      "roles": [
+        "permanent-body-growth",
+        "strength"
+      ],
+      "form": "A pale, rounded flying Gu; the source emphasizes its rarity more than exact anatomy.",
+      "abilities": [
+        "Gradually adds physical strength until the user gains one boar's strength.",
+        "The gained strength remains even if the Gu later dies."
+      ],
+      "acquisition": [
+        {
+          "type": "inheritance-cache",
+          "locationId": "canon_location_flower_wine_inheritance",
+          "summary": "Recovered from a single-use Earth Treasury Flower placed behind the first strength trial."
+        }
+      ],
+      "feeding": {
+        "status": "known",
+        "summary": "Consumes the meat of one adult pig every five days."
+      },
+      "refinement": [
+        {
+          "ingredients": [
+            "canon_gu_white_boar",
+            "canon_gu_jade_skin"
+          ],
+          "resultId": "canon_gu_white_jade",
+          "certainty": "explicit"
+        }
+      ],
+      "development": [
+        "White Boar Gu plus Jade Skin Gu produces rank-two White Jade Gu.",
+        "White Jade Gu can continue to rank-three Sky Canopy Gu."
+      ],
+      "limitations": [
+        "Daily strengthening use is limited to roughly a quarter-hour before escalating pain.",
+        "Feeding requires a recurring supply of whole adult pigs."
+      ],
+      "evidence": [
+        {
+          "chapterId": "v01-s063",
+          "sourceLines": [
+            4737,
+            4766
+          ],
+          "facts": [
+            "inheritance cache",
+            "acquisition"
+          ]
+        },
+        {
+          "chapterId": "v01-s064",
+          "sourceLines": [
+            4794,
+            4839
+          ],
+          "facts": [
+            "rank",
+            "ability",
+            "feeding",
+            "refinement route"
+          ]
+        },
+        {
+          "chapterId": "v01-s070",
+          "sourceLines": [
+            5296,
+            5296
+          ],
+          "facts": [
+            "daily use limit"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "canon_gu_jade_skin",
+      "name": "玉皮蛊",
+      "rank": {
+        "value": 1,
+        "certainty": "explicit"
+      },
+      "scopeTag": "demo-core",
+      "roles": [
+        "defense"
+      ],
+      "form": "A flat, broad, pale-green bug with a jade-colored halo.",
+      "abilities": [
+        "Hardens the user's skin with low primeval-essence consumption.",
+        "Provides better rank-one defense than Copper Skin Gu."
+      ],
+      "acquisition": [
+        {
+          "type": "inheritance-cache",
+          "locationId": "canon_location_flower_wine_inheritance",
+          "summary": "Recovered from the second Earth Treasury Flower after the one-boar-strength gate."
+        },
+        {
+          "type": "faction-reward",
+          "locationId": "canon_location_gu_yue_village",
+          "summary": "The Gu Yue clan leader separately grants one to Fang Zheng as an advance cultivation reward."
+        }
+      ],
+      "feeding": {
+        "status": "known",
+        "summary": "Consumes two liang of jade every ten days."
+      },
+      "refinement": [
+        {
+          "ingredients": [
+            "canon_gu_white_boar",
+            "canon_gu_jade_skin"
+          ],
+          "resultId": "canon_gu_white_jade",
+          "certainty": "explicit"
+        },
+        {
+          "ingredients": [
+            "canon_gu_moonlight",
+            "canon_gu_jade_skin"
+          ],
+          "resultId": "canon_gu_moon_raiment",
+          "certainty": "explicit"
+        }
+      ],
+      "development": [
+        "Can enter either the White Jade defense line or the Gu Yue Moon Raiment team-defense line."
+      ],
+      "limitations": [
+        "Jade feed is costly and conspicuous for an unsupported low-rank Gu Master.",
+        "The defense is still rank one and can be broken by sufficiently strong physical attacks."
+      ],
+      "evidence": [
+        {
+          "chapterId": "v01-s063",
+          "sourceLines": [
+            4705,
+            4715
+          ],
+          "facts": [
+            "clan reward",
+            "defense comparison"
+          ]
+        },
+        {
+          "chapterId": "v01-s079",
+          "sourceLines": [
+            5968,
+            5983
+          ],
+          "facts": [
+            "inheritance acquisition",
+            "form",
+            "feeding",
+            "role"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "canon_gu_white_jade",
+      "name": "白玉蛊",
+      "rank": {
+        "value": 2,
+        "certainty": "explicit"
+      },
+      "scopeTag": "demo-progression",
+      "roles": [
+        "defense"
+      ],
+      "form": "An oval white-jade, pebble-like Gu.",
+      "abilities": [
+        "Provides substantially stronger continuous defense than rank-one Jade Skin Gu.",
+        "Defense consumes more primeval essence as incoming attacks accumulate."
+      ],
+      "acquisition": [
+        {
+          "type": "refinement",
+          "summary": "Made from White Boar Gu and Jade Skin Gu; Fang Yuan's case also used a snow tusk from a wild-boar king."
+        }
+      ],
+      "feeding": {
+        "status": "known-by-inheritance",
+        "summary": "Continues the Jade Skin Gu preference for jade."
+      },
+      "refinement": [
+        {
+          "ingredients": [
+            "canon_gu_white_jade",
+            "canon_material_rank_two_water_defense_gu"
+          ],
+          "resultId": "canon_gu_sky_canopy",
+          "certainty": "explicit-category-only"
+        }
+      ],
+      "development": [
+        "Can refine onward to rank-three Sky Canopy Gu with a water-path defensive Gu."
+      ],
+      "limitations": [
+        "Sustained defense drains primeval essence in proportion to pressure.",
+        "The refinement has meaningful economic and failure costs."
+      ],
+      "evidence": [
+        {
+          "chapterId": "v01-s098",
+          "sourceLines": [
+            7575,
+            7584
+          ],
+          "facts": [
+            "rank",
+            "formula",
+            "defense role"
+          ]
+        },
+        {
+          "chapterId": "v01-s099",
+          "sourceLines": [
+            7661,
+            7670
+          ],
+          "facts": [
+            "successful refinement"
+          ]
+        },
+        {
+          "chapterId": "v01-s100",
+          "sourceLines": [
+            7751,
+            7791
+          ],
+          "facts": [
+            "form",
+            "defense drain",
+            "feeding inheritance"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "canon_gu_moon_glow",
+      "name": "月芒蛊",
+      "rank": {
+        "value": 2,
+        "certainty": "explicit"
+      },
+      "scopeTag": "demo-progression",
+      "roles": [
+        "ranged-attack"
+      ],
+      "form": "Not separately described in the curated passage.",
+      "abilities": [
+        "Raises moonblade attack to three times the base Moonlight Gu result."
+      ],
+      "acquisition": [
+        {
+          "type": "refinement",
+          "summary": "Made from one Moonlight Gu and two Little Light Gu."
+        }
+      ],
+      "feeding": {
+        "status": "not-located"
+      },
+      "refinement": [],
+      "development": [],
+      "limitations": [
+        "Optimizes direct damage but does not provide the range, curved trajectory or ally protection of other moon branches."
+      ],
+      "evidence": [
+        {
+          "chapterId": "v01-s106",
+          "sourceLines": [
+            8291,
+            8294
+          ],
+          "facts": [
+            "rank",
+            "formula",
+            "attack multiplier"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "canon_gu_moon_raiment",
+      "name": "月霓裳",
+      "rank": {
+        "value": 2,
+        "certainty": "explicit"
+      },
+      "scopeTag": "demo-progression",
+      "roles": [
+        "defense",
+        "ally-protection"
+      ],
+      "form": "A moonlight garment effect around the protected target.",
+      "abilities": [
+        "Defends the user and can extend protection to allies.",
+        "Its personal defense is below White Jade Gu, but its team utility is higher."
+      ],
+      "acquisition": [
+        {
+          "type": "refinement",
+          "summary": "Made from Moonlight Gu and Jade Skin Gu."
+        }
+      ],
+      "feeding": {
+        "status": "not-located"
+      },
+      "refinement": [],
+      "development": [
+        "The source says this rarer line can continue as far as rank-five Treasure Moonlight King Gu."
+      ],
+      "limitations": [
+        "Trades peak self-defense for support of other people."
+      ],
+      "evidence": [
+        {
+          "chapterId": "v01-s098",
+          "sourceLines": [
+            7597,
+            7597
+          ],
+          "facts": [
+            "formula"
+          ]
+        },
+        {
+          "chapterId": "v01-s104",
+          "sourceLines": [
+            8095,
+            8100
+          ],
+          "facts": [
+            "rank",
+            "team-defense role",
+            "comparison"
+          ]
+        },
+        {
+          "chapterId": "v01-s106",
+          "sourceLines": [
+            8299,
+            8299
+          ],
+          "facts": [
+            "rank-five route"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "canon_gu_moonwhirl",
+      "name": "月旋蛊",
+      "rank": {
+        "value": 2,
+        "certainty": "explicit-by-refinement-context"
+      },
+      "scopeTag": "demo-progression",
+      "roles": [
+        "ranged-attack",
+        "trajectory-control"
+      ],
+      "form": "Changes the moonblade from blue to green.",
+      "abilities": [
+        "Changes moonblade travel from a straight line to a curved trajectory."
+      ],
+      "acquisition": [
+        {
+          "type": "refinement",
+          "summary": "Made from Moonlight Gu and Whirlwind Gu."
+        }
+      ],
+      "feeding": {
+        "status": "not-located"
+      },
+      "refinement": [],
+      "development": [],
+      "limitations": [
+        "The cited passage emphasizes trajectory rather than increased raw damage."
+      ],
+      "evidence": [
+        {
+          "chapterId": "v01-s106",
+          "sourceLines": [
+            8298,
+            8298
+          ],
+          "facts": [
+            "formula",
+            "color",
+            "curved trajectory"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "canon_gu_moon_scar",
+      "name": "月痕蛊",
+      "rank": {
+        "value": 2,
+        "certainty": "explicit-by-refinement-context"
+      },
+      "scopeTag": "demo-progression",
+      "roles": [
+        "ranged-attack",
+        "range-extension"
+      ],
+      "form": "Not separately described in the curated passage.",
+      "abilities": [
+        "Keeps Moonlight Gu's attack strength while doubling range to twenty meters."
+      ],
+      "acquisition": [
+        {
+          "type": "refinement",
+          "summary": "Made from Moonlight Gu and Trace Stone Gu."
+        }
+      ],
+      "feeding": {
+        "status": "not-located"
+      },
+      "refinement": [],
+      "development": [],
+      "limitations": [
+        "Provides range rather than a damage increase."
+      ],
+      "evidence": [
+        {
+          "chapterId": "v01-s106",
+          "sourceLines": [
+            8297,
+            8297
+          ],
+          "facts": [
+            "formula",
+            "range",
+            "unchanged attack"
+          ]
+        },
+        {
+          "chapterId": "v01-s156",
+          "sourceLines": [
+            13035,
+            13037
+          ],
+          "facts": [
+            "formula confirmation",
+            "advantages and disadvantages"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "canon_gu_hidden_stone",
+      "name": "隐石蛊",
+      "rank": {
+        "value": 1,
+        "certainty": "explicit"
+      },
+      "scopeTag": "demo-core",
+      "roles": [
+        "stealth"
+      ],
+      "form": "Stone-like; the detailed shape is not recorded in the curated passage.",
+      "abilities": [
+        "Makes the user's body invisible.",
+        "Does not hide clothing or visible blood, making the base form awkward for a clothed person."
+      ],
+      "acquisition": [
+        {
+          "type": "wild-beast-drop",
+          "locationId": "canon_location_flower_wine_inheritance",
+          "summary": "Captured from the stone-monkey king inside the inheritance stone forest."
+        }
+      ],
+      "feeding": {
+        "status": "not-located"
+      },
+      "refinement": [
+        {
+          "ingredients": [
+            "canon_gu_hidden_stone",
+            "canon_gu_fish_scales"
+          ],
+          "resultId": "canon_gu_hidden_scales",
+          "certainty": "explicit"
+        }
+      ],
+      "development": [
+        "Refines to rank-two Hidden Scales Gu to include clothing in the invisibility effect."
+      ],
+      "limitations": [
+        "Body-only concealment creates obvious floating-clothes or blood clues."
+      ],
+      "evidence": [
+        {
+          "chapterId": "v01-s116",
+          "sourceLines": [
+            9224,
+            9253
+          ],
+          "facts": [
+            "rank",
+            "stone-monkey acquisition"
+          ]
+        },
+        {
+          "chapterId": "v01-s121",
+          "sourceLines": [
+            9741,
+            9749
+          ],
+          "facts": [
+            "invisibility limitation",
+            "rank-two route"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "canon_gu_hidden_scales",
+      "name": "隐鳞蛊",
+      "rank": {
+        "value": 2,
+        "certainty": "explicit"
+      },
+      "scopeTag": "demo-progression",
+      "roles": [
+        "stealth"
+      ],
+      "form": "A gray carp-fossil-like Gu with lifelike scales.",
+      "abilities": [
+        "Makes both the user and worn clothing invisible.",
+        "Provides a practical infiltration and escape option during the wolf tide."
+      ],
+      "acquisition": [
+        {
+          "type": "refinement",
+          "summary": "Made from Hidden Stone Gu and Fish Scales Gu using a formula not yet known to the local clans at that point."
+        }
+      ],
+      "feeding": {
+        "status": "not-located"
+      },
+      "refinement": [],
+      "development": [],
+      "limitations": [
+        "Does not guarantee safety against broad-area threats or sufficiently strong beasts.",
+        "Cannot conceal the rank-three Thunder Wings Gu effect when both are activated."
+      ],
+      "evidence": [
+        {
+          "chapterId": "v01-s121",
+          "sourceLines": [
+            9746,
+            9750
+          ],
+          "facts": [
+            "rank",
+            "clothing concealment",
+            "practical role"
+          ]
+        },
+        {
+          "chapterId": "v01-s123",
+          "sourceLines": [
+            9903,
+            9923
+          ],
+          "facts": [
+            "Fish Scales Gu formula"
+          ]
+        },
+        {
+          "chapterId": "v01-s127",
+          "sourceLines": [
+            10243,
+            10254
+          ],
+          "facts": [
+            "form",
+            "safety limit"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "canon_gu_nine_leaf_vitality_grass",
+      "name": "九叶生机草",
+      "rank": {
+        "value": 2,
+        "certainty": "explicit"
+      },
+      "scopeTag": "demo-progression",
+      "roles": [
+        "healing-production",
+        "economy"
+      ],
+      "form": "A nine-leaf grass Gu that can grow from the user's palm and retract into a green mark.",
+      "abilities": [
+        "Each removed leaf becomes a Vitality Leaf healing item.",
+        "Primeval essence regrows the harvested leaves, turning the Gu into a renewable medical and trade asset."
+      ],
+      "acquisition": [
+        {
+          "type": "estate-inheritance",
+          "locationId": "canon_location_gu_yue_village",
+          "summary": "Transferred to Fang Yuan through the Gu Yue Dong Tu estate settlement."
+        }
+      ],
+      "feeding": {
+        "status": "known",
+        "summary": "Needs only water and sunlight, making upkeep unusually cheap."
+      },
+      "refinement": [],
+      "development": [],
+      "limitations": [
+        "Its strategic value makes ownership politically and economically important inside the clan."
+      ],
+      "evidence": [
+        {
+          "chapterId": "v01-s102",
+          "sourceLines": [
+            7969,
+            7979
+          ],
+          "facts": [
+            "rank",
+            "healing leaves",
+            "economic value"
+          ]
+        },
+        {
+          "chapterId": "v01-s106",
+          "sourceLines": [
+            8263,
+            8284
+          ],
+          "facts": [
+            "form",
+            "regrowth",
+            "feeding",
+            "clan supply"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "canon_gu_earth_communication_ear_grass",
+      "name": "地听肉耳草",
+      "rank": {
+        "value": 2,
+        "certainty": "explicit"
+      },
+      "scopeTag": "demo-progression",
+      "roles": [
+        "long-range-scouting",
+        "body-installation"
+      ],
+      "form": "A fleshy grass Gu grafted into the side of the head as a replacement ear.",
+      "abilities": [
+        "Detects activity out to three hundred steps in the cited setup.",
+        "Its range improves sharply when the root tendrils contact the ground."
+      ],
+      "acquisition": [
+        {
+          "type": "inheritance-cache",
+          "locationId": "canon_location_flower_wine_inheritance",
+          "summary": "Recovered from a later Earth Treasury Flower in the hidden inheritance."
+        }
+      ],
+      "feeding": {
+        "status": "known",
+        "summary": "Fed with ginseng roots, which are easy to dry and store."
+      },
+      "refinement": [],
+      "development": [],
+      "limitations": [
+        "Use requires a painful permanent graft into a head wound.",
+        "Performance falls when its tendrils cannot reach the earth."
+      ],
+      "evidence": [
+        {
+          "chapterId": "v01-s128",
+          "sourceLines": [
+            10340,
+            10409
+          ],
+          "facts": [
+            "rank",
+            "inheritance acquisition",
+            "range",
+            "feeding",
+            "grafting cost"
+          ]
+        },
+        {
+          "chapterId": "v01-s129",
+          "sourceLines": [
+            10457,
+            10457
+          ],
+          "facts": [
+            "ground-contact condition"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "canon_gu_water_shield",
+      "name": "水罩蛊",
+      "rank": {
+        "value": 2,
+        "certainty": "strong-inference-not-explicit-in-located-lines"
+      },
+      "scopeTag": "demo-progression",
+      "roles": [
+        "defense"
+      ],
+      "form": "A jellyfish-like Gu that raises a flowing water shield.",
+      "abilities": [
+        "The cited shield outperforms White Jade Gu's defense in favorable conditions.",
+        "Its moving water surface can resist binding pressure, though positioning affects performance."
+      ],
+      "acquisition": [
+        {
+          "type": "battle-spoil",
+          "summary": "Fang Yuan takes it from Bai Ning Bing after the Gu Yue Qing Shu confrontation."
+        }
+      ],
+      "feeding": {
+        "status": "not-located"
+      },
+      "refinement": [
+        {
+          "ingredients": [
+            "canon_gu_white_jade",
+            "canon_gu_water_shield"
+          ],
+          "resultId": "canon_gu_sky_canopy",
+          "certainty": "documented-failed-attempt-not-confirmed-success-formula"
+        }
+      ],
+      "development": [],
+      "limitations": [
+        "Repeated shield breakage injures the Gu and can kill it.",
+        "The shield performs poorly if the user cannot stabilize position."
+      ],
+      "evidence": [
+        {
+          "chapterId": "v01-s136",
+          "sourceLines": [
+            11174,
+            11191
+          ],
+          "facts": [
+            "defense comparison",
+            "position dependence"
+          ]
+        },
+        {
+          "chapterId": "v01-s143",
+          "sourceLines": [
+            11785,
+            11790
+          ],
+          "facts": [
+            "battle-spoil acquisition"
+          ]
+        },
+        {
+          "chapterId": "v01-s150",
+          "sourceLines": [
+            12433,
+            12455
+          ],
+          "facts": [
+            "form",
+            "breakage risk"
+          ]
+        },
+        {
+          "chapterId": "v01-s155",
+          "sourceLines": [
+            12985,
+            12988
+          ],
+          "facts": [
+            "failed Sky Canopy refinement attempt"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "canon_gu_sky_canopy",
+      "name": "天蓬蛊",
+      "rank": {
+        "value": 3,
+        "certainty": "explicit"
+      },
+      "scopeTag": "rank-three-boundary",
+      "roles": [
+        "defense"
+      ],
+      "form": "Produces a white-light armor effect and hardens the user's skin like white jade.",
+      "abilities": [
+        "Provides rank-three full-body defense.",
+        "Reduces cutting effects such as moonblades."
+      ],
+      "acquisition": [
+        {
+          "type": "refinement",
+          "summary": "Made from rank-two White Jade Gu and a rank-two water-path defensive Gu."
+        }
+      ],
+      "feeding": {
+        "status": "not-located"
+      },
+      "refinement": [],
+      "development": [],
+      "limitations": [
+        "Still consumes primeval essence under sustained pressure and can be overwhelmed by higher-level attacks."
+      ],
+      "evidence": [
+        {
+          "chapterId": "v01-s064",
+          "sourceLines": [
+            4797,
+            4798
+          ],
+          "facts": [
+            "White Jade route",
+            "defense effect"
+          ]
+        },
+        {
+          "chapterId": "v01-s155",
+          "sourceLines": [
+            12985,
+            12990
+          ],
+          "facts": [
+            "rank",
+            "category formula"
+          ]
+        },
+        {
+          "chapterId": "v01-s157",
+          "sourceLines": [
+            13125,
+            13129
+          ],
+          "facts": [
+            "combat role"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "canon_gu_frost_demon",
+      "name": "霜妖蛊",
+      "rank": {
+        "value": 3,
+        "certainty": "explicit"
+      },
+      "scopeTag": "rank-three-boundary",
+      "roles": [
+        "transformation",
+        "attack"
+      ],
+      "form": "Transforms the user into a frost-demon state.",
+      "abilities": [
+        "Grants powerful frost offense capable of piercing White Jade Gu defense.",
+        "Synergizes strongly with an ice-muscle body and an ice-water Gu set."
+      ],
+      "acquisition": [
+        {
+          "type": "refinement",
+          "summary": "Bai Ning Bing refined one after multiple failed attempts and major resource expenditure."
+        }
+      ],
+      "feeding": {
+        "status": "not-located"
+      },
+      "refinement": [],
+      "development": [],
+      "limitations": [
+        "Prolonged transformation extinguishes the user's life and leaves an ice statue.",
+        "Self-destruction can be used as a desperate one-time escalation and destroys the Gu."
+      ],
+      "evidence": [
+        {
+          "chapterId": "v01-s137",
+          "sourceLines": [
+            11227,
+            11245
+          ],
+          "facts": [
+            "rank",
+            "attack",
+            "ice synergy"
+          ]
+        },
+        {
+          "chapterId": "v01-s139",
+          "sourceLines": [
+            11403,
+            11498
+          ],
+          "facts": [
+            "self-destruction",
+            "refinement cost"
+          ]
+        },
+        {
+          "chapterId": "v01-s143",
+          "sourceLines": [
+            11785,
+            11787
+          ],
+          "facts": [
+            "transformation",
+            "lethal overuse"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "canon_gu_chainsaw_golden_centipede",
+      "name": "锯齿金蜈",
+      "rank": {
+        "value": 3,
+        "certainty": "explicit"
+      },
+      "scopeTag": "rank-three-boundary",
+      "roles": [
+        "melee-weapon",
+        "inheritance-guardian"
+      ],
+      "form": "A long golden centipede with two rows of rotating saw teeth; it can contract or extend.",
+      "abilities": [
+        "Functions as a low-essence, high-cutting-power melee weapon.",
+        "Its wild will can command the surrounding centipede swarm until refined away."
+      ],
+      "acquisition": [
+        {
+          "type": "wild-guardian-capture",
+          "locationId": "canon_location_flower_wine_inheritance",
+          "summary": "Encountered as a wild rank-three guardian and later forcibly refined after Fang Yuan reached rank three."
+        }
+      ],
+      "feeding": {
+        "status": "not-located-in-curated-pass"
+      },
+      "refinement": [],
+      "development": [
+        "One documented rank-four route is Electric Teeth Killing Centipede."
+      ],
+      "limitations": [
+        "Broken saw teeth recover very slowly without support such as Raw Iron Gu.",
+        "Refining away the wild will also removes its natural command of the swarm."
+      ],
+      "evidence": [
+        {
+          "chapterId": "v01-s129",
+          "sourceLines": [
+            10486,
+            10503
+          ],
+          "facts": [
+            "rank",
+            "guardian role",
+            "early capture constraint"
+          ]
+        },
+        {
+          "chapterId": "v01-s162",
+          "sourceLines": [
+            13595,
+            13637
+          ],
+          "facts": [
+            "capture",
+            "wild swarm control"
+          ]
+        },
+        {
+          "chapterId": "v01-s166",
+          "sourceLines": [
+            13999,
+            14032
+          ],
+          "facts": [
+            "rank-four route",
+            "weapon use"
+          ]
+        },
+        {
+          "chapterId": "v01-s177",
+          "sourceLines": [
+            15021,
+            15030
+          ],
+          "facts": [
+            "repair limitation",
+            "essence efficiency"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "canon_gu_thunder_wings",
+      "name": "雷翼蛊",
+      "rank": {
+        "value": 3,
+        "certainty": "explicit"
+      },
+      "scopeTag": "rank-three-boundary",
+      "roles": [
+        "movement",
+        "short-flight"
+      ],
+      "form": "Resides as two lightning-shaped marks on the user's back and manifests thunder wings.",
+      "abilities": [
+        "Enables short-duration flight and high mobility."
+      ],
+      "acquisition": [
+        {
+          "type": "clan-inventory",
+          "summary": "Fang Yuan takes it from the clan's emergency stock after becoming a rank-three pillar."
+        }
+      ],
+      "feeding": {
+        "status": "not-located"
+      },
+      "refinement": [],
+      "development": [],
+      "limitations": [
+        "Consumes primeval essence quickly.",
+        "Cannot be concealed by rank-two Hidden Scales Gu while active.",
+        "A damaged or poorly maintained specimen creates a severe falling risk."
+      ],
+      "evidence": [
+        {
+          "chapterId": "v01-s150",
+          "sourceLines": [
+            12470,
+            12470
+          ],
+          "facts": [
+            "short flight"
+          ]
+        },
+        {
+          "chapterId": "v01-s157",
+          "sourceLines": [
+            13125,
+            13129
+          ],
+          "facts": [
+            "rank",
+            "movement role",
+            "essence cost"
+          ]
+        },
+        {
+          "chapterId": "v01-s159",
+          "sourceLines": [
+            13307,
+            13345
+          ],
+          "facts": [
+            "form",
+            "cost"
+          ]
+        },
+        {
+          "chapterId": "v01-s165",
+          "sourceLines": [
+            13935,
+            13935
+          ],
+          "facts": [
+            "stealth incompatibility"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "canon_gu_blood_moon",
+      "name": "血月蛊",
+      "rank": {
+        "value": 3,
+        "certainty": "explicit"
+      },
+      "scopeTag": "rank-three-boundary",
+      "roles": [
+        "ranged-attack",
+        "bleeding"
+      ],
+      "form": "Similar to Moonlight Gu and resides as a red crescent mark in the palm.",
+      "abilities": [
+        "Fires a blood-aspected moonblade and leaves a bleeding effect.",
+        "Uses an easily sourced blood diet."
+      ],
+      "acquisition": [
+        {
+          "type": "refinement",
+          "summary": "Fang Yuan selects and refines an uncommon Gu Yue rank-three moon route."
+        }
+      ],
+      "feeding": {
+        "status": "known",
+        "summary": "Feeds on fresh blood, readily obtained from local beasts."
+      },
+      "refinement": [],
+      "development": [],
+      "limitations": [
+        "Only has a ten-meter cited range and mediocre direct attack among rank-three Gu.",
+        "On recurring days each month it leaks blood and sharply lowers combat effectiveness."
+      ],
+      "evidence": [
+        {
+          "chapterId": "v01-s157",
+          "sourceLines": [
+            13079,
+            13129
+          ],
+          "facts": [
+            "attack",
+            "range",
+            "feeding",
+            "role"
+          ]
+        },
+        {
+          "chapterId": "v01-s159",
+          "sourceLines": [
+            13290,
+            13306
+          ],
+          "facts": [
+            "rank",
+            "form"
+          ]
+        },
+        {
+          "chapterId": "v01-s160",
+          "sourceLines": [
+            13380,
+            13394
+          ],
+          "facts": [
+            "effect",
+            "monthly weakness"
+          ]
+        }
+      ]
+    }
+  ]
+}

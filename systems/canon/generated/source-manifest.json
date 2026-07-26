@@ -1,0 +1,149 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "fileName": "蛊真人.txt",
+    "sha256": "e48d91ad4d7b62fb60986050e735ffe634bc552d797945114d7e46034202708e",
+    "sizeBytes": 13304057,
+    "encoding": "gbk",
+    "lineCount": 180945,
+    "headingCount": 1915,
+    "volumeCount": 6,
+    "coverageStatus": "incomplete"
+  },
+  "volumes": [
+    {
+      "volume": 1,
+      "headingCount": 195,
+      "firstSection": 1,
+      "lastSection": 199,
+      "missingRanges": [
+        {
+          "from": 34,
+          "to": 34
+        },
+        {
+          "from": 140,
+          "to": 142
+        }
+      ]
+    },
+    {
+      "volume": 2,
+      "headingCount": 206,
+      "firstSection": 1,
+      "lastSection": 206,
+      "missingRanges": []
+    },
+    {
+      "volume": 3,
+      "headingCount": 244,
+      "firstSection": 1,
+      "lastSection": 244,
+      "missingRanges": []
+    },
+    {
+      "volume": 4,
+      "headingCount": 372,
+      "firstSection": 1,
+      "lastSection": 373,
+      "missingRanges": [
+        {
+          "from": 211,
+          "to": 211
+        }
+      ]
+    },
+    {
+      "volume": 5,
+      "headingCount": 554,
+      "firstSection": 1,
+      "lastSection": 951,
+      "missingRanges": [
+        {
+          "from": 193,
+          "to": 193
+        },
+        {
+          "from": 211,
+          "to": 211
+        },
+        {
+          "from": 244,
+          "to": 244
+        },
+        {
+          "from": 411,
+          "to": 411
+        },
+        {
+          "from": 441,
+          "to": 524
+        },
+        {
+          "from": 527,
+          "to": 829
+        },
+        {
+          "from": 894,
+          "to": 898
+        },
+        {
+          "from": 941,
+          "to": 941
+        }
+      ]
+    },
+    {
+      "volume": 6,
+      "headingCount": 344,
+      "firstSection": 2,
+      "lastSection": 364,
+      "missingRanges": [
+        {
+          "from": 1,
+          "to": 1
+        },
+        {
+          "from": 15,
+          "to": 15
+        },
+        {
+          "from": 18,
+          "to": 21
+        },
+        {
+          "from": 24,
+          "to": 27
+        },
+        {
+          "from": 29,
+          "to": 30
+        },
+        {
+          "from": 44,
+          "to": 44
+        },
+        {
+          "from": 58,
+          "to": 58
+        },
+        {
+          "from": 61,
+          "to": 61
+        },
+        {
+          "from": 110,
+          "to": 110
+        },
+        {
+          "from": 119,
+          "to": 121
+        },
+        {
+          "from": 129,
+          "to": 129
+        }
+      ]
+    }
+  ]
+}
