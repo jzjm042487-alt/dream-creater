@@ -103,6 +103,24 @@ migration, but content-facing quest states must map as follows:
 - `delta_boar_escape`: no reward; preserve expedition state as battle return.
 - `delta_boar_defeat`: use existing defeat recovery and end expedition.
 
+## Future Gu Acquisition Boundary
+
+Demo V2's wilderness acquisition loop is limited to unowned low-rank wild Gu.
+High-rank Gu acquisition is reserved for a later contract and must not be
+implemented as an ordinary wilderness reward.
+
+- Combat, formations, or environmental hazards may be prerequisites that
+  suppress a high-rank Gu before a later capture or sealing resolution.
+- Battle victory must never add a high-rank Gu directly to inventory.
+- Defeating a Gu Master does not automatically transfer ownership of their Gu.
+  Escape, destruction, backlash, sealing, and authored acquisition are possible
+  future outcomes.
+- The future contract must define rank-gap limits, suppression state, ownership
+  transfer, post-battle capture, failure consequences, and save fields before
+  any high-rank acquisition content is authored.
+- Demo V2 defines no high-rank Gu IDs, recipes, drop rates, or combat-acquisition
+  formulas. Downstream agents must not invent them.
+
 ## Non-Negotiable Compatibility
 
 Version 3 migration may add branches but must not recompute existing v2 clock,

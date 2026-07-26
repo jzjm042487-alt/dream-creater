@@ -156,6 +156,19 @@ Saving and loading must persist the seed and cursor. Loading must not reroll the
 next event. If the player saves before choosing a command, the next command after
 load must resolve the same random event it would have resolved before load.
 
+## Future Gu Acquisition Handoff
+
+The wilderness graph may later hand an unowned low-rank wild Gu encounter to a
+dedicated tracking, luring, and capture minigame. That interaction is outside
+the Demo V2 wilderness implementation defined here.
+
+High-rank Gu are explicitly reserved. A future encounter may require combat or
+another suppression challenge before capture, but battle victory must not grant
+the Gu directly. The wilderness resolver must hand off to a future acquisition
+contract instead of treating a high-rank Gu as loot. No high-rank Gu IDs,
+rank-gap rules, capture formulas, ownership-transfer rules, or save fields are
+defined by this specification.
+
 ## Finite First Map
 
 The map is defined in `systems/balance/demo-v2.json`. Required implementation
