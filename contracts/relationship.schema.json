@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://dream-creater.local/contracts/relationship.schema.json",
+  "title": "Demo V2 Directed Relationship",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["sourceCharacterId", "targetCharacterId", "dimension", "value"],
+  "properties": {
+    "sourceCharacterId": { "type": "string", "x-idRegistry": "characters" },
+    "targetCharacterId": { "type": "string", "x-idRegistry": "characters" },
+    "dimension": { "type": "string", "x-idRegistry": "relationshipDimensions" },
+    "value": { "type": "integer", "minimum": -100, "maximum": 100 },
+    "appliedEventDeltaIds": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "type": "string", "x-idRegistry": "eventDeltas" }
+    }
+  }
+}

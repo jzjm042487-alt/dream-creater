@@ -1,0 +1,108 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "id": "demo-v2-ids",
+  "version": 1,
+  "stableIds": {
+    "characters": [
+      "char_player",
+      "char_fang_yuan",
+      "char_wine_merchant",
+      "char_tavern_clerk",
+      "char_academy_elder"
+    ],
+    "quests": ["quest_wine_worm"],
+    "questStates": [
+      "state_wine_unknown",
+      "state_wine_clerk_observed",
+      "state_wine_patrol_known",
+      "state_wine_jar_confirmed",
+      "state_wine_player_unhidden",
+      "state_wine_player_hidden",
+      "state_wine_player_refined",
+      "state_wine_fang_yuan_owned"
+    ],
+    "locations": [
+      "loc_qingmao_wilderness",
+      "loc_gu_yue_village",
+      "loc_bamboo_hunting_ground",
+      "loc_hidden_cave",
+      "loc_theft_cache"
+    ],
+    "events": [
+      "event_wilderness_boar",
+      "event_qm_entry_hint",
+      "event_hidden_cave_discovery",
+      "event_theft_cache_discovery"
+    ],
+    "gu": ["gu_wine_worm"],
+    "emotions": [
+      "emotion_neutral",
+      "emotion_guarded",
+      "emotion_hostile",
+      "emotion_alarmed",
+      "emotion_wounded"
+    ],
+    "relationshipDimensions": [
+      "relation_trust",
+      "relation_vigilance",
+      "relation_enmity",
+      "relation_debt",
+      "relation_interest"
+    ]
+  },
+  "systemIds": {
+    "wildernessMaps": ["map_qingmao_wilderness_v2"],
+    "graphNodes": [
+      "node_qm_entry",
+      "node_qm_old_pine",
+      "node_qm_split_stone",
+      "node_qm_bamboo_shadow",
+      "node_qm_boar_scrape",
+      "node_qm_stream_bend",
+      "node_qm_village_ridge",
+      "node_qm_hunting_gate",
+      "node_qm_moss_wall",
+      "node_qm_cave_mouth",
+      "node_qm_theft_cache"
+    ],
+    "ordinaryRoutes": [
+      "route_qm_to_village",
+      "route_qm_to_bamboo_hunting_ground"
+    ],
+    "hiddenRoutes": [
+      "route_qm_hidden_cave",
+      "route_qm_theft_cache"
+    ],
+    "dialogueNodes": [
+      "dlg_wilderness_entry",
+      "dlg_wilderness_boar_warning",
+      "dlg_hidden_cave_found",
+      "dlg_theft_cache_found",
+      "dlg_destination_gu_yue_village",
+      "dlg_destination_bamboo_hunting_ground"
+    ],
+    "eventDeltas": [
+      "delta_hidden_cave_discovered",
+      "delta_theft_cache_looted",
+      "delta_boar_victory",
+      "delta_boar_escape",
+      "delta_boar_defeat"
+    ],
+    "eventSlots": [
+      "slot_qm_entry_hint",
+      "slot_qm_boar_daily",
+      "slot_qm_hidden_cave",
+      "slot_qm_theft_cache"
+    ],
+    "directions": ["north", "east", "south", "west"],
+    "relativeCommands": ["forward", "back", "left", "right"],
+    "eventLifetimes": ["permanent", "daily", "expedition"],
+    "eventKinds": [
+      "environmentHint",
+      "battle",
+      "hiddenDiscovery",
+      "theftCache",
+      "destination"
+    ]
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "id": "quest_wine_worm.zh-CN",
+  "locale": "zh-CN",
+  "questId": "quest_wine_worm",
+  "nodes": [
+    {
+      "id": "dlg_wilderness_entry",
+      "speakerId": "char_player",
+      "emotionId": "emotion_neutral",
+      "questStateId": "state_wine_unknown",
+      "text": "The mountain path is quiet."
+    },
+    {
+      "id": "dlg_hidden_cave_found",
+      "speakerId": "char_player",
+      "emotionId": "emotion_guarded",
+      "text": "There is a hollow behind the moss."
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "id": "char_player",
+  "displayName": "Player",
+  "publicIdentity": "A newly awakened Gu Yue youth.",
+  "privateGoal": "Acquire and protect the wine worm before Fang Yuan does.",
+  "knownFacts": ["The back mountain begins outside Gu Yue Village."],
+  "secrets": ["Carries memories from another world."],
+  "relationshipBaseline": [
+    {
+      "sourceCharacterId": "char_player",
+      "targetCharacterId": "char_fang_yuan",
+      "dimension": "relation_vigilance",
+      "value": 15
+    }
+  ],
+  "speechPattern": "Short, cautious observations.",
+  "availableEmotions": ["emotion_neutral", "emotion_guarded"]
+}

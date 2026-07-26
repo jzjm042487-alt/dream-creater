@@ -1,0 +1,193 @@
+{
+  "$schema": "../../contracts/wilderness-map.schema.json",
+  "id": "map_qingmao_wilderness_v2",
+  "locationId": "loc_qingmao_wilderness",
+  "entryNodeByOrigin": {
+    "loc_gu_yue_village": "node_qm_entry",
+    "origin_default": "node_qm_entry"
+  },
+  "entryFacingByOrigin": {
+    "loc_gu_yue_village": "north",
+    "origin_default": "north"
+  },
+  "availableOrdinaryDestinations": [
+    "loc_gu_yue_village",
+    "loc_bamboo_hunting_ground"
+  ],
+  "directTravelLocations": ["loc_gu_yue_village"],
+  "nodes": [
+    {
+      "id": "node_qm_entry",
+      "label": "Back Mountain Gate",
+      "description": "The village palisade is behind you. A narrow animal path runs north into wet bamboo.",
+      "eventSlotIds": ["slot_qm_entry_hint"],
+      "edges": [
+        { "direction": "north", "to": "node_qm_old_pine" },
+        { "direction": "east", "to": "node_qm_split_stone" }
+      ]
+    },
+    {
+      "id": "node_qm_old_pine",
+      "label": "Old Pine",
+      "description": "A lightning-scarred pine leans over the path. Village cooking smoke is faint to the south.",
+      "edges": [
+        { "direction": "south", "to": "node_qm_entry" },
+        { "direction": "north", "to": "node_qm_village_ridge" },
+        { "direction": "east", "to": "node_qm_bamboo_shadow" },
+        { "direction": "west", "to": "node_qm_stream_bend" }
+      ]
+    },
+    {
+      "id": "node_qm_split_stone",
+      "label": "Split Stone",
+      "description": "A cracked stone blocks part of the slope. Fresh heel marks cut east across the moss.",
+      "edges": [
+        { "direction": "west", "to": "node_qm_entry" },
+        { "direction": "north", "to": "node_qm_boar_scrape" },
+        { "direction": "east", "to": "node_qm_moss_wall" }
+      ]
+    },
+    {
+      "id": "node_qm_bamboo_shadow",
+      "label": "Bamboo Shadow",
+      "description": "Dense bamboo swallows sound. A hunter's red thread hangs from a broken stalk.",
+      "edges": [
+        { "direction": "west", "to": "node_qm_old_pine" },
+        { "direction": "north", "to": "node_qm_hunting_gate" },
+        { "direction": "east", "to": "node_qm_boar_scrape" }
+      ]
+    },
+    {
+      "id": "node_qm_boar_scrape",
+      "label": "Boar Scrape",
+      "description": "Mud is gouged by tusks. The air smells of sap and animal heat.",
+      "eventSlotIds": ["slot_qm_boar_daily"],
+      "edges": [
+        { "direction": "south", "to": "node_qm_split_stone" },
+        { "direction": "west", "to": "node_qm_bamboo_shadow" },
+        { "direction": "north", "to": "node_qm_stream_bend" }
+      ]
+    },
+    {
+      "id": "node_qm_stream_bend",
+      "label": "Stream Bend",
+      "description": "Cold water bends around black stones. Wine-sweet air slips from the western cliff.",
+      "edges": [
+        { "direction": "south", "to": "node_qm_boar_scrape" },
+        { "direction": "east", "to": "node_qm_old_pine" },
+        { "direction": "west", "to": "node_qm_moss_wall" }
+      ]
+    },
+    {
+      "id": "node_qm_village_ridge",
+      "label": "Village Ridge",
+      "description": "The path opens above Gu Yue Village. Roof tiles and smoke are clear below.",
+      "destinationId": "loc_gu_yue_village",
+      "edges": [
+        { "direction": "south", "to": "node_qm_old_pine" }
+      ]
+    },
+    {
+      "id": "node_qm_hunting_gate",
+      "label": "Hunting Gate",
+      "description": "Two forked stakes mark the Bamboo Hunting Ground. Old traps hang from vine loops.",
+      "destinationId": "loc_bamboo_hunting_ground",
+      "edges": [
+        { "direction": "south", "to": "node_qm_bamboo_shadow" }
+      ]
+    },
+    {
+      "id": "node_qm_moss_wall",
+      "label": "Moss Wall",
+      "description": "The cliff is green and damp. One patch of moss has been brushed clean by a sleeve.",
+      "eventSlotIds": ["slot_qm_hidden_cave"],
+      "edges": [
+        { "direction": "east", "to": "node_qm_split_stone" },
+        { "direction": "north", "to": "node_qm_stream_bend" },
+        { "direction": "west", "to": "node_qm_cave_mouth" }
+      ]
+    },
+    {
+      "id": "node_qm_cave_mouth",
+      "label": "Hidden Cave Mouth",
+      "description": "Behind the moss is a shallow cave mouth, cold enough to bead water on your sleeves.",
+      "destinationId": "loc_hidden_cave",
+      "edges": [
+        { "direction": "east", "to": "node_qm_moss_wall" },
+        { "direction": "south", "to": "node_qm_theft_cache" }
+      ]
+    },
+    {
+      "id": "node_qm_theft_cache",
+      "label": "Stone Root Cache",
+      "description": "Under knotted roots, a wrapped packet was wedged where only a thief would look.",
+      "destinationId": "loc_theft_cache",
+      "eventSlotIds": ["slot_qm_theft_cache"],
+      "edges": [
+        { "direction": "north", "to": "node_qm_cave_mouth" }
+      ]
+    }
+  ],
+  "ordinaryRoutes": [
+    {
+      "id": "route_qm_to_village",
+      "destinationId": "loc_gu_yue_village",
+      "sequence": ["forward", "forward"]
+    },
+    {
+      "id": "route_qm_to_bamboo_hunting_ground",
+      "destinationId": "loc_bamboo_hunting_ground",
+      "sequence": ["forward", "right", "left"]
+    }
+  ],
+  "hiddenRoutes": [
+    {
+      "id": "route_qm_hidden_cave",
+      "locationId": "loc_hidden_cave",
+      "sequence": ["right", "left", "forward", "left", "forward"],
+      "discoveryCondition": { "type": "routeSequence" },
+      "eventDeltaId": "delta_hidden_cave_discovered"
+    },
+    {
+      "id": "route_qm_theft_cache",
+      "locationId": "loc_theft_cache",
+      "sequence": ["right", "left", "forward", "left", "forward", "left"],
+      "discoveryCondition": {
+        "type": "nodeAndFlag",
+        "requiredNodeId": "node_qm_theft_cache",
+        "requiredFlag": "flags.theftRankAtLeast1"
+      },
+      "eventDeltaId": "delta_theft_cache_looted"
+    }
+  ],
+  "eventSlots": [
+    {
+      "id": "slot_qm_entry_hint",
+      "eventId": "event_qm_entry_hint",
+      "lifetime": "expedition",
+      "trigger": "nonBlockingHintOnly",
+      "weight": 100
+    },
+    {
+      "id": "slot_qm_boar_daily",
+      "eventId": "event_wilderness_boar",
+      "lifetime": "daily",
+      "trigger": "randomBlockingBattleBeforeStep20",
+      "weight": 35
+    },
+    {
+      "id": "slot_qm_hidden_cave",
+      "eventId": "event_hidden_cave_discovery",
+      "lifetime": "permanent",
+      "trigger": "hiddenRouteMatched",
+      "weight": 100
+    },
+    {
+      "id": "slot_qm_theft_cache",
+      "eventId": "event_theft_cache_discovery",
+      "lifetime": "permanent",
+      "trigger": "hiddenRouteMatchedAndTheftRankAtLeast1",
+      "weight": 100
+    }
+  ]
+}

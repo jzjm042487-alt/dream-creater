@@ -1,0 +1,139 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://dream-creater.local/contracts/wilderness-map.schema.json",
+  "title": "Demo V2 Wilderness Map",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "locationId",
+    "entryNodeByOrigin",
+    "entryFacingByOrigin",
+    "availableOrdinaryDestinations",
+    "directTravelLocations",
+    "nodes",
+    "ordinaryRoutes",
+    "hiddenRoutes",
+    "eventSlots"
+  ],
+  "properties": {
+    "$schema": { "type": "string" },
+    "id": { "type": "string", "x-idRegistry": "wildernessMaps" },
+    "locationId": { "type": "string", "x-idRegistry": "locations" },
+    "entryNodeByOrigin": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": { "type": "string", "x-idRegistry": "graphNodes" }
+    },
+    "entryFacingByOrigin": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": { "type": "string", "x-idRegistry": "directions" }
+    },
+    "availableOrdinaryDestinations": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "type": "string", "x-idRegistry": "locations" }
+    },
+    "directTravelLocations": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "type": "string", "x-idRegistry": "locations" }
+    },
+    "nodes": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "label", "description", "edges"],
+        "properties": {
+          "id": { "type": "string", "x-idRegistry": "graphNodes" },
+          "label": { "type": "string", "minLength": 1 },
+          "description": { "type": "string", "minLength": 1 },
+          "destinationId": { "type": "string", "x-idRegistry": "locations" },
+          "eventSlotIds": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": { "type": "string", "x-idRegistry": "eventSlots" }
+          },
+          "edges": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["direction", "to"],
+              "properties": {
+                "direction": { "type": "string", "x-idRegistry": "directions" },
+                "to": { "type": "string", "x-idRegistry": "graphNodes" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "ordinaryRoutes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "destinationId", "sequence"],
+        "properties": {
+          "id": { "type": "string", "x-idRegistry": "ordinaryRoutes" },
+          "destinationId": { "type": "string", "x-idRegistry": "locations" },
+          "sequence": {
+            "type": "array",
+            "minItems": 1,
+            "items": { "type": "string", "x-idRegistry": "relativeCommands" }
+          }
+        }
+      }
+    },
+    "hiddenRoutes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "locationId", "sequence", "discoveryCondition"],
+        "properties": {
+          "id": { "type": "string", "x-idRegistry": "hiddenRoutes" },
+          "locationId": { "type": "string", "x-idRegistry": "locations" },
+          "sequence": {
+            "type": "array",
+            "minItems": 2,
+            "maxItems": 8,
+            "items": { "type": "string", "x-idRegistry": "relativeCommands" }
+          },
+          "discoveryCondition": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["type"],
+            "properties": {
+              "type": { "type": "string", "enum": ["routeSequence", "nodeAndFlag"] },
+              "requiredNodeId": { "type": "string", "x-idRegistry": "graphNodes" },
+              "requiredFlag": { "type": "string", "pattern": "^[a-zA-Z0-9_.:-]+$" }
+            }
+          },
+          "eventDeltaId": { "type": "string", "x-idRegistry": "eventDeltas" }
+        }
+      }
+    },
+    "eventSlots": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "eventId", "lifetime", "trigger"],
+        "properties": {
+          "id": { "type": "string", "x-idRegistry": "eventSlots" },
+          "eventId": { "type": "string", "x-idRegistry": "events" },
+          "lifetime": { "type": "string", "x-idRegistry": "eventLifetimes" },
+          "trigger": { "type": "string", "minLength": 1 },
+          "weight": { "type": "integer", "minimum": 0, "maximum": 100 }
+        }
+      }
+    }
+  }
+}

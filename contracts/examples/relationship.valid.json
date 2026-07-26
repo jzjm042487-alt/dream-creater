@@ -1,0 +1,7 @@
+{
+  "sourceCharacterId": "char_fang_yuan",
+  "targetCharacterId": "char_player",
+  "dimension": "relation_interest",
+  "value": 10,
+  "appliedEventDeltaIds": ["delta_hidden_cave_discovered"]
+}

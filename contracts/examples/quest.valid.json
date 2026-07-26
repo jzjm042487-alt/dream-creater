@@ -1,0 +1,30 @@
+{
+  "id": "quest_wine_worm",
+  "initialStateId": "state_wine_unknown",
+  "states": [
+    { "id": "state_wine_unknown", "label": "Unknown", "terminal": false },
+    { "id": "state_wine_clerk_observed", "label": "Clerk observed", "terminal": false },
+    { "id": "state_wine_player_unhidden", "label": "Player owns wine worm", "terminal": false },
+    { "id": "state_wine_player_refined", "label": "Wine worm refined", "terminal": true }
+  ],
+  "transitions": [
+    {
+      "id": "observe_clerk",
+      "from": "state_wine_unknown",
+      "to": "state_wine_clerk_observed",
+      "trigger": "observe-clerk"
+    },
+    {
+      "id": "acquire",
+      "from": "state_wine_clerk_observed",
+      "to": "state_wine_player_unhidden",
+      "trigger": "steal-back-room"
+    },
+    {
+      "id": "refine",
+      "from": "state_wine_player_unhidden",
+      "to": "state_wine_player_refined",
+      "trigger": "WINE_WORM_REFINED"
+    }
+  ]
+}
