@@ -6,6 +6,8 @@
 - Wilderness map and balance: `systems/balance/demo-v2.json`
 - Save contract: `contracts/game-state-v3.md`
 - Content schemas: `contracts/*.schema.json`
+- Low-rank Gu acquisition, care, and advancement:
+  `docs/superpowers/specs/2026-07-26-low-rank-gu-acquisition-and-care-design.md`
 
 Downstream agents may reference these IDs but must not invent IDs for graph
 nodes, dialogue nodes, event slots, event deltas, relationship dimensions, or

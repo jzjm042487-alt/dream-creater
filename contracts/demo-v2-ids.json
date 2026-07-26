@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "id": "demo-v2-ids",
-  "version": 1,
+  "version": 2,
   "stableIds": {
     "characters": [
       "char_player",
@@ -34,7 +34,17 @@
       "event_hidden_cave_discovery",
       "event_theft_cache_discovery"
     ],
-    "gu": ["gu_wine_worm"],
+    "gu": [
+      "gu_moonlight",
+      "gu_wine_worm",
+      "gu_white_boar",
+      "gu_jade_skin",
+      "gu_earth_communication_ear_grass",
+      "gu_nine_leaf_vitality_grass",
+      "gu_moon_glow",
+      "gu_four_flavors_liquor_worm",
+      "gu_white_jade"
+    ],
     "emotions": [
       "emotion_neutral",
       "emotion_guarded",
@@ -103,6 +113,104 @@
       "hiddenDiscovery",
       "theftCache",
       "destination"
+    ],
+    "guAbilityFamilies": ["gu_family_cultivation_support"],
+    "guAbilityTags": [
+      "combat_ranged_attack",
+      "moon_path",
+      "cultivation_essence_quality",
+      "body_strength_growth",
+      "combat_body_defense",
+      "exploration_ground_sense",
+      "healing_leaf_production",
+      "renewable_asset"
+    ],
+    "guClueKinds": [
+      "clue_habitat",
+      "clue_feeding",
+      "clue_activity",
+      "clue_capture_weakness"
+    ],
+    "guLifecycleStatuses": [
+      "contained_unrefined",
+      "refining",
+      "refined_bonded",
+      "consumed_advancement"
+    ],
+    "guConcealmentStatuses": [
+      "not_required",
+      "unhidden",
+      "hidden",
+      "aperture",
+      "body_implanted"
+    ],
+    "guCareStatuses": [
+      "not_applicable",
+      "fed",
+      "hungry",
+      "weak",
+      "dormant"
+    ],
+    "guFeedingModes": [
+      "stocked",
+      "self_sustaining",
+      "canon_pending"
+    ],
+    "guAdvancementModes": [
+      "mastery_simplified",
+      "canonical_recipe"
+    ],
+    "guTrackingOpportunities": ["tracking_wine_worm_flower_wine"],
+    "guTrackingResolutionTypes": [
+      "wild_available",
+      "captured_from_wild",
+      "migrated_existing_instance"
+    ],
+    "guHolderRouteIntel": [
+      "intel_wine_patrol_handover",
+      "intel_wine_patrol_sheet",
+      "intel_wine_patrol_window_hint",
+      "intel_wine_correct_merchant_jar"
+    ],
+    "guSources": [
+      "source_gu_moonlight_academy_allocation",
+      "tracking_wine_worm_flower_wine",
+      "source_gu_white_boar_flower_wine_cache_1",
+      "source_gu_jade_skin_flower_wine_cache_2",
+      "source_gu_earth_ear_flower_wine_cache_3",
+      "source_gu_nine_leaf_estate_settlement",
+      "advance_moonlight_to_moon_glow",
+      "advance_wine_worm_to_four_flavors",
+      "advance_white_boar_jade_skin_to_white_jade"
+    ],
+    "guTrackingClues": [
+      "clue_wine_habitat_stone_fissure",
+      "clue_wine_feeding_green_bamboo_wine",
+      "clue_wine_activity_rain_dawn",
+      "clue_wine_capture_drunk_sealed_jar"
+    ],
+    "guCaptureBaits": [
+      "bait_green_bamboo_wine",
+      "bait_cloudy_rice_wine",
+      "bait_moon_orchid_petals"
+    ],
+    "guCaptureTimings": [
+      "timing_after_rain_dawn",
+      "timing_clear_midday",
+      "timing_dry_night"
+    ],
+    "guCaptureContainers": [
+      "container_corked_wine_jar",
+      "container_cloth_pouch",
+      "container_open_bamboo_basket"
+    ],
+    "guAdvancements": [
+      "advance_moonlight_to_moon_glow",
+      "advance_wine_worm_to_four_flavors",
+      "advance_white_boar_jade_skin_to_white_jade"
+    ],
+    "permanentEffects": [
+      "strength_boar_1"
     ]
   }
 }

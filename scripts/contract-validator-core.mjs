@@ -30,7 +30,25 @@ export function loadRegistry() {
     directions: ids.systemIds.directions,
     relativeCommands: ids.systemIds.relativeCommands,
     eventLifetimes: ids.systemIds.eventLifetimes,
-    eventKinds: ids.systemIds.eventKinds
+    eventKinds: ids.systemIds.eventKinds,
+    guAbilityFamilies: ids.systemIds.guAbilityFamilies,
+    guAbilityTags: ids.systemIds.guAbilityTags,
+    guClueKinds: ids.systemIds.guClueKinds,
+    guLifecycleStatuses: ids.systemIds.guLifecycleStatuses,
+    guConcealmentStatuses: ids.systemIds.guConcealmentStatuses,
+    guCareStatuses: ids.systemIds.guCareStatuses,
+    guFeedingModes: ids.systemIds.guFeedingModes,
+    guAdvancementModes: ids.systemIds.guAdvancementModes,
+    guTrackingOpportunities: ids.systemIds.guTrackingOpportunities,
+    guTrackingResolutionTypes: ids.systemIds.guTrackingResolutionTypes,
+    guHolderRouteIntel: ids.systemIds.guHolderRouteIntel,
+    guSources: ids.systemIds.guSources,
+    guTrackingClues: ids.systemIds.guTrackingClues,
+    guCaptureBaits: ids.systemIds.guCaptureBaits,
+    guCaptureTimings: ids.systemIds.guCaptureTimings,
+    guCaptureContainers: ids.systemIds.guCaptureContainers,
+    guAdvancements: ids.systemIds.guAdvancements,
+    permanentEffects: ids.systemIds.permanentEffects
   };
 }
 
