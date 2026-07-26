@@ -1,0 +1,20 @@
+<svg width="720" height="360" viewBox="0 0 720 360" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="720" height="360" fill="#101613"/>
+  <path d="M42 282C112 236 130 187 188 171C236 158 259 193 310 174C366 153 374 99 434 78C487 60 528 94 575 70C608 53 625 30 661 22" stroke="#36584B" stroke-width="18" stroke-linecap="round" opacity=".45"/>
+  <path d="M54 287C132 239 148 204 198 188C249 172 279 207 329 186C382 164 389 116 443 96C495 77 528 111 580 88C612 74 637 47 669 37" stroke="#84B89D" stroke-width="2" stroke-linecap="round" opacity=".9"/>
+  <path d="M122 252L178 181L236 244L304 137L366 220L446 104L522 204L588 126L664 253" stroke="#24352F" stroke-width="54" stroke-linejoin="round" opacity=".8"/>
+  <path d="M122 252L178 181L236 244L304 137L366 220L446 104L522 204L588 126L664 253" stroke="#597467" stroke-width="3" stroke-linejoin="round"/>
+  <circle cx="242" cy="206" r="24" fill="#161F1A" stroke="#D8B46A" stroke-width="3"/>
+  <text x="242" y="212" text-anchor="middle" fill="#F3E7CA" font-size="16" font-family="Microsoft YaHei, sans-serif">寨</text>
+  <circle cx="364" cy="154" r="18" fill="#191A18" stroke="#D8B46A" stroke-width="2"/>
+  <text x="364" y="160" text-anchor="middle" fill="#F3E7CA" font-size="13" font-family="Microsoft YaHei, sans-serif">学</text>
+  <circle cx="454" cy="117" r="18" fill="#191A18" stroke="#B95D52" stroke-width="2"/>
+  <text x="454" y="123" text-anchor="middle" fill="#F3E7CA" font-size="13" font-family="Microsoft YaHei, sans-serif">酒</text>
+  <circle cx="548" cy="190" r="18" fill="#191A18" stroke="#84B89D" stroke-width="2"/>
+  <text x="548" y="196" text-anchor="middle" fill="#F3E7CA" font-size="13" font-family="Microsoft YaHei, sans-serif">商</text>
+  <circle cx="624" cy="252" r="14" fill="#191A18" stroke="#6A92C7" stroke-width="2"/>
+  <text x="624" y="257" text-anchor="middle" fill="#F3E7CA" font-size="12" font-family="Microsoft YaHei, sans-serif">洞</text>
+  <path d="M242 206C284 188 319 170 364 154C398 142 423 129 454 117C487 132 517 159 548 190C577 206 602 226 624 252" stroke="#D8B46A" stroke-dasharray="6 8" stroke-width="2" opacity=".7"/>
+  <text x="34" y="42" fill="#84B89D" font-size="18" font-family="Microsoft YaHei, sans-serif">青茅山势力节点</text>
+  <text x="34" y="70" fill="#9DAEA5" font-size="13" font-family="Microsoft YaHei, sans-serif">路线会随偷盗、警觉与缘线归属改变</text>
+</svg>

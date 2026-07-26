@@ -1,0 +1,30 @@
+# Dependencies
+node_modules/
+
+# Build and test output
+dist/
+coverage/
+test-results/
+playwright-report/
+
+# Local development state
+.superpowers/
+.vite-*.log
+*.log
+
+# Local environment and credentials
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+credentials.json
+
+# Generated review captures
+demo-*.png
+
+# Operating system and editor files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

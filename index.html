@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="青茅山开放世界像素角色扮演游戏原型"
+    />
+    <title>蛊真人：天外盗客</title>
+    <link rel="stylesheet" href="/src/styles.css" />
+  </head>
+  <body>
+    <main
+      id="game-root"
+      class="game-shell"
+      data-testid="game-root"
+      data-player-x="0"
+      data-player-y="0"
+    >
+      <section class="game-stage" aria-label="青茅山游戏画面">
+        <div id="game-canvas"></div>
+
+        <header class="hud">
+          <div class="brand">
+            <span class="brand-mark">盗</span>
+            <div>
+              <strong>天外盗客</strong>
+              <span data-testid="scene-name">青茅山</span>
+            </div>
+          </div>
+
+          <div class="clock" data-testid="clock">第一日 · 卯正</div>
+
+          <div class="resources" aria-label="角色状态">
+            <span><b>命</b><i data-hp>40/40</i></span>
+            <span><b>元</b><i data-essence>20/20</i></span>
+            <span><b>石</b><i data-stones>6</i></span>
+            <span class="alert"><b>警</b><i data-alert>8</i></span>
+          </div>
+
+          <nav class="system-actions" aria-label="系统操作">
+            <button type="button" data-quest-toggle title="查看当前机缘">缘</button>
+            <button type="button" data-save title="保存进度">存</button>
+            <button type="button" data-load title="读取进度">读</button>
+            <button type="button" data-reset title="重新开始">新</button>
+          </nav>
+        </header>
+
+        <aside class="quest-rail" data-quest-rail aria-label="当前线索">
+          <div class="quest-heading">
+            <span>当前机缘</span>
+            <strong>酒虫</strong>
+          </div>
+          <p data-quest-state data-testid="quest-state">
+            酒虫仍在客栈商贩手中
+          </p>
+          <ol data-quest-steps></ol>
+          <div class="fang-status">
+            <span>方源</span>
+            <strong data-fang-stance>尚未在意你</strong>
+          </div>
+        </aside>
+
+        <div class="interaction-prompt" data-prompt hidden>
+          <kbd>E</kbd>
+          <span data-prompt-label></span>
+        </div>
+
+        <section class="dialogue" data-dialogue hidden aria-live="polite">
+          <div class="speaker-seal" data-speaker-seal>客</div>
+          <div class="dialogue-copy">
+            <strong data-speaker></strong>
+            <p data-dialogue-text></p>
+          </div>
+          <div class="dialogue-choices" data-dialogue-choices></div>
+          <button
+            class="close-dialogue"
+            type="button"
+            data-close-dialogue
+            title="关闭"
+          >
+            ×
+          </button>
+        </section>
+
+        <section class="battle-panel" data-battle-panel hidden>
+          <div class="battle-readout" data-battle-status></div>
+          <div class="battle-actions" data-battle-actions></div>
+        </section>
+
+        <div class="toast" data-toast hidden></div>
+
+        <div class="test-controls" data-test-controls hidden>
+          <button type="button" data-advance-tick>推进一刻</button>
+        </div>
+
+        <div class="touch-controls" aria-label="触控方向键">
+          <button type="button" data-touch="up">↑</button>
+          <button type="button" data-touch="left">←</button>
+          <button type="button" data-touch="interact">E</button>
+          <button type="button" data-touch="right">→</button>
+          <button type="button" data-touch="down">↓</button>
+        </div>
+      </section>
+    </main>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
