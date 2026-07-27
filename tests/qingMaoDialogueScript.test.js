@@ -110,6 +110,23 @@ const q03Ids = [
   "D_Q03_JIA_FU_MISSED_01",
 ];
 
+const q04Ids = [
+  "D_Q04_HE_NIANG_01",
+  "D_Q04_UNCLE_01",
+  "D_Q04_AUNT_01",
+  "I_Q04_PARENT_LEDGER_01",
+  "I_Q04_CUSTODY_RECORD_01",
+  "D_Q04_MEDICINE_ELDER_01",
+  "D_Q04_JIANG_YA_01",
+  "D_Q04_HE_NIANG_02",
+  "I_Q04_NINE_LEAF_GRASS_01",
+  "D_Q04_UNCLE_RESULT_FAILED_01",
+  "D_Q04_UNCLE_RESULT_REFUSED_01",
+  "D_Q04_MEDICINE_ELDER_SETTLEMENT_01",
+  "D_Q04_JIANG_YA_SETTLEMENT_01",
+  "D_Q04_MEDICINE_ELDER_MISSED_01",
+];
+
 function readScript(file) {
   return readFileSync(`${scriptRoot}${file}`, "utf8");
 }
@@ -176,6 +193,14 @@ test("provides every Jia Jin Sheng route, investigation, and endpoint", () => {
   const ids = new Set(recordFiles.flatMap(parseRecords).map(({ id }) => id));
 
   for (const id of q03Ids) {
+    assert.equal(ids.has(id), true, `${id} must exist`);
+  }
+});
+
+test("provides every Nine Leaf ownership route and endpoint", () => {
+  const ids = new Set(recordFiles.flatMap(parseRecords).map(({ id }) => id));
+
+  for (const id of q04Ids) {
     assert.equal(ids.has(id), true, `${id} must exist`);
   }
 });
