@@ -127,6 +127,29 @@ const q04Ids = [
   "D_Q04_MEDICINE_ELDER_MISSED_01",
 ];
 
+const q05Ids = [
+  "D_Q05_QING_SHU_01",
+  "D_Q05_QING_SHU_DEPUTY_01",
+  "I_Q05_WOLF_ROUTE_01",
+  "D_Q05_SCOUT_SURVIVOR_01",
+  "I_Q05_ICE_TRACE_01",
+  "D_Q05_BAI_NING_BING_01",
+  "D_Q05_QING_SHU_02",
+  "D_Q05_QING_SHU_DEPUTY_02",
+  "D_Q05_MEDICINE_ELDER_01",
+  "D_Q05_ARMORY_KEEPER_01",
+  "I_Q05_RETREAT_MARKERS_01",
+  "D_Q05_QING_SHU_03",
+  "D_Q05_QING_SHU_DEPUTY_03",
+  "D_Q05_QING_SHU_RESULT_SAVED_01",
+  "D_Q05_QING_SHU_RESULT_COSTLY_01",
+  "D_Q05_QING_SHU_RESULT_REPLACED_01",
+  "D_Q05_QING_SHU_RESULT_WITHDREW_01",
+  "D_Q05_QING_SHU_DEPUTY_RESULT_DEAD_01",
+  "D_Q05_QING_SHU_RESULT_REFUSED_01",
+  "D_Q05_QING_SHU_DEPUTY_MISSED_01",
+];
+
 function readScript(file) {
   return readFileSync(`${scriptRoot}${file}`, "utf8");
 }
@@ -201,6 +224,14 @@ test("provides every Nine Leaf ownership route and endpoint", () => {
   const ids = new Set(recordFiles.flatMap(parseRecords).map(({ id }) => id));
 
   for (const id of q04Ids) {
+    assert.equal(ids.has(id), true, `${id} must exist`);
+  }
+});
+
+test("provides every Qing Shu evidence, preparation, decision, and endpoint", () => {
+  const ids = new Set(recordFiles.flatMap(parseRecords).map(({ id }) => id));
+
+  for (const id of q05Ids) {
     assert.equal(ids.has(id), true, `${id} must exist`);
   }
 });
