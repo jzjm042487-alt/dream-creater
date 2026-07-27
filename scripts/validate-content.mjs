@@ -5,7 +5,7 @@ import {
   loadRegistry,
   readJson,
   schemaPathForContent,
-  validateSchema,
+  validateContentValue,
   validateWildernessGraph
 } from "./contract-validator-core.mjs";
 
@@ -16,6 +16,7 @@ const selfTestInvalid = process.argv.includes("--self-test-invalid");
 const inputs = process.argv.slice(2).filter((arg) => arg !== "--self-test-invalid").map((file) => path.resolve(file));
 const files = inputs.length ? inputs : defaultContentFiles();
 const errors = [];
+let validatedCount = 0;
 
 if (selfTestInvalid) {
   const value = {
@@ -25,23 +26,43 @@ if (selfTestInvalid) {
     privateGoal: "Invalid",
     knownFacts: ["Invalid"],
     secrets: [],
-    relationshipBaseline: [],
+    relationshipBaseline: [
+      {
+        sourceCharacterId: "char_player",
+        targetCharacterId: "char_fang_yuan",
+        kind: "relation_rival",
+        value: 10
+      }
+    ],
     speechPattern: "Invalid",
     availableEmotions: ["emotion_neutral"]
   };
-  const schema = readJson(path.join(CONTRACTS, "character.schema.json"));
   errors.push(
-    ...validateSchema(value, schema, registry).map((error) => `temporary-invalid-character.json ${error}`)
+    ...validateContentValue(
+      value,
+      path.join(CONTRACTS, "character.schema.json"),
+      registry
+    ).map((error) => `temporary-invalid-character.json ${error}`)
   );
 } else {
   for (const file of files) {
+    if (!fs.existsSync(file)) {
+      errors.push(`${relative(file)} does not exist`);
+      continue;
+    }
+
     const schemaPath = schemaPathForContent(file);
-    if (!schemaPath) continue;
+    if (!schemaPath) {
+      errors.push(`${relative(file)} has no schema mapping`);
+      continue;
+    }
 
     try {
       const value = readJson(file);
-      const schema = readJson(schemaPath);
-      errors.push(...validateSchema(value, schema, registry).map((error) => `${relative(file)} ${error}`));
+      validatedCount += 1;
+      errors.push(
+        ...validateContentValue(value, schemaPath, registry).map((error) => `${relative(file)} ${error}`)
+      );
       if (path.basename(schemaPath) === "wilderness-map.schema.json") {
         errors.push(...validateWildernessGraph(value).map((error) => `${relative(file)} ${error}`));
       }
@@ -57,7 +78,7 @@ if (errors.length) {
   process.exit(1);
 }
 
-console.log(`Content validation passed (${files.length} file(s) checked).`);
+console.log(`Content validation passed (${validatedCount} file(s) validated).`);
 
 function defaultContentFiles() {
   const files = [];

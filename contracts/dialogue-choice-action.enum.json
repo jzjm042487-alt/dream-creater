@@ -1,0 +1,10 @@
+[
+  "nextNode",
+  "endDialogue",
+  "openMap",
+  "startBattle",
+  "openShop",
+  "openPanel",
+  "openOpportunity",
+  "applyEventDelta"
+]

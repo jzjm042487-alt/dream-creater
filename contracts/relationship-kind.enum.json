@@ -1,0 +1,11 @@
+[
+  "relation_blood_parent",
+  "relation_blood_child",
+  "relation_blood_sibling",
+  "relation_spouse",
+  "relation_extended_family",
+  "relation_friend",
+  "relation_mentor",
+  "relation_rival",
+  "relation_acquaintance"
+]

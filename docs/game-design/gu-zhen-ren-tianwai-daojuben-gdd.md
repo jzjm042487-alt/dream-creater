@@ -36,8 +36,9 @@ MVP 只运行以下玩家状态：
 - 力量、身法、感知、运气、意志、盗道熟练。
 - 有名称、可见效果和明确持续期的 Buff/Debuff。
 
-Buff/Debuff 的持续期只允许 `turn`、`scene`、`untilRest`。不创建跨章节的
-隐藏压力状态。
+Buff/Debuff 的持续期只允许 `turns`、`scene`、`untilRest`。每个实例保存
+类别专用 ID 与持续期；`turns` 还保存 `remainingTurns`。不创建跨章节的隐藏
+压力状态。
 
 ### 1.5 第一版内容量
 
@@ -413,7 +414,7 @@ finalChance = clamp(15, 95, rawChance)
 
 - `status`：`inactive`、`active` 或 `completed`。
 - `currentStepId`。
-- `nextStepId`，完成后为空。
+- `nextStepId`，完成后省略，禁止写 `null`。
 
 UI 只显示当前步骤、下一步骤和是否完成。每一步只有一个明确
 `completionTrigger`：
@@ -425,6 +426,9 @@ UI 只显示当前步骤、下一步骤和是否完成。每一步只有一个�
 5. 保存。
 
 不使用百分比、门槛列表或补救路线。到达最终步骤后直接显示离山路线选择。
+
+五条可选机缘统一使用 `inactive`、`available`、`contested`、`resolved`、
+`gone`。它们不是任务状态，不使用 `open` 或 `unknown`。
 
 ## 11. 人物关系
 
@@ -444,7 +448,10 @@ UI 只显示当前步骤、下一步骤和是否完成。每一步只有一个�
 - 最多三个简短选项。
 
 选项只能进入下一对白、结束对话、触发一个即时事件增量，或进入地图、
-战斗、商店。选项不显示行动点、概率公式、风险、锁形图标或二次确认。
+战斗、商店。数据动作使用 `nextNode`、`endDialogue`、`openMap`、
+`startBattle`、`openShop`、`openPanel`、`openOpportunity` 或
+`applyEventDelta`，并只携带匹配的注册目标。选项不显示行动点、概率公式、
+风险、锁形图标或二次确认。
 
 ## 13. UI
 
@@ -477,9 +484,12 @@ MVP 只保留以下面板：
 
 ### 14.2 活动分支
 
-新存档只运行精简系统所需字段。旧存档迁移完整保留原 payload，再添加精简
-活动分支和缺失默认值；保留的旧字段不会被活动系统读取、显示、更新或用于
-分支判断。
+新存档只运行精简系统所需字段。旧存档按现有 `{ state, journal }` 包装完整
+保留原 payload，再添加精简活动分支和缺失默认值；保留的旧字段不会被活动
+系统读取、显示、更新或用于分支判断。
+
+活动分支必须保存行囊数量、装备槽、配方、地点发现、五条机缘状态、人物存亡
+与位置。精确字段和迁移映射见 `contracts/game-state-v3.md`。
 
 ### 14.3 确定性
 
@@ -488,6 +498,7 @@ MVP 只保留以下面板：
 - 野外 `expeditionSeed` 与 `randomCursor`。
 - 偷盗 `theftSeed` 与 `theftRandomCursor`。
 - 当前战斗状态与固定 AI 顺序。
+- 行囊、装备、配方、地点、机缘与人物存亡。
 - 已结算战斗、探索、炼制和突破的唯一记录。
 
 读档不重复奖励、不重复结算，也不改变下一次随机结果。

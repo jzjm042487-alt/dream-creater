@@ -20,17 +20,24 @@
           "id": { "type": "string", "x-idRegistry": "dialogueNodes" },
           "speakerId": { "type": "string", "x-idRegistry": "characters" },
           "emotionId": { "type": "string", "x-idRegistry": "emotions" },
-          "questStateId": { "type": "string", "x-idRegistry": "questStates" },
+          "questStepId": { "type": "string", "x-idRegistry": "questSteps" },
           "text": { "type": "string", "minLength": 1 },
           "choices": {
             "type": "array",
+            "maxItems": 3,
             "items": {
               "type": "object",
               "additionalProperties": false,
-              "required": ["label", "nextNodeId"],
+              "required": ["label", "action"],
               "properties": {
                 "label": { "type": "string", "minLength": 1 },
+                "action": { "type": "string", "x-idRegistry": "dialogueChoiceActions" },
                 "nextNodeId": { "type": "string", "x-idRegistry": "dialogueNodes" },
+                "targetLocationId": { "type": "string", "x-idRegistry": "locations" },
+                "battleId": { "type": "string", "x-idRegistry": "battles" },
+                "shopId": { "type": "string", "x-idRegistry": "shops" },
+                "panelId": { "type": "string", "x-idRegistry": "panelIds" },
+                "opportunityId": { "type": "string", "x-idRegistry": "opportunities" },
                 "eventDeltaId": { "type": "string", "x-idRegistry": "eventDeltas" }
               }
             }

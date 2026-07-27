@@ -1,7 +1,6 @@
 {
-  "sourceCharacterId": "char_fang_yuan",
-  "targetCharacterId": "char_player",
-  "dimension": "relation_interest",
-  "value": 10,
-  "appliedEventDeltaIds": ["delta_hidden_cave_discovered"]
+  "sourceCharacterId": "char_player",
+  "targetCharacterId": "char_fang_yuan",
+  "kind": "relation_rival",
+  "note": "A descriptive roster connection, not an affinity meter."
 }

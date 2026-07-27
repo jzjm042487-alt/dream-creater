@@ -37,12 +37,12 @@
             "additionalProperties": false,
             "properties": {
               "discoverLocationId": { "type": "string", "x-idRegistry": "locations" },
-              "addInventoryItemId": { "type": "string", "pattern": "^[a-z0-9_-]+$" },
+              "addInventoryItemId": { "type": "string", "x-idRegistry": "items" },
               "stonesDelta": { "type": "integer", "minimum": -99, "maximum": 99 },
-              "relationshipDeltas": {
-                "type": "array",
-                "items": { "$ref": "relationship.schema.json" }
-              }
+              "cultivationDelta": { "type": "integer", "minimum": 0, "maximum": 100 },
+              "addBuff": { "$ref": "buff-instance.schema.json" },
+              "addDebuff": { "$ref": "debuff-instance.schema.json" },
+              "setQuestStepId": { "type": "string", "x-idRegistry": "questSteps" }
             }
           }
         }

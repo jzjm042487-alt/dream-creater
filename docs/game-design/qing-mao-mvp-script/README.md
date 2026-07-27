@@ -134,9 +134,13 @@ MVP 只制作五条：
 | Q04 | 九叶生机草 | 地图交互、偷盗或护草战斗 | 无 |
 | Q05 | 青书命运 | 一次救援战斗 | 无 |
 
-每条机缘只记录 `inactive`、`open` 或 `resolved`。
+每条机缘统一记录 `inactive`、`available`、`contested`、`resolved` 或
+`gone`。简单场景通常只经过 `inactive -> available -> resolved/gone`；
+只有实际出现两名争夺者时才进入 `contested`。
 
 `resolved` 只说明这条内容已经结算。
+
+这些值来自机缘枚举，不复用任务状态，不使用 `open` 或 `unknown`。
 
 机缘不会生成新的强制任务。
 

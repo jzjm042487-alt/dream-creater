@@ -35,14 +35,13 @@
       "id": "delta_boar_victory",
       "applyOnce": false,
       "effects": {
-        "relationshipDeltas": [
-          {
-            "sourceCharacterId": "char_fang_yuan",
-            "targetCharacterId": "char_player",
-            "dimension": "relation_interest",
-            "value": 2
-          }
-        ]
+        "cultivationDelta": 8,
+        "stonesDelta": 2,
+        "addInventoryItemId": "item_boar_tusk",
+        "addBuff": {
+          "id": "buff_danger_sense",
+          "duration": "scene"
+        }
       }
     }
   ]

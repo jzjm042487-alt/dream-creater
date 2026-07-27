@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://dream-creater.local/contracts/debuff-instance.schema.json",
+  "title": "Active Debuff Instance",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "duration"],
+  "properties": {
+    "id": { "type": "string", "x-idRegistry": "debuffIds" },
+    "duration": { "type": "string", "x-idRegistry": "statusDurations" },
+    "remainingTurns": { "type": "integer", "minimum": 1, "maximum": 99 }
+  }
+}

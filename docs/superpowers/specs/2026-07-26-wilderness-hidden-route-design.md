@@ -7,9 +7,10 @@ wilderness map for Qing Mao Mountain. The player sees only relative commands:
 `forward`, `back`, `left`, and `right`. The runtime resolves those commands
 against an absolute directed graph that is hidden from the UI.
 
-This spec is binding for Systems Wave 0. Runtime, narrative, art, and QA may
-reference these IDs and rules but may not invent new graph, dialogue, event, or
-formula IDs.
+This spec is the binding travel sub-contract of
+`2026-07-27-qing-mao-simplified-mvp-design.md`. Runtime, narrative, art, and QA
+may reference these IDs and rules but may not invent new graph, dialogue, event,
+or formula IDs.
 
 ## Direction Contract
 
@@ -59,6 +60,9 @@ Use these independent fields:
 - `routeSequence`: recent relative commands for hidden route matching.
 - `traversalHistory`: reversible history stack for backtracking.
 - `randomCursor`: persisted deterministic random cursor.
+
+These fields are local to the current wilderness expedition. They must not gate
+story steps, relationships, departure, or any global pressure system.
 
 Time charges occur immediately after a successful move and before event
 resolution. Charge exactly one tick when the new `wanderCount` is one of
@@ -113,9 +117,11 @@ Victory and escape from a wilderness battle return to the post-movement
 `randomCursor`, and triggered event IDs. They clear only `routeSequence` so the
 player cannot use battle reloads to splice a hidden route.
 
-Defeat follows existing battle defeat semantics: wake at the recovery location
-on the next day and end the current expedition. The expedition branch resets to
-the default entry node and facing, while permanent discoveries remain.
+Defeat follows the simplified battle contract: return to the battle entrance
+node, restore health to 30 percent, preserve inventory, Gu, stones, cultivation,
+and permanent discoveries, apply `debuff_wounded` until rest, and end the
+current expedition. The expedition branch resets to the default entry node and
+facing.
 
 ## Event Lifecycle
 
@@ -158,9 +164,11 @@ load must resolve the same random event it would have resolved before load.
 
 ## Future Gu Acquisition Handoff
 
-The wilderness graph may later hand an unowned low-rank wild Gu encounter to a
-dedicated tracking, luring, and capture minigame. That interaction is outside
-the Demo V2 wilderness implementation defined here.
+The wilderness graph may hand an unowned low-rank wild Gu encounter to the
+tracking, luring, and capture minigame defined in
+`2026-07-26-low-rank-gu-acquisition-and-care-design.md`. The wilderness
+resolver pauses, persists its post-movement state, opens the minigame, then
+returns to that same node after resolution.
 
 High-rank Gu are explicitly reserved. A future encounter may require combat or
 another suppression challenge before capture, but battle victory must not grant
@@ -197,7 +205,7 @@ Discovery conditions:
   `node_qm_moss_wall` with a route sequence suffix of
   `right,left,forward,left,forward`.
 - `loc_theft_cache`: arrive at `node_qm_theft_cache`, player has
-  `theftRank >= 1`, and route sequence suffix is
+  `mvp.player.attributes.theftMastery >= 20`, and route sequence suffix is
   `right,left,forward,left,forward,left`.
 
 ## Save Migration

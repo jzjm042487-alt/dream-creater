@@ -1,5 +1,9 @@
 # 群侠传式可玩 Demo Implementation Plan
 
+> **状态：已于 2026-07-27 废弃。** 本文只保留旧实施历史，不得继续执行。
+> 当前实施依据为 `2026-07-27-simplified-qing-mao-mvp.md`，产品规则依据为
+> `../specs/2026-07-27-qing-mao-simplified-mvp-design.md`。
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** 把现有地点按钮文字原型改造成一个复古像素风、可自由行走、拥有三条酒虫路线、回合制战斗和方源动态行动的浏览器 RPG Demo。

@@ -1,25 +1,57 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "id": "demo-v2-ids",
-  "version": 2,
+  "version": 3,
   "stableIds": {
     "characters": [
       "char_player",
       "char_fang_yuan",
+      "char_fang_zheng",
+      "char_gu_yue_mo_bei",
+      "char_gu_yue_chi_cheng",
+      "char_gu_yue_qing_shu",
+      "char_bai_ning_bing",
+      "char_jia_jin_sheng",
+      "char_jia_fu",
+      "char_tie_ruonan",
+      "char_tie_xue_leng",
       "char_wine_merchant",
       "char_tavern_clerk",
       "char_academy_elder"
     ],
-    "quests": ["quest_wine_worm"],
-    "questStates": [
-      "state_wine_unknown",
-      "state_wine_clerk_observed",
-      "state_wine_patrol_known",
-      "state_wine_jar_confirmed",
-      "state_wine_player_unhidden",
-      "state_wine_player_hidden",
-      "state_wine_player_refined",
-      "state_wine_fang_yuan_owned"
+    "quests": ["quest_main_qingmao"],
+    "questSteps": [
+      "D00-S01",
+      "D01-S01",
+      "D02-S01",
+      "D03-S01",
+      "D04-S01",
+      "D05-S01",
+      "D06-S01",
+      "D07-S01",
+      "D08-S01",
+      "D09-S01",
+      "D10-S01",
+      "D11-S01",
+      "D12-S01",
+      "D13-S01",
+      "D14-S01",
+      "D15-S01",
+      "D16-S01",
+      "D17-S01",
+      "D18-S01",
+      "D19-S01",
+      "D20-S01",
+      "D21-S01",
+      "D22-S01",
+      "D23-S01",
+      "D24-S01",
+      "D25-S01",
+      "D26-S01",
+      "D27-S01",
+      "D28-S01",
+      "D29-S01",
+      "D30-S01"
     ],
     "locations": [
       "loc_qingmao_wilderness",
@@ -52,12 +84,75 @@
       "emotion_alarmed",
       "emotion_wounded"
     ],
-    "relationshipDimensions": [
-      "relation_trust",
-      "relation_vigilance",
-      "relation_enmity",
-      "relation_debt",
-      "relation_interest"
+    "relationshipKinds": [
+      "relation_blood_parent",
+      "relation_blood_child",
+      "relation_blood_sibling",
+      "relation_spouse",
+      "relation_extended_family",
+      "relation_friend",
+      "relation_mentor",
+      "relation_rival",
+      "relation_acquaintance"
+    ],
+    "cultivationRanks": [
+      "rank_mortal",
+      "rank_one",
+      "rank_two",
+      "rank_three"
+    ],
+    "buffIds": [
+      "buff_training_focus",
+      "buff_danger_sense",
+      "buff_wine_worm_support"
+    ],
+    "debuffIds": [
+      "debuff_wounded",
+      "debuff_poisoned",
+      "debuff_suppressed"
+    ],
+    "items": [
+      "item_moon_orchid_petal",
+      "item_healing_medicine",
+      "item_wolf_pelt",
+      "item_earth_flower_powder",
+      "item_vitality_leaf",
+      "item_nine_leaf_vitality_grass",
+      "item_green_vine_talisman",
+      "item_mountain_material",
+      "item_field_supplies",
+      "item_stone_chip_material",
+      "item_boar_tusk"
+    ],
+    "recipes": [
+      "recipe_low_rank_healing"
+    ],
+    "opportunities": [
+      "opportunity_wine_worm",
+      "opportunity_flower_wine_inheritance",
+      "opportunity_merchant_goods",
+      "opportunity_nine_leaf_vitality",
+      "opportunity_qing_shu_fate"
+    ],
+    "battles": [
+      "B-D07-01",
+      "B-D10-01",
+      "B-D17-01",
+      "B-D19-01",
+      "B-D21-01",
+      "B-D24-01",
+      "B-D26-01",
+      "B-D27-01",
+      "B-D29-01",
+      "B-Q02-01",
+      "B-Q03-01",
+      "B-Q04-01",
+      "B-Q05-01"
+    ],
+    "shops": [
+      "shop_caravan",
+      "shop_supply_stall",
+      "shop_clan_pharmacy"
     ]
   },
   "systemIds": {
@@ -114,6 +209,29 @@
       "theftCache",
       "destination"
     ],
+    "questStatuses": ["inactive", "active", "completed"],
+    "opportunityStatuses": ["inactive", "available", "contested", "resolved", "gone"],
+    "statusDurations": ["turns", "scene", "untilRest"],
+    "dialogueChoiceActions": [
+      "nextNode",
+      "endDialogue",
+      "openMap",
+      "startBattle",
+      "openShop",
+      "openPanel",
+      "openOpportunity",
+      "applyEventDelta"
+    ],
+    "panelIds": [
+      "panel_character",
+      "panel_aperture",
+      "panel_inventory",
+      "panel_quest",
+      "panel_talent_roster",
+      "panel_canon_lookup"
+    ],
+    "characterLifeStatuses": ["alive", "wounded", "dead", "departed"],
+    "equipmentSlots": ["weapon", "armor", "artifact"],
     "guAbilityFamilies": ["gu_family_cultivation_support"],
     "guAbilityTags": [
       "combat_ranged_attack",
@@ -209,8 +327,45 @@
       "advance_wine_worm_to_four_flavors",
       "advance_white_boar_jade_skin_to_white_jade"
     ],
-    "permanentEffects": [
-      "strength_boar_1"
+    "permanentEffects": ["strength_boar_1"]
+  },
+  "legacyIds": {
+    "quests": [
+      "quest_wine_worm",
+      "quest_flower_wine_inheritance",
+      "quest_merchant_opportunity",
+      "quest_nine_leaf_vitality",
+      "quest_qing_shu_fate"
+    ],
+    "questSteps": [
+      "step_wine_find_lead",
+      "step_wine_reach_hiding_place",
+      "step_wine_resolve_opportunity"
+    ],
+    "questStates": [
+      "state_wine_unknown",
+      "state_wine_clerk_observed",
+      "state_wine_patrol_known",
+      "state_wine_jar_confirmed",
+      "state_wine_player_unhidden",
+      "state_wine_player_hidden",
+      "state_wine_player_refined",
+      "state_wine_fang_yuan_owned"
+    ],
+    "relationshipDimensions": [
+      "relation_trust",
+      "relation_vigilance",
+      "relation_enmity",
+      "relation_debt",
+      "relation_interest"
+    ],
+    "statusEffects": [
+      "buff_training_focus",
+      "buff_danger_sense",
+      "buff_wine_worm_support",
+      "debuff_wounded",
+      "debuff_poisoned",
+      "debuff_suppressed"
     ]
   }
 }
