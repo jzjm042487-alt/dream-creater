@@ -1,1864 +1,576 @@
-# Theft System Design
+# 偷盗系统设计
 
-## Status And Authority
+## 1. 状态与权限
 
-This document defines the original theft system from low-rank physical theft
-through the last pre-demigod tier. It is the authoritative Systems design input
-for a later contract and implementation plan.
+本文定义青茅山精简 MVP 的偷盗交互、成功率、结果结算、技能树、界面和
+存档要求。
 
-The design borrows only the progression idea that theft can grow from objects
-and deception into techniques and thoughts. It does not copy another work's
-sequence names, individual powers, advancement rituals, or setting rules.
+`docs/superpowers/specs/2026-07-27-qing-mao-simplified-mvp-design.md`
+是唯一产品规则源。本文只把总契约展开到可实现、可测试的程度，不建立
+第二套规则。
 
-The current runtime implements only a small deterministic physical-theft
-prototype. Its three-band formula and hard-coded actions are not authoritative
-where they conflict with this document.
+偷盗是玩家自身的技能体系：
 
-## Scope
+- 不要求装备蛊虫。
+- 不消耗或替代空窍负载。
+- 只在地图角色交互中发起。
+- 每次只选择一件物品。
+- 每次只有一次成功或失败判定。
+- 成功保存后，事件立即结束。
 
-This specification covers:
+蛊虫以后可以通过通用 Buff 改变玩家已经存在的属性，但不能开启另一套
+偷盗流程，也不能替代盗道熟练。
 
-- Theft during ordinary exploration, planned infiltration, and battle.
-- Money, documents, carried items, worn equipment, garments, and personal
-  effects.
-- A dedicated, non-explicit state for an adult character noticing that an
-  intimate garment was stolen.
-- Final item ownership and state changes on success, plus detection,
-  attribution, escape, evidence, and target adaptation only after failure.
-- A complete four-tier theft progression beginning at roughly the competence
-  level of a highly trained physical thief and ending before demigod powers.
-- Skill ranks, technique points, qualifying practice, tier trials, and
-  anti-grind rules.
-- Exact final-success, failure-detection, and failure-attribution formulas.
-- UI, portrait, emotion, schedule, quest, and battle handoffs.
-- Deterministic randomness and save requirements.
+## 2. 设计目标
 
-This specification does not grant:
+1. 偷盗主修角色从开局就有可靠、可持续的成功率。
+2. 玩家先看到可偷内容，再决定是否承担一次判定。
+3. 普通物品、装备、衣物和贴身物品使用同一公式。
+4. 成功就是完整结算，不附带事后系统。
+5. 失败只产生当前场景的即时反应。
+6. 技能成长来自新类别、挑战和剧情里程碑，不鼓励重复刷同一目标。
+7. 所有随机结果可保存、可复现，读档不能重掷。
 
-- Automatic ownership of a defeated target's Gu.
-- Theft from an aperture, soul, or otherwise inaccessible internal storage.
-- Permanent theft of identity, innate ability, lifespan, luck, fate, time,
-  causality, or rules.
-- Any demigod-tier ability.
-- Explicit nudity or sexualized presentation.
-- Intimate-garment interactions for a character who is not explicitly an
-  adult.
+## 3. 明确不做
 
-## Design Principles
+以下旧内容已经删除或本次明确不做：
 
-1. Theft is the protagonist's primary play style, so a valid, prepared attempt
-   usually succeeds.
-2. Success is final: the target transfers to the player, the theft interaction
-   closes, and the former holder cannot trace, pursue, or recover it through
-   that theft incident.
-3. Important theft is planned. Information, tools, Gu, timing, disguises, and
-   escape routes create the advantage.
-4. Detection, attribution, pursuit, evidence, heat, and anti-thief adaptation
-   are failure consequences only.
-5. Failure should create a new situation more often than it creates a dead end.
-6. Low-value repetition cannot advance the whole skill tree.
-7. Character cultivation limits the maximum target. Technique cannot ignore a
-   full power gap.
-8. Every removed equipped item changes the target state immediately.
-9. Emotional and quest consequences are authored from concrete item loss. A
-   generic embarrassment bonus must not replace stateful consequences.
-10. The player may see high-tier branches in the UI, but demigod branches remain
-   sealed and have no executable effect.
+- 已删除赃物、原主人、非法占有和所有权追踪。
+- 已删除证据、失主线索、追查、热度、嫁祸、洗白和后续归因。
+- 已删除失败后的跨场景警觉状态和目标长期适应。
+- 已删除战斗偷取、战斗中断条件、反应窗口和战后搜索偷取。
+- 不做偷取记忆、身份、命运、概念或规则。
+- 不做序列 4 半神及以上能力。
 
-## Core Terms
+## 4. 地图交互
 
-- **Success:** Atomically transfer the selected target to the player, apply all
-  declared missing-item or stolen-effect state, and close theft resolution.
-- **Failure:** Transfer nothing, then resolve whether the attempt was detected
-  and attributed.
-- **Evidence:** A fact created by a failed attempt that can connect the method
-  or player to that attempt.
-- **Action window:** A temporary target or scene state that makes a slot
-  accessible.
-- **Strong action window:** Sleep, unconsciousness, restraint, severe
-  distraction, isolation plus misdirection, or combat stagger.
-- **Qualifying use:** A skill use against sufficient security and a distinct
-  target that may count toward mastery.
-- **Technique point:** A non-repeatable advancement resource awarded by authored
-  theft milestones.
-- **Theft tier:** The protagonist's conceptual theft progression. It is
-  independent from Gu Master cultivation.
+### 4.1 发起条件
 
-## Theft Actions And Support Actions
+“偷盗”按钮同时满足以下条件时出现：
 
-Only a final-success target action uses the success formula and transfers an
-item or bounded payload:
+- 玩家与目标处于同一地图。
+- 玩家进入目标的交互距离。
+- 目标配置至少一条当前可偷物品。
+- 本次地图访问尚未对该目标尝试。
+- 当前不在战斗、对话过场或其他锁定交互中。
 
-- `theft_skill_pick_pocket`
-- `theft_skill_unfasten`
-- `theft_skill_strip_garment`
-- `theft_skill_combat_sleight`
-- `theft_skill_steal_momentum`
-- `theft_skill_intercept_technique`
-- `theft_skill_take_effect`
-- `theft_skill_borrow_technique`
-- `theft_skill_take_intent`
-- `theft_skill_take_recent_memory`
-- `theft_skill_take_dream_clue`
-- `theft_skill_take_attention`
-- `theft_skill_induce_misrecognition`
+交互距离使用地图已有的角色靠近判定，不建立偷盗专属距离模型。
 
-These are support actions or riders and never make an independent final-success
-roll:
+### 4.2 唯一流程
 
-- Read Opening, Misdirect, Conceal Goods, Break Ward, Mask Presence, Forge
-  Credential, and similar preparation skills modify eligibility or the final
-  success formula.
-- Talk Out, Escape, False Trail, and Frame Target resolve only inside a detected
-  failed-attempt consequence.
-- Swap Decoy is selected before a physical theft; on success it atomically
-  consumes the prepared decoy and places it in the vacated slot.
-- Break Tracking is selected as a rider on a marked physical theft; its essence
-  is included in the pre-roll cost, its strain is included in the post-resolution
-  strain total, it makes the declared mark eligible, and success removes that
-  mark during transfer.
-- Leave False Thought is selected only as a rider on Take Intent; its essence
-  is included in the pre-roll cost, its strain is included in the
-  post-resolution strain total, and on success it consumes the stolen intent
-  payload while applying the chosen replacement thought. The combined attempt
-  uses `targetPenalty = 25`.
+完整流程只有五步：
 
-A support skill earns qualifying use only when its declared support objective
-commits. It cannot award a separate stolen item, success milestone, or random
-reroll.
+1. 玩家在地图上靠近角色。
+2. 选择“偷盗”。
+3. 查看该角色当前可偷物品。
+4. 选择一件物品。
+5. 进行一次成功或失败判定，并在地图交互层显示结果。
 
-For an action plus any riders, eligibility and the success penalty use
-`mentalStrain` at attempt start. Sum and deduct all essence before the roll.
-Sum all listed strain but add that combined strain only after success or failure
-resolves.
+玩家打开清单或关闭清单不消耗尝试资格。只有确认一件合法物品后才提交
+判定。提交后无论成功或失败，都消耗本次地图访问对该目标的尝试资格。
 
-## Two-Axis Power Model
+### 4.3 地图访问限制
 
-Theft power uses two independent axes.
+每名目标每次地图访问只能尝试一次。离开并重新进入地图后，目标可以再次
+尝试。
 
-### Theft Technique
+该限制只保存在当前地图会话的 `attemptedTargetIds` 中：
 
-The theft tier and individual skill ranks determine:
+- 不跨地图。
+- 不跨章节。
+- 不改变目标长期状态。
+- 不阻挡主线。
 
-- Which theft actions are visible.
-- Which item slots can be targeted.
-- How accurately the player reads risk.
-- How well the player creates action windows.
-- How safely a failed attempt avoids evidence and pursuit.
-- Whether the player can intercept temporary states, techniques, or thoughts.
+保存发生在判定结算后。若保存位于判定前，读档得到相同的下一随机结果；
+若保存位于判定后，读档恢复已经消耗的本次尝试。
 
-### Cultivation And Gu
+## 5. 可偷物品
 
-Cultivation and compatible Gu determine:
+### 5.1 类别
 
-- The maximum target cultivation difference.
-- Whether a seal, sensory defense, Gu effect, or tracking mark can be opposed.
-- The amount of essence available for supernatural theft.
-- The duration and storage limit of intercepted effects.
-- Resistance to backlash.
+目标清单可以包含：
 
-A character can be an expert thief and still be unable to affect a much
-stronger target directly.
+| 类别 | `itemClass` | 例子 |
+| --- | --- | --- |
+| 普通物品 | `ordinary` | 药物、钥匙、材料、小袋元石 |
+| 装备 | `equipment` | 武器、防具、法器 |
+| 外衣 | `outerwear` | 披风、外袍、腰带 |
+| 成年角色贴身物品 | `closeWorn` | 只写抽象物品名与表现标签 |
+| 固定物品 | `secured` | 被封装、系牢或特别收好的实体物品 |
 
-### Rank-Gap Rules
+蛊材属于普通物品。已经炼化并寄居空窍的蛊虫不是地图偷盗清单中的实体
+物品。
 
-For comparison, Gu ranks are ordered first and initial, middle, upper, and peak
-stages are ordered `0` through `3` inside a rank. `minorStageDelta` is used only
-when both characters have the same Gu rank.
+### 5.2 条目结构
 
-| Target difference | Success penalty | Failure-detection rank-gap | Failed-evidence strength | Physical access |
-| --- | ---: | ---: | ---: | --- |
-| Lower rank or same rank at an equal/lower stage | 0 | 0 | +0 | All otherwise accessible external slots |
-| Same rank, one or two minor stages higher | 5 | 5 | +5 | All otherwise accessible external slots |
-| Same rank, three minor stages higher | 10 | 10 | +5 | Exposed external slots during a strong action window |
-| Exactly one full Gu rank higher | 25 | 15 | +10 | Exposed external slots during a strong action window |
-| Two or more full Gu ranks higher | Blocked | N/A | N/A | No direct body theft |
-| Immortal, soul-bound, aperture-bound, or rule-protected | Blocked | N/A | N/A | No direct theft |
+每条可偷物品至少声明：
 
-On failure, the evidence modifier is added to every evidence record produced by
-the attempt before clamping that record to `0..50`. A successful theft produces
-no traceable evidence.
-
-Non-physical effect-interception and thought skills are stricter than physical
-theft:
-
-- An equal/lower target follows the skill's normal rule.
-- A target one or two minor stages higher requires that skill at rank 3 and an
-  explicit prepared action or mental window; essence cost increases by 2 and
-  evidence strength increases by 10.
-- A target three minor stages higher or one full rank higher is blocked.
-- A skill-specific limit may be stricter, but never looser.
-
-The UI must explain a blocked attempt instead of displaying a misleading low
-percentage.
-
-## Theft Progression
-
-`Liangshang Hand` is a pre-game apprentice tier. The protagonist begins at
-`Shadow Thief`, roughly the desired low-sequence competence reference.
-
-| Design ID | Display name | Reference pace | Minimum cultivation | Maximum domain |
-| --- | --- | --- | --- | --- |
-| `theft_tier_apprentice` | 梁上手 | Pre-game | None | Loose unattended items |
-| `theft_tier_shadow_thief` | 暗线贼 | Low sequence | Rank One | Physical items, garments, deception |
-| `theft_tier_wardbreaker` | 破禁客 | Next low sequence | Rank One middle stage | Locks, seals, credentials, evidence |
-| `theft_tier_technique_interceptor` | 截术师 | Mid sequence | Rank Two initial stage | Prepared actions and temporary effects |
-| `theft_tier_thought_thief` | 窃念使 | Last pre-demigod | Rank Three initial stage | Current intent, attention, recent memory |
-| `theft_tier_demigod_sealed` | 越界之门 | Sealed | Not defined | No executable abilities |
-
-The game must not translate these tiers into a claim of cross-setting combat
-equivalence.
-
-## Skill Rank Rules
-
-Every skill has rank `0` through `3`.
-
-| Rank | Meaning |
-| --- | --- |
-| `0` | Locked |
-| `1` | Learned; base action available |
-| `2` | Reliable; wider targets or lower risk |
-| `3` | Mastered; special application unlocked |
-
-Rank progression is:
-
-- `0 -> 1`: current theft tier unlocked and spend one technique point.
-- `1 -> 2`: three qualifying uses across at least two target IDs, then spend one
-  technique point.
-- `2 -> 3`: five qualifying uses across at least three target IDs, complete the
-  skill's mastery challenge, then spend two technique points.
-
-Every owned rank has one persisted `skillRankLedger[skillId][rank]` record:
-
-```text
-source: starting_grant | purchased | scripted_grant
-sourceId: start | purchaseEventId | milestoneId
-refundablePoints: 0 | 1 | 2
+```js
+{
+  stealableEntryId,
+  itemId,
+  itemClass,
+  quantity,
+  requiredTheftTier,
+  availabilityCondition,
+  onSuccessPresentation,
+  onFailurePresentation,
+  onSuccessEffectId,
+  onFailureBattleEncounterId
+}
 ```
 
-A normal purchase records source `purchased` and its exact rank cost. Starting
-ranks record `starting_grant` and zero refundable points.
+约束：
 
-A scripted reward may grant a specific rank only with an idempotent milestone
-ID. For every newly covered rank, record `scripted_grant` and zero refundable
-points. If that rank was already purchased, atomically convert its ledger record
-to the scripted grant and immediately refund its recorded points. An existing
-starting or scripted grant is unchanged. Reapplying the milestone changes
-nothing.
+- `quantity` 必须为正整数。
+- `requiredTheftTier` 只控制能否选择，不改变成功率公式。
+- `availabilityCondition` 只读取当前场景已经可见的事实。
+- `onSuccessEffectId` 只能应用即时 Buff/Debuff 或场景表现。
+- `onFailureBattleEncounterId` 可为空；非空时失败立即进入普通战斗。
+- 一个清单条目成功后即从目标当前清单移除。
 
-A mastery challenge is attempted while the skill is rank 2. It must be
-completable with rank-2 effects plus ordinary tools, Gu, allies, and
-reconnaissance; it cannot require the rank-3 effect it unlocks.
+### 5.3 成年角色边界
 
-All skills in an unlocked tier may be learned at rank 1 without a cross-skill
-prerequisite. Technique-point spending has no free or mid-scene undo; the
-controlled retraining rule below is the only respec.
+只有明确标记为成年人的角色可以配置 `closeWorn`。该类条目必须：
 
-### Starting Skills
+- 使用抽象、非露骨的物品名称。
+- 不展示裸体或具体隐私部位。
+- 提供缺失衣物后的安全立绘标签。
+- 不要求地图 Q 版角色切换外观。
 
-The protagonist starts with:
+未成年人、年龄未知角色和未提供安全差分的角色不得配置该类别。
 
-| Skill | Rank |
-| --- | ---: |
-| `theft_skill_read_opening` | 2 |
-| `theft_skill_pick_pocket` | 2 |
-| `theft_skill_unfasten` | 1 |
-| `theft_skill_strip_garment` | 1 |
-| `theft_skill_misdirect` | 1 |
-| `theft_skill_talk_out` | 1 |
-| `theft_skill_conceal_goods` | 1 |
-| `theft_skill_escape` | 1 |
+## 6. 成功率
 
-Starting competence is intentionally high enough that theft feels like the
-protagonist's defining ability. A new game starts with zero unspent technique
-points and zero mental strain; the listed ranks are `starting_grant` records and
-cost no points.
+### 6.1 输入
 
-## Shadow Thief Skills
+成功率只读取：
 
-### `theft_skill_read_opening` - 察隙
+- 玩家 `luck`。
+- 玩家 `theftMastery`。
+- 玩家和目标的境界序号。
+- 所选物品的 `itemClass`。
 
-| Rank | Effect |
-| --- | --- |
-| 1 | Reveal visible item categories and broad risk: safe, risky, or blocked. |
-| 2 | Reveal accessible slots, current action windows, approximate final-success/failure-detection bands, and whether an unexplained decoy or tracking anomaly may exist. |
-| 3 | Reveal exact numeric modifiers, decoy suspicion, tracking marks, and remaining window duration. |
+境界序号：凡人 `0`、一转 `1`、二转 `2`、三转 `3`。
 
-Mastery challenge: use the rank-2 anomaly warning plus external reconnaissance
-to identify a decoy and a tracking mark in one planned theft, then leave both
-untouched.
+### 6.2 唯一公式
 
-### `theft_skill_pick_pocket` - 探囊
-
-| Rank | Effect |
-| --- | --- |
-| 1 | Target one loose small item in a pocket, pouch, sleeve, or bag. |
-| 2 | Target a concealed pocket or fastened pouch; reduce its item penalty by 5. |
-| 3 | Take two tiny items in one action or one small item without increasing witness exposure. |
-
-Mastery challenge: take two mission-relevant small items from two alert targets
-within one planned heist and resolve both thefts successfully.
-
-### `theft_skill_unfasten` - 解佩
-
-| Rank | Effect |
-| --- | --- |
-| 1 | Target an exposed accessory, token, purse, pendant, or keepsake. |
-| 2 | Target a fastened accessory or concealed waist item; reduce item penalty by 5. |
-| 3 | Remove a marked mundane accessory or low-rank talisman; if acquisition fails, detection chance is reduced by 10. |
-
-Mastery challenge: successfully remove a worn key token from an alert same-rank
-target and use it to pass an access check.
-
-### `theft_skill_strip_garment` - 褪装
-
-| Rank | Effect |
-| --- | --- |
-| 1 | Target an outer garment during a strong action window. |
-| 2 | Target a uniform, cloak, footwear, or an adult character's intimate garment during a strong action window. |
-| 3 | Target one fastened external armor or garment layer; reduce garment item penalty by 10. |
-
-This skill never removes the target's protected base-coverage layer.
-
-Mastery challenge: steal a key worn garment, use its resulting disguise or
-schedule disruption to complete an objective.
-
-### `theft_skill_misdirect` - 引目
-
-| Rank | Effect |
-| --- | --- |
-| 1 | Once per target per scene, create a short distraction worth `windowBonus = 10`. |
-| 2 | The bonus becomes 15 and may redirect one ordinary witness. |
-| 3 | The bonus becomes 20; choose the false direction or false object that receives attention. |
-
-Mastery challenge: create a distraction that opens a theft window and an escape
-route without spending money or starting combat.
-
-### `theft_skill_talk_out` - 伪辞
-
-| Rank | Effect |
-| --- | --- |
-| 1 | Conditional attribution chance is reduced by 10 after verbal suspicion. |
-| 2 | Reduction becomes 20; one named suspicion may become general uncertainty. |
-| 3 | Reduction becomes 30; confirmed attribution is delayed by one time segment unless hard evidence exists. |
-
-The skill cannot contradict a trusted eyewitness, a validated technique trace,
-or a theft tool found in the player's hand during a failed attempt.
-
-Mastery challenge: escape a direct accusation while leaving the accuser
-uncertain and without framing an innocent third party.
-
-### `theft_skill_conceal_goods` - 藏赃
-
-| Rank | Effect |
-| --- | --- |
-| 1 | Prepare a concealed carry slot; physical acquisition gains +5. |
-| 2 | The bonus becomes +10; if acquisition fails, detection chance is reduced by 10. |
-| 3 | The bonus becomes +15; on success the item may be routed directly to the player's safe stash. |
-
-The acquisition bonus is part of `preparationBonus` and does not raise its
-15-point cap.
-
-Mastery challenge: complete a planned theft whose pre-resolution route includes
-a body search, using concealed carry to pass the search and finish successfully.
-
-### `theft_skill_escape` - 脱身
-
-| Rank | Effect |
-| --- | --- |
-| 1 | After a detected failed attempt, gain one movement unit in the escape scene or one escape preparation token. |
-| 2 | Ignore the first ordinary pursuit-zone penalty caused by that failure. |
-| 3 | Choose between two authored exit routes and retain one unused preparation tool while escaping. |
-
-Mastery challenge: escape a multi-zone pursuit caused by a failed theft attempt
-with no ally left captured.
-
-## Wardbreaker Skills
-
-### `theft_skill_swap_decoy` - 调包
-
-| Rank | Effect |
-| --- | --- |
-| 1 | Replace an item with a same-size decoy; discovery is delayed until normal inspection. |
-| 2 | Reproduce appearance and weight closely enough for one casual use. |
-| 3 | Reproduce mundane marks or packaging; routine inspection does not reveal the swap. |
-
-The skill cannot reproduce a Gu, soul mark, bloodline response, or unique
-supernatural effect.
-
-Mastery challenge: complete a key-item swap that survives one casual use and is
-exposed only by the later routine inspection.
-
-### `theft_skill_break_ward` - 破禁
-
-| Rank | Effect |
-| --- | --- |
-| 1 | Open mundane locks and mechanical restraints. |
-| 2 | Suppress one same-rank seal, alarm, or simple Gu formation for one action. |
-| 3 | Resolve two layered same-rank protections in one planned theft. |
-
-Mastery challenge: enter and exit a protected storehouse without destroying the
-lock, seal, or contents.
-
-### `theft_skill_mask_presence` - 匿息
-
-| Rank | Effect |
-| --- | --- |
-| 1 | Immediate detection chance is reduced by 10. |
-| 2 | Reduction becomes 20 and applies to ordinary scent. |
-| 3 | Reduction becomes 30 and applies to one same-rank supernatural sense. |
-
-Mastery challenge: cross a guarded area using two different sensory defenses
-without disabling either guard permanently.
-
-### `theft_skill_false_trail` - 假迹
-
-| Rank | Effect |
-| --- | --- |
-| 1 | Attribution chance is reduced by 10 through a false exit trace. |
-| 2 | Reduction becomes 20 and one search team takes the wrong route. |
-| 3 | Reduction becomes 30 and the false route persists for one time segment. |
-
-Mastery challenge: redirect a pursuit while keeping an uninvolved civilian out
-of danger.
-
-### `theft_skill_forge_credential` - 假证
-
-| Rank | Effect |
-| --- | --- |
-| 1 | Create a temporary mundane pass or copied signature. |
-| 2 | Pass one routine identity checkpoint. |
-| 3 | Support one mission route until a close acquaintance, bloodline test, or supernatural inspection occurs. |
-
-Mastery challenge: enter and act inside a faction location using a credential
-created from stolen evidence, then leave through a route that needs no second
-identity checkpoint.
-
-### `theft_skill_frame_target` - 嫁祸
-
-| Rank | Effect |
-| --- | --- |
-| 1 | Add a plausible alternative suspect to the investigation. |
-| 2 | Attach one supporting evidence token to that suspect. |
-| 3 | Redirect initial faction suspicion, but only while the fabricated evidence remains credible. |
-
-Disproved framing adds double heat and a long-lived method signature to the
-player.
-
-Mastery challenge: frame a hostile actor using truthful evidence of their own
-misconduct, then survive the later review.
-
-## Technique Interceptor Skills
-
-All skills in this tier consume essence and require a compatible theft Gu
-function. A content item supplies functional tags such as `perception`,
-`interception`, `storage`, or `concealment`; this design does not invent final
-Gu names before the canon catalog is available.
-
-### `theft_skill_combat_sleight` - 战中妙手
-
-| Rank | Effect |
-| --- | --- |
-| 1 | Target one exposed small item on an adjacent staggered, restrained, or distracted same-rank enemy. |
-| 2 | Target a fastened external item or a target up to two minor stages higher. |
-| 3 | Target one key external item on a target one full rank higher during a strong authored window. |
-
-On success, item ownership is final even if the surrounding battle continues.
-
-Mastery challenge: take a key item successfully in battle and use the resulting
-state change to leave rather than defeat the owner.
-
-### `theft_skill_steal_momentum` - 偷势
-
-| Rank | Effect |
-| --- | --- |
-| 1 | Remove one prepared ordinary action from a same-rank target; gain one initiative token. |
-| 2 | Hold the initiative token for two rounds or transfer it to an ally. |
-| 3 | Affect a target up to two minor stages higher during an exposed preparation. |
-
-Mastery challenge: steal an enemy's prepared action and use the gained
-initiative to complete a non-damage objective.
-
-### `theft_skill_intercept_technique` - 截术
-
-| Rank | Effect |
-| --- | --- |
-| 1 | Interrupt one visible same-rank Gu activation; the target retains the Gu. |
-| 2 | Store an echo for one round if the player owns a compatible Gu function. |
-| 3 | Affect a target up to two minor stages higher; stored echo lasts two rounds. |
-
-The player cannot reproduce an incompatible Gu ability.
-
-Mastery challenge: interrupt three distinct Gu functions and safely discharge
-or use each echo.
-
-### `theft_skill_take_effect` - 夺效
-
-| Rank | Effect |
-| --- | --- |
-| 1 | Transfer one ordinary short-lived buff or recovery tick from a same-rank target. |
-| 2 | Transfer a same-rank protection effect for one round. |
-| 3 | Transfer one exposed effect from a target up to two minor stages higher; backlash applies after expiry. |
-
-Mastery challenge: take a protective effect, use it to survive one incoming
-attack, and complete the original theft objective successfully.
-
-### `theft_skill_borrow_technique` - 借技
-
-| Rank | Effect |
-| --- | --- |
-| 1 | Borrow one observed mundane skill at novice quality for one scene. |
-| 2 | Borrow it at the target's demonstrated quality, capped by the player's physical limits. |
-| 3 | Borrow one compatible same-rank Gu activation pattern for one use; a compatible owned Gu is mandatory. |
-
-Mastery challenge: finish a mission using a borrowed non-theft technique, then
-return to the player's normal skill set without permanent gain.
-
-### `theft_skill_break_tracking` - 断追
-
-| Rank | Effect |
-| --- | --- |
-| 1 | Make an item with one mundane tracking mark eligible for the attempt. |
-| 2 | Make an item with one same-rank aura or scent mark eligible for the attempt. |
-| 3 | Make one non-soul-bound tracking connection up to two minor stages higher eligible. |
-
-Mastery challenge: make a marked item eligible by suppressing its tracking
-connection, then steal it successfully without destroying it.
-
-At every rank, final success removes the eligible mark as part of ownership
-transfer. Failure leaves it intact.
-
-## Thought Thief Skills
-
-Thought theft affects current mental activity, not permanent identity. Every use
-adds mental strain. A failed detected use creates psychic evidence. It is
-blocked against targets three minor stages higher or any full Gu rank higher.
-
-### `theft_skill_take_intent` - 窃念
-
-| Rank | Effect |
-| --- | --- |
-| 1 | Read and remove the target's strongest immediate intention for one round. |
-| 2 | Hold the intention as a clue for one scene; target suffers brief hesitation. |
-| 3 | Affect a target up to two minor stages higher during a prepared mental window. |
-
-Mastery challenge: verify a stolen intention through later world behavior
-without confronting the target.
-
-### `theft_skill_take_recent_memory` - 摘忆
-
-| Rank | Effect |
-| --- | --- |
-| 1 | Obtain one sensory fragment from the last few minutes. |
-| 2 | Obtain one coherent recent event fragment, excluding deep secrets not present in current thought. |
-| 3 | Select one of two recent-event categories during a prepared attempt. |
-
-Mastery challenge: reconstruct a true event from three fragments and detect one
-misleading interpretation.
-
-### `theft_skill_take_dream_clue` - 偷梦
-
-| Rank | Effect |
-| --- | --- |
-| 1 | Extract one image or emotion from a sleeping adult target's current dream. |
-| 2 | Extract one symbolic clue and distinguish memory from fantasy. |
-| 3 | Take one actionable clue while leaving the dream continuity intact. |
-
-Mastery challenge: solve a mission lead from a dream clue without treating a
-symbolic image as literal fact.
-
-### `theft_skill_take_attention` - 夺目
-
-| Rank | Effect |
-| --- | --- |
-| 1 | Remove attention from one object for one action. |
-| 2 | Remove attention from one small zone for one round. |
-| 3 | Redirect the stolen attention to a chosen plausible stimulus. |
-
-Mastery challenge: pass a guarded checkpoint by moving attention rather than
-disabling or harming the guard.
-
-### `theft_skill_induce_misrecognition` - 错认
-
-| Rank | Effect |
-| --- | --- |
-| 1 | Cause a brief mistake about one similar object. |
-| 2 | Cause a brief mistake about direction or action source. |
-| 3 | Cause a familiar target to misrecognize one prepared external role until contradictory evidence appears. |
-
-This does not steal identity or alter records.
-
-Mastery challenge: complete a guarded movement objective by causing a temporary
-direction or action-source misrecognition, then leave before hard evidence
-breaks it.
-
-### `theft_skill_leave_false_thought` - 伪念
-
-| Rank | Effect |
-| --- | --- |
-| 1 | Fill the removed intention with a simple neutral explanation. |
-| 2 | Plant a plausible short-term explanation based on observed facts. |
-| 3 | Delay recognition of the mental gap for one time segment. |
-
-This cannot compel an action, rewrite values, or create lasting loyalty.
-
-Mastery challenge: replace a stolen plan with a false explanation that the
-target later rejects through their own reasoning.
-
-## Mastery Challenge IDs
-
-Every prose mastery challenge above has one stable design ID. Content and saves
-must store the ID, not derive it from display text.
-
-| Skill ID | Mastery challenge ID |
-| --- | --- |
-| `theft_skill_read_opening` | `mastery_theft_read_opening` |
-| `theft_skill_pick_pocket` | `mastery_theft_pick_pocket` |
-| `theft_skill_unfasten` | `mastery_theft_unfasten` |
-| `theft_skill_strip_garment` | `mastery_theft_strip_garment` |
-| `theft_skill_misdirect` | `mastery_theft_misdirect` |
-| `theft_skill_talk_out` | `mastery_theft_talk_out` |
-| `theft_skill_conceal_goods` | `mastery_theft_conceal_goods` |
-| `theft_skill_escape` | `mastery_theft_escape` |
-| `theft_skill_swap_decoy` | `mastery_theft_swap_decoy` |
-| `theft_skill_break_ward` | `mastery_theft_break_ward` |
-| `theft_skill_mask_presence` | `mastery_theft_mask_presence` |
-| `theft_skill_false_trail` | `mastery_theft_false_trail` |
-| `theft_skill_forge_credential` | `mastery_theft_forge_credential` |
-| `theft_skill_frame_target` | `mastery_theft_frame_target` |
-| `theft_skill_combat_sleight` | `mastery_theft_combat_sleight` |
-| `theft_skill_steal_momentum` | `mastery_theft_steal_momentum` |
-| `theft_skill_intercept_technique` | `mastery_theft_intercept_technique` |
-| `theft_skill_take_effect` | `mastery_theft_take_effect` |
-| `theft_skill_borrow_technique` | `mastery_theft_borrow_technique` |
-| `theft_skill_break_tracking` | `mastery_theft_break_tracking` |
-| `theft_skill_take_intent` | `mastery_theft_take_intent` |
-| `theft_skill_take_recent_memory` | `mastery_theft_take_recent_memory` |
-| `theft_skill_take_dream_clue` | `mastery_theft_take_dream_clue` |
-| `theft_skill_take_attention` | `mastery_theft_take_attention` |
-| `theft_skill_induce_misrecognition` | `mastery_theft_induce_misrecognition` |
-| `theft_skill_leave_false_thought` | `mastery_theft_leave_false_thought` |
-
-## Gu Functions, Essence, And Mental Strain
-
-Shadow Thief and Wardbreaker actions cost no essence unless the player activates
-a Gu bonus. An activated supporting Gu declares a cost from `1..4` essence and
-only one acquisition Gu plus one concealment Gu may contribute to one attempt.
-
-Technique Interceptor and Thought Thief actions require the following functional
-tags. These are system tags, not final Gu names.
-
-| Skill | Required Gu function tag(s) | Base essence | Mental strain |
-| --- | --- | ---: | ---: |
-| `theft_skill_combat_sleight` | `perception` or `interception` | 3 | 0 |
-| `theft_skill_steal_momentum` | `interception` | 4 | 5 |
-| `theft_skill_intercept_technique` | `perception`, `interception` | 5 | 10 |
-| `theft_skill_take_effect` | `interception`, `storage` | 5 | 10 |
-| `theft_skill_borrow_technique` | `perception`, `storage` | 6 | 10 |
-| `theft_skill_break_tracking` | `concealment` | 4 | 5 |
-| `theft_skill_take_intent` | `perception`, `storage` | 5 | 15 |
-| `theft_skill_take_recent_memory` | `perception`, `storage` | 6 | 20 |
-| `theft_skill_take_dream_clue` | `perception` | 4 | 15 |
-| `theft_skill_take_attention` | `interception` | 5 | 15 |
-| `theft_skill_induce_misrecognition` | `concealment`, `interception` | 6 | 20 |
-| `theft_skill_leave_false_thought` | `concealment`, `storage` | 7 | 25 |
-
-A comma means all listed tags are required. One Gu may supply multiple tags.
-The `or` entry requires either tag. A one- or two-minor-stage-higher target adds
-2 essence as defined by the rank-gap rule.
-
-Eligibility is checked before spending. Once an eligible action commits, its
-action-plus-rider essence total is deducted before any roll and is not refunded
-on failure. The formula reads starting strain. Action-plus-rider strain is added
-after the action resolves, whether it succeeds or fails, and is clamped to
-`0..100`.
-
-`mentalStrain` has deterministic thresholds:
-
-| Starting strain | Effect on Technique Interceptor and Thought Thief actions |
-| --- | --- |
-| 0-39 | No modifier |
-| 40-69 | Final success `-5`; failed detected use creates psychic or technique evidence `+5` |
-| 70-89 | Final success `-15`; failed detected use creates related evidence `+15`; rank-3 variants disabled; apply `state_mental_backlash` |
-| 90-100 | New supernatural theft actions are blocked |
-
-Crossing into `70..89` applies `state_mental_backlash` once for that crossing.
-The state clears only after strain falls below 70. Full sleep removes 20 strain;
-an authored uninterrupted meditation action costs one time point and removes 10.
-Ordinary travel, save/load, and battle end do not remove strain.
-
-## Technique Points And Anti-Grind
-
-Technique points are awarded only by unique milestone IDs.
-
-| Milestone type | Points |
-| --- | ---: |
-| First completion of a new theft category or optional heist objective | 1 |
-| Authored key heist or difficult evidence resolution | 2 |
-| Theft-tier promotion trial | 3 |
-
-Rules:
-
-- A milestone is idempotent for the whole save.
-- Target content declares `securityRating` from `0..3`. Practice for a skill at
-  rank 1 requires security at least 1; practice for a skill at rank 2 requires
-  security at least 2.
-- The same target, item category, and method combination grants qualifying
-  practice at most once per game day. The ledger key is
-  `gameDay + targetId + itemCategory + skillId`.
-- Routine theft may provide money or information after the practice cap, but no
-  technique points.
-- Failure may count as practice only when the player reaches execution and
-  survives the consequence. It never completes a mastery challenge unless the
-  challenge explicitly says so.
-- Content must declare milestone and mastery-challenge IDs; runtime must not
-  infer them from item value.
-
-A content release that claims to support a tier must expose at least this many
-new, mutually compatible technique points before its next cap:
-
-| Supported progression | Newly obtainable points | Purpose |
-| --- | ---: | --- |
-| Shadow Thief promotion | 4 | Minimum named rank-2 gate |
-| Wardbreaker promotion | 13 | 16-point gate minus 3 points from prior trial |
-| Technique Interceptor promotion | 15 | 18-point gate minus 3 points from prior trial |
-| Full Thought Thief mastery | 21 | 24 points to master six skills minus 3 points from prior trial |
-
-Optional routes may provide more. Mutually exclusive quest branches cannot be
-counted twice toward the minimum.
-
-### Controlled Retraining
-
-At a safe location, while no pursuit or tier trial is active, the player may
-spend two world time points and five primeval stones to start one retraining
-transaction. The transaction may lower any number of skills and refunds the
-exact points previously spent on those removed ranks.
-
-- For each skill, find the highest `starting_grant` or `scripted_grant` rank.
-  Retraining cannot lower that skill below this grant floor.
-- Only contiguous `purchased` ranks above the grant floor may be removed.
-  Refund the sum of their persisted `refundablePoints`, then delete those rank
-  records.
-- A rank used by an active heist loadout cannot be lowered.
-- Qualifying-use counts above the new rank are cleared; completed mastery IDs
-  remain historical but do not bypass the use-count requirement when buying the
-  rank again.
-- A completed tier trial and unlocked tier never relock. Promotion gates are
-  achievements checked at trial start, not a permanent loadout requirement.
-- The cost, rank changes, cleared counters, and point refund commit atomically.
-
-## Theft-Tier Promotion Gates
-
-### Shadow Thief To Wardbreaker
-
-All conditions are required:
-
-1. `gate_stw_cultivation`: reach at least Rank One middle stage.
-2. `gate_stw_core_skills`: raise `read_opening`, `pick_pocket`,
-   `conceal_goods`, and `misdirect` to rank 2.
-3. `gate_stw_support_skills`: raise any two other Shadow Thief skills to rank 2.
-4. `gate_stw_worn_item`: steal one worn item from an alert same-rank target.
-5. `gate_stw_infiltration`: complete one patrolled infiltration successfully.
-6. `gate_stw_stolen_access`: use a successfully stolen key, token, or garment
-   to pass an access check.
-7. `gate_stw_failure_evidence`: escape one detected failed attempt and resolve
-   its evidence chain.
-8. `gate_stw_gu_functions`: own or have access to Gu supplying the `perception`
-   and `concealment` function tags.
-9. `gate_stw_trial`: complete `trial_theft_break_the_closed_room`.
-
-### Wardbreaker To Technique Interceptor
-
-All conditions are required:
-
-1. `gate_wti_cultivation`: reach at least Rank Two initial stage.
-2. `gate_wti_core_skills`: raise `break_ward`, `swap_decoy`, and
-   `mask_presence` to rank 3.
-3. `gate_wti_support_skills`: raise any two other Wardbreaker skills to rank 2.
-4. `gate_wti_rank_gap_item`: take one key exposed item from a target one full Gu
-   rank higher without obtaining it from post-battle loot.
-5. `gate_wti_stolen_route`: use a stolen uniform, credential, or token to
-   complete a mission route.
-6. `gate_wti_defense_categories`: defeat physical-lock, active-guard, and
-   Gu-ward defenses.
-7. `gate_wti_failed_pursuit`: escape a multi-zone pursuit caused by a failed
-   attempt.
-8. `gate_wti_gu_functions`: own or have access to `perception`,
-   `interception`, and `storage` Gu functions.
-9. `gate_wti_trial`: complete `trial_theft_intercept_the_opportunity`.
-
-### Technique Interceptor To Thought Thief
-
-All conditions are required:
-
-1. `gate_itt_cultivation`: reach at least Rank Three initial stage.
-2. `gate_itt_core_skills`: raise `intercept_technique`, `steal_momentum`, and
-   `break_tracking` to rank 3.
-3. `gate_itt_support_skills`: raise any three other Technique Interceptor skills
-   to rank 2.
-4. `gate_itt_distinct_functions`: interrupt three distinct Gu functions from
-   distinct target IDs.
-5. `gate_itt_taken_effect`: take and survive one temporary effect from a
-   same-rank or higher-minor-stage target.
-6. `gate_itt_information_reward`: complete one key theft whose reward is
-   information rather than a physical item.
-7. `gate_itt_reconstruct_intent`: reconstruct one target's intended action from
-   at least three independently stolen physical or information clues and verify
-   it against later world behavior.
-8. `gate_itt_backlash`: suffer and resolve one mental-backlash state.
-9. `gate_itt_trial`: complete `trial_theft_take_the_unacted_plan`.
-
-### Promotion Trial Resolution
-
-A promotion condition ID is added to `completedPromotionConditionIds` when its
-condition first commits. Conditions are latched achievements. Once all eight
-non-trial IDs for a gate are present, add that trial ID to
-`availableTierTrialIds`. Availability persists even after controlled retraining
-or later stat changes. Trial completion adds its ninth gate ID and removes its
-trial ID from the available list.
-
-Common rules:
-
-1. Starting a trial reads
-   `ordinal = tierTrialAttemptCounterById[trialId] ?? 0`, creates
-   `trialAttemptId = "trial-attempt:" + trialId + ":" + ordinal`, increments
-   that persisted counter, and consumes its authored entry cost.
-2. The trial uses normal injury, item, essence, strain, time, and failed-attempt
-   consequence rules. Failure is not rolled back.
-3. Saving and loading resumes the same attempt and random cursor.
-4. Abandonment and failure set
-   `tierTrialCooldownById[trialId] = currentGameDay + 1`; retry is enabled when
-   `currentGameDay >= storedDay`. The player keeps their current tier.
-5. Success atomically records the trial ID, unlocks the next tier, and awards
-   exactly three technique points.
-6. Repeating a completed trial grants no points, practice, or milestone.
-
-`trial_theft_break_the_closed_room`:
-
-- Setup: a designated ledger is inside a mundane locked room with one patrol,
-  one witness route, and two discoverable entry routes.
-- Required play: perform reconnaissance, enter without defeating a guard,
-  acquire the ledger, and leave through a route different from the entry route.
-- Success: the final ledger theft resolves successfully with no civilian injury;
-  ownership transfers and the trial closes immediately.
-- Failure: capture, abandonment, a failed final theft resolution, or defeating a
-  guard to bypass the theft problem.
-
-`trial_theft_intercept_the_opportunity`:
-
-- Setup: a target exactly one Gu rank higher carries an exposed key item behind
-  a mundane checkpoint and one same-rank Gu ward.
-- Required play: pass the checkpoint with a stolen or forged credential,
-  suppress rather than destroy the ward, create a strong action window, and
-  choose a valid exit before committing the final theft.
-- Success: the final key-item theft resolves successfully; ownership transfers,
-  no pursuit is created, and the trial closes immediately.
-- Failure: abandonment, destruction of the ward, failed theft resolution, or
-  obtaining the item only as post-battle loot.
-
-`trial_theft_take_the_unacted_plan`:
-
-- Setup: three officers hold separate timing, route, and objective fragments;
-  one officer prepares the action that commits the plan.
-- Required play: steal all three fragments, use `steal_momentum` or
-  `intercept_technique` on the prepared action, and choose the true objective
-  before the plan executes.
-- Success: identify the objective, prevent or exploit the plan through a
-  non-lethal successful theft route; the trial closes immediately.
-- Failure: choose a false objective, let the plan execute, obtain the answer
-  through ordinary dialogue, or defeat the officers and loot the fragments.
-
-### Demigod Gate
-
-The `theft_tier_demigod_sealed` node is visible but permanently disabled in this
-design. It has no advancement conditions, skills, formula modifiers, content
-hooks, or save transition. A future approved specification must define it from
-zero.
-
-## Item And Equipment Contract
-
-Every content-authored definition, instance, target, opportunity, action, skill,
-gate, trial, and event ID used by theft must match:
+以下公式与总契约逐字一致，任何技能、内容或界面都不得增加第二个加成项：
 
 ```text
-^[a-z][a-z0-9_]{0,63}$
+rankGap = targetRankIndex - playerRankIndex
+luckBonus = round((luck - 50) * 0.20)
+masteryBonus = round((theftMastery - 50) * 0.35)
+rankModifier =
+  rankGap > 0 ? -10 * rankGap
+              : 5 * min(-rankGap, 2)
+
+itemPenalty:
+  ordinary = 0
+  equipment = 5
+  outerwear = 8
+  closeWorn = 10
+  secured = 15
+
+rawChance = 65 + luckBonus + masteryBonus + rankModifier - itemPenalty
+finalChance = clamp(15, 95, rawChance)
 ```
 
-Colon, comma, square brackets, plus, and byte `0x1f` are reserved for
-runtime-constructed IDs and cannot occur in a content-authored component ID.
-Constructed IDs below are not revalidated against the 64-character component
-limit.
+所有运算使用整数。`round` 为四舍五入。
 
-Every stealable item needs:
+### 6.3 边界值
 
-- Stable item-definition ID and item-instance ID.
-- A constructed `successResolutionId`: `"unique:" + itemInstanceId` for a
-  unique item, or
-  `"renewable:" + opportunityId + ":" + spawnCycleOrdinal` for a renewable
-  stack. `spawnCycleOrdinal` is a persisted unsigned integer.
-- Display name.
-- Original owner character or faction ID.
-- Current holder and location.
-- Equipment slot.
-- Size and attachment difficulty.
-- Visibility and concealment.
-- Mundane and supernatural marks.
-- Whether it is external, aperture-bound, soul-bound, or otherwise blocked.
-- Whether it is unique, replaceable, a decoy, or a quest key.
-- Failed-attempt evidence profile.
-- Atomic `onSuccessfulTheft` and later `onReplaced` effects.
+- 同境界、运气 `50`、盗道熟练 `50`、普通物品为 `65%`。
+- 任意合法目标最低仍有 `15%`。
+- 最高成功率为 `95%`。
+- 境界比目标低一阶时，`rankModifier = -10`。
+- 境界比目标低两阶时，`rankModifier = -20`。
+- 境界比目标高一阶时，`rankModifier = +5`。
+- 境界比目标高两阶或更多时，`rankModifier = +10`。
 
-### Equipment Slots
+技能树对成功率的成长统一体现在 `theftMastery`。装备、外衣和贴身物品解锁
+后直接使用表内惩罚，不再附加位置、层数、目标姿态或衣物数量等隐性项。
 
-Required design slots are:
+### 6.4 合法性检查
 
-- `slot_outerwear`
-- `slot_uniform`
-- `slot_armor`
-- `slot_waist`
-- `slot_footwear`
-- `slot_accessory`
-- `slot_weapon`
-- `slot_pouch`
-- `slot_external_gu_container`
-- `slot_keepsake`
-- `slot_intimate_garment`
-- `slot_base_coverage`
+以下任一条件不满足时，不进行随机判定，也不推进随机游标：
 
-`slot_base_coverage` is never stealable or removable.
-`slot_external_gu_container` may contain only an unrefined, unowned, sealed, or
-otherwise externally carried Gu that content explicitly marks stealable. A
-refined Gu inside an aperture remains blocked.
+- 目标仍在交互距离内。
+- 条目仍存在且可用。
+- 玩家技能层级满足 `requiredTheftTier`。
+- 本次地图访问尚未对目标提交。
+- 目标和玩家境界序号可解析。
+- `itemClass` 是公式列出的五类之一。
 
-### Attachment Penalties
+## 7. 确定性随机
 
-| Item state | Item penalty |
-| --- | ---: |
-| Loose unattended item | 0 |
-| Pocket or open pouch | 5 |
-| Concealed pocket or closed pouch | 10 |
-| Exposed accessory or outer garment | 15 |
-| Fastened accessory, uniform, or footwear | 20 |
-| Fastened armor layer | 25 |
-| Adult intimate garment | 30 |
-| Aperture-bound, soul-bound, or protected base coverage | Attempt blocked |
+### 7.1 存档字段
 
-Content may add up to 10 additional difficulty for a unique construction but
-must not exceed the rank-gap rules.
+偷盗随机只使用：
 
-### Two-Item Pick Pocket
+- `theftSeed`。
+- `theftRandomCursor`。
 
-Pick Pocket rank 3 may create one composite target with exactly two items.
+确认合法物品后：
 
-- Both items must be `tiny`, have the same holder, be available in the same
-  action window, and be individually eligible.
-- Validate capacity for both items, both uncompleted `successResolutionId`
-  values, and every ordinary item restriction before charging cost.
-- Sort the two item-instance IDs by ASCII code point and encode
-  `itemOrEffectId = "composite[" + id1 + "," + id2 + "]"`.
-- Sort the two component success IDs the same way and encode
-  `successResolutionId = "multi[" + successId1 + "," + successId2 + "]"`.
-- Because component IDs exclude comma and square brackets, both composite
-  encodings are injective and can be parsed without ambiguity.
-- `targetPenalty = min(30, max(componentTargetPenalty) + 5)`.
-- `detectionAttachment = min(25, max(componentDetectionAttachment) + 5)`.
-- Use the holder's one guard/rank-gap value and one set of preparation/Gu
-  bonuses.
-- Make one final-success roll. Success transfers both items and records the
-  composite plus both component success IDs atomically; failure transfers
-  neither and makes only one failure-detection chain.
+1. 使用 `theftSeed` 和当前 `theftRandomCursor` 取得下一随机值。
+2. 立即将 `theftRandomCursor` 增加 `1`。
+3. 用该随机值与 `finalChance` 进行唯一一次比较。
+4. 将游标和结果放入同一原子结算。
 
-There is no partial two-item result. Any duplicate, capacity failure, or
-ineligible component blocks the composite attempt before cost.
+无效提交、打开清单、关闭清单和查看概率都不推进游标。
 
-## Bounded Payload Contract
+### 7.2 不重掷
 
-A non-item final-success action atomically applies one source mutation and
-creates one player-owned bounded payload. The source mutation is an effect of
-success, not evidence and not a path back to the player.
+读取判定前的存档会得到相同随机值和相同结果。读取判定后的存档直接恢复
+已结算状态，不再次比较、不重复转移物品。
 
-Every payload stores:
+实现必须使用项目统一的确定性随机函数，不得调用无种子的
+`Math.random()`。
 
-- `payloadInstanceId = "payload:" + theftAttemptId + ":" + payloadTypeId`
-- `payloadTypeId`
-- `ownerId = "player"`
-- `sourceTargetId`
-- `sourceMutationId`
-- `createdByTheftAttemptId`
-- `remainingUses`
-- `expiresAtRound`, `expiresAtScene`, or `permanentClue = true`
-- One exact content fragment or compatible Gu-function payload
+## 8. 原子结算
 
-| Final-success target | Payload type ID | Source mutation ID | Player-owned bound |
+### 8.1 成功
+
+成功按以下顺序一次提交：
+
+1. 消耗本次地图访问对该目标的尝试资格。
+2. 从目标当前可偷清单移除所选条目。
+3. 将物品作为普通物品加入玩家行囊。
+4. 若是外衣或贴身物品，写入直接展示标签。
+5. 若条目声明即时 Buff/Debuff，应用该效果。
+6. 显示成功结果。
+7. 保存。
+
+第 7 步完成后事件结束。之后不创建失主、物品性质或事后流程。
+
+若任一步骤失败，整个事务回滚：条目仍在目标清单，玩家不获得物品，尝试
+资格和随机游标都不推进。
+
+### 8.2 失败
+
+失败按以下顺序一次提交：
+
+1. 消耗本次地图访问对该目标的尝试资格。
+2. 不转移物品。
+3. 播放目标的即时反应气泡或当前场景立绘。
+4. 显示失败结果。
+5. 保存。
+6. 若场景明确配置战斗：玩家拥有无形手且本次免战尚未使用时，可以消耗
+   免战并返回地图；否则进入对应普通战斗。
+
+失败不创建跨场景状态。没有配置战斗时，反馈关闭后玩家立即返回地图。
+
+### 8.3 物品唯一性
+
+同一 `stealableEntryId` 只能成功结算一次。存档中的已结算条目再次提交时
+直接返回已有结果，不再次增加物品数量，也不推进随机游标。
+
+## 9. 衣物与情绪表现
+
+### 9.1 直接标签
+
+角色服装状态只使用：
+
+- `portrait_normal`。
+- `portrait_outerwear_missing`。
+- `portrait_close_worn_missing`。
+
+成功取得外衣或贴身物品后，角色立刻切换到对应立绘标签。若两种状态都
+存在，内容必须指定优先级；默认 `portrait_close_worn_missing` 优先。
+
+### 9.2 情绪
+
+内容作者可以同时添加一个直接情绪标签：
+
+- `embarrassed`。
+- `angry`。
+- `guarded`。
+
+标签只选择当前对话头像、短台词和动画，不保存数值心情。若关键衣物条目
+声明 `debuff_suppressed`，它只按 `scene` 或 `untilRest` 的通用持续期影响
+当前场景或下一场战斗。
+
+### 9.3 地图表现
+
+地图 Q 版角色继续使用基础行走图，不随外衣、贴身物品或情绪标签换图。
+所有差分只发生在成年角色的大立绘、对话头像和即时反馈层。
+
+## 10. 盗道成长
+
+### 10.1 成长资源
+
+盗道使用两项已有数据：
+
+- `theftMastery`：`0..100` 的成功率属性。
+- 盗道技能点：解锁层内节点与晋升。
+
+推荐的偷盗主修初始值为 `theftMastery = 50`，因此同境界普通物品基准为
+`65%`。具体新游戏初值由角色配置写入，不由公式暗中补足。
+
+技能点和熟练只来自首次内容：
+
+| 来源 | 盗道熟练 | 技能点 |
+| --- | ---: | ---: |
+| 首次成功取得一种新 `itemClass` | `+5` | `+1` |
+| 首次完成一个明确偷盗挑战 | `+10` | `+1` |
+| 完成一个盗道剧情里程碑 | `+10` | `+1` |
+
+同一角色、同一物品类别的重复成功不再提供熟练或技能点。每个来源用稳定 ID
+只结算一次。`theftMastery` 到达 `100` 后不再增加。
+
+### 10.2 层级总览
+
+技能树完整设计到约序列 5 的半神前层级：
+
+| 近似层级 | 名称 | 核心能力 | MVP |
 | --- | --- | --- | --- |
-| Prepared action / momentum | `payload_stolen_initiative` | `mutation_prepared_action_removed` | One initiative use; expires after one round, or two rounds at skill rank 2+ |
-| Visible Gu activation | `payload_intercepted_activation` | `mutation_activation_cancelled` | Rank 1 is consumed immediately by the cancel; rank 2 stores one echo for one round; rank 3 for two rounds |
-| Temporary effect | `payload_stolen_effect` | `mutation_effect_removed` | Rank 1: one immediate tick; rank 2: one round; rank 3: `min(originalRemainingRounds, 2)` rounds; never permanent |
-| Observed technique | `payload_borrowed_technique` | `mutation_technique_exposed` | Mundane technique for one scene, or one compatible Gu-pattern use at rank 3; source cannot repeat that exact technique for one action |
-| Current intent | `payload_stolen_intent` | `mutation_intent_gap` | One authored intent clue for one scene; source lacks that intent for one round |
-| Recent memory fragment | `payload_memory_fragment` | `mutation_recent_memory_gap` | One permanent journal clue; source cannot recall that fragment for one scene |
-| Dream image or emotion | `payload_dream_fragment` | `mutation_dream_fragment_faded` | One permanent journal clue; the source dream bridges over the removed fragment |
-| Attention | `payload_stolen_attention` | `mutation_attention_gap` | One action at rank 1, one round at rank 2+, then expires |
-| Recognition | `payload_recognition_mask` | `mutation_recognition_shifted` | Prepared external role until contradictory evidence or scene end |
+| 序列 8 | 摸索者 | 查看清单并取得普通物品 | 实现 |
+| 序列 7 | 巧手 | 解锁装备与外衣 | 实现 |
+| 序列 6 | 无形手 | 解锁成年角色贴身物品 | 实现 |
+| 序列 5 | 藏锋盗客 | 解锁配置为 `secured` 的实体物品 | 只设计接口 |
 
-Payload creation and source mutation are all-or-nothing. Expiry, consumption, or
-natural restoration of a bounded source mutation is not recovery of a stolen
-item and cannot create attribution. A payload cannot be sold, duplicated,
-refreshed by save/load, or converted into a permanent ability unless a later
-approved contract explicitly allows it.
+每层包含一个自动获得的核心能力和两个各需 `1` 技能点的层内节点。晋升必须
+先购买当前层两个节点，再满足下一层条件。晋升本身不额外消耗技能点。
 
-A permanent journal-clue payload is written to the existing clue ledger and
-then marked consumed; all other unexpired payloads remain in
-`activeTheftPayloads`.
+### 10.3 序列 8：摸索者
 
-Leave False Thought is a rider rather than a payload row: it consumes
-`payload_stolen_intent` in the same success transaction and changes the source
-mutation to `mutation_intent_replaced_by_false_thought` for its rank-defined
-duration.
+核心能力：
 
-## Adult Intimate-Garment Boundary
+- 靠近角色后显示“偷盗”。
+- 查看目标当前可偷的 `ordinary` 条目。
+- 选择一件并使用唯一成功率公式。
 
-An intimate-garment slot exists only when:
+层内节点：
 
-- `settings.allowAdultIntimateTheft === true`. This player-controlled setting
-  defaults to `false` in every new or migrated save.
-- `character.isAdult === true`.
-- The character content explicitly allows the slot.
-- A protected base-coverage visual exists.
-- The required emotion, portrait, dialogue, quest, combat, and fallback states
-  exist.
+1. `识物`：清单显示物品类别、数量和最终成功率。
+2. `稳手`：购买时永久增加 `theftMastery +5`，仍只通过公式中的
+   `masteryBonus` 生效。
 
-If any condition is absent, the slot is not targetable and is not shown.
-The slot is never a combat-theft target. External clothing, armor, accessories,
-and pouches remain valid combat targets when their ordinary access rules are
-met.
+晋升巧手的条件：
 
-The dedicated successful-loss state is:
+- 已购买 `识物` 与 `稳手`。
+- `theftMastery >= 55`。
+- 已首次成功取得一件 `ordinary`。
+- 已完成一个摸索者挑战或盗道剧情里程碑。
 
-- Design emotion ID: `emotion_embarrassed_intimate_theft`
-- Portrait state: `portrait_intimate_item_stolen_embarrassed`
-- Sprite state: `sprite_base_coverage`
-- Schedule state: `schedule_seek_cover_or_replacement`
-- Dialogue state: `dialogue_state_intimate_theft_embarrassed`
-- Quest state: `quest_state_target_missing_intimate_item`
-- Combat state: `combat_state_embarrassed_intimate_theft`
+### 10.4 序列 7：巧手
 
-On successful theft, the target's missing-item state and reaction apply
-immediately in the same transaction:
+核心能力：
 
-- Apply `composure -= 20` once for that missing item.
-- Apply `vigilance += 15` once for that missing item.
-- Current ordinary schedule is interrupted.
-- Public dialogue is restricted until cover or replacement is found.
-- The authored quest may gain an infiltration, distraction, negotiation, or
-  combat-advantage route.
-- If combat begins before replacement, the combat state lasts two rounds:
-  initiative order is reduced by 1 and accuracy by 10 percentage points.
-- After cover or replacement is found, emotion transitions according to
-  authored personality; it does not remain generically embarrassed forever.
+- 解锁 `equipment` 和 `outerwear`。
+- 两类物品分别使用公式中的 `5` 与 `8` 点惩罚。
+- 不再叠加附着位置、衣物层数或目标姿态惩罚。
 
-Clamp composure to `-30..30` and vigilance to `0..100` after applying the
-deltas.
+层内节点：
 
-The `successResolutionId` is added to `completedSuccessfulTheftIds`; ownership
-and every missing-item delta above are idempotent. The target reacts to the
-missing item but receives no information that can identify, trace, pursue, or
-recover it from the player.
+1. `解佩`：清单显示装备与佩挂物的抽象位置提示。
+2. `褪装`：外衣成功后立即应用对应成年角色立绘和一个直接情绪标签。
 
-The +15 vigilance is emotional presentation only. It cannot modify theft slot
-visibility, access, `targetGuard`, success chance, failure detection,
-attribution, evidence, heat, or target adaptation.
+晋升无形手的条件：
 
-The Settings UI exposes `allowAdultIntimateTheft` as a toggle. Turning it off
-after a prior success does not restore ownership or rewind world state; it hides
-future intimate targets and uses the protected base-coverage plus generic
-missing-garment fallback instead of the dedicated portrait/dialogue.
+- 已购买 `解佩` 与 `褪装`。
+- `theftMastery >= 65`。
+- 已分别首次成功取得一件 `equipment` 和一件 `outerwear`。
+- 已完成巧手挑战“连续两次不同目标成功”，次数可以跨地图，不要求连胜。
 
-This state is presented as a consequential theft and not as explicit sexual
-content.
+“降低物品惩罚”的最终实现就是只采用总契约表内惩罚，不增加旧版二次
+惩罚；不得在唯一公式之外再减常数。
 
-## Theft Contexts
+### 10.5 序列 6：无形手
 
-### Opportunistic Theft
+核心能力：
 
-Use for pockets, loose objects, exposed tokens, and simple distractions.
+- 解锁成年角色的 `closeWorn`。
+- 该类物品固定使用公式中的 `10` 点惩罚。
+- 若当前场景配置“失败立即开战”，每次地图访问可取消一次开战；偷盗仍然
+  失败、物品不转移、尝试资格照常消耗。
 
-- One inspect action.
-- One target action.
-- One final success check. On success, transfer and close immediately.
-- Detection and attribution are checked only after failure. A pursuit board may
-  open only from that failed-attempt branch.
+层内节点：
 
-### Planned Infiltration
+1. `贴身辨位`：只对符合成年角色边界的条目显示抽象位置与安全预览。
+2. `无声收手`：购买时永久增加 `theftMastery +5`；不提供重掷。
 
-Use for guarded rooms, stores, key garments, faction records, Gu materials, and
-other authored objectives.
+晋升藏锋盗客的条件：
 
-Required phases:
+- 已购买 `贴身辨位` 与 `无声收手`。
+- `theftMastery >= 80`。
+- 已首次成功取得一件 `closeWorn`。
+- 已完成两个不同偷盗挑战。
+- 已完成一个明确的盗道剧情里程碑。
 
-1. Reconnaissance.
-2. Preparation loadout.
-3. Entry.
-4. Access the target and choose a valid exit.
-5. Commit the final theft-and-exit resolution.
-6. Close on success, or resolve failed-attempt consequences.
+MVP 实现到本层为止。
 
-Each phase commits state atomically. Steps 1 through 4 are preparation and never
-display "theft succeeded." Success exists only at step 5 and ends the theft
-interaction.
+### 10.6 序列 5：藏锋盗客
 
-### Combat Theft
+本层属于半神前的后续设计，不在 MVP 启用。
 
-Use only for an external item or temporary state exposed during battle.
+核心能力：
 
-- The target must be staggered, restrained, distracted, preparing a technique,
-  or affected by another explicit action window.
-- Physical item theft requires adjacency. No pre-demigod skill in this design
-  permits remote physical acquisition.
-- A successful physical theft transfers final ownership immediately. The target
-  cannot recover it even if the surrounding battle continues.
-- Victory does not automatically grant every carried item.
-- A later battle defeat does not reverse a completed successful theft.
-- A failed combat theft transfers nothing and may change the enemy's battle
-  behavior according to the failure result.
+- 解锁内容明确配置的 `secured` 实体物品。
+- 该类物品固定使用公式中的 `15` 点惩罚。
+- 仍然只能选择一件、判定一次、取得一次。
 
-### Post-Battle Search
+层内节点：
 
-Post-battle search is ordinary loot or recovery, not a theft skill use. It
-awards no theft practice, milestone, or mastery progress.
+1. `观藏`：在目标清单中显示已经由内容作者配置的固定物品，不揭示不存在
+   的隐藏内容。
+2. `破封取物`：允许确认 `secured` 条目；购买时永久增加
+   `theftMastery +5`。
 
-### Time And Turn Costs
+本层不允许偷取空窍内蛊虫、技能、记忆、身份或抽象对象，也不改变成功或
+失败的结算顺序。
 
-| Committed action | Cost |
-| --- | --- |
-| Open/close inspect or loadout UI | 0 world time |
-| Opportunistic theft attempt | 1 world time point |
-| Planned reconnaissance action | 1 world time point |
-| Choose preparation loadout | 0 world time |
-| Planned entry phase | 1 world time point |
-| Planned access and exit preparation phase | 1 world time point |
-| Planned final theft-and-exit resolution | 1 world time point |
-| Combat theft | 1 battle action and the listed essence; 0 additional world time |
-| Post-battle search | Included in battle settlement; 0 additional world time |
+### 10.7 半神边界
 
-Each cost is charged exactly once when its phase commits, including a failed
-eligible phase. Rejected or blocked input costs nothing. A chase or follow-up
-dialogue created by failure uses its own ordinary action costs; opening it does
-not add a hidden theft surcharge. Battle settlement remains the only source of
-persistent world time for the battle as a whole.
+序列 4 及以上既不实现，也不设计技能节点、升级条件和数值。后续若开启，
+必须另立规则契约，不能从本技能树自动外推。
 
-## Action Windows
+## 11. 挑战设计
 
-| Window | Modifier | Strength |
-| --- | ---: | --- |
-| Item unattended | +20 | Strong |
-| Target asleep or unconscious | +20 | Strong |
-| Target restrained | +20 | Strong |
-| Target severely distracted | +15 | Strong |
-| Target isolated plus successful misdirection | +15 plus skill bonus | Strong |
-| Target casually distracted | +10 | Ordinary |
-| Target in conversation with another character | +5 | Ordinary |
-| Combat stagger | +10 | Strong for exposed combat items |
-| Target alert with no distraction | 0 | Ordinary |
-| Target actively guarding the item | -25 | Not strong |
+挑战是一次性、可明确验证的技巧目标。MVP 建议只使用以下三类：
 
-An adult intimate garment requires `strip_garment >= 2` and a strong action
-window.
+- 在同一剧情步骤中成功取得两种不同 `itemClass`。
+- 从高一境界的目标取得一件合法物品。
+- 在不触发场景战斗的情况下取得一件外衣或贴身物品。
 
-## Resolution Formula
+挑战要求：
 
-Theft uses one final success check. If and only if it fails, the system checks
-failure detection and then, when detected, failure attribution. A success
-cannot become detected, attributed, hot, contested, pursued, or recovered
-later.
+- 每个挑战只结算一次。
+- 不要求连续登录或现实时间。
+- 失败不重置已有进度。
+- 不能以重复刷同一角色、同一类别完成。
+- 挑战只奖励熟练和技能点，不解锁主线。
 
-### Final Success
+## 12. UI 契约
 
-```text
-theftSuccessChance =
-  clamp(
-    70
-    + relevantSkillRank * 8
-    + preparationBonus
-    + actionWindowModifier
-    + theftGuBonus
-    - targetPenalty
-    - targetGuard
-    - rankGapPenalty
-    - mentalStrainPenalty,
-    minimumEligibleChance,
-    95
-  )
+### 12.1 地图按钮
+
+靠近合法目标时显示“偷盗”。按钮禁用时只显示直接原因，例如“本次访问
+已经尝试”或“当前没有可偷物品”。
+
+### 12.2 可偷清单
+
+清单每行只显示：
+
+- 物品名称与图标。
+- 数量。
+- 物品类别。
+- 当前技能是否允许选择。
+- `finalChance`。
+
+玩家确认一件物品后立即判定，不显示第二次确认、额外风险公式或结果预演。
+
+### 12.3 即时结果
+
+结果覆盖层显示：
+
+- 成功或失败。
+- 所选物品。
+- 最终概率。
+- 本次获得的物品或当前场景反应。
+
+关闭后回到地图，除明确进入普通战斗外不跳转到独立页面。
+
+### 12.4 技能树
+
+技能树显示四层纵向路径，MVP 前三层可操作，序列 5 标记为“后续开放”。
+每层显示核心能力、两个节点、当前熟练、可用技能点和晋升条件。序列 4 及
+以上不显示占位节点。
+
+## 13. 存档
+
+### 13.1 最小活动字段
+
+```js
+{
+  theftSeed,
+  theftRandomCursor,
+  theftTier,
+  theftMastery,
+  unspentTheftSkillPoints,
+  unlockedTheftSkillIds: [],
+  firstSuccessItemClasses: [],
+  completedTheftChallengeIds: [],
+  completedTheftMilestoneIds: [],
+  resolvedStealableEntryIds: [],
+  currentMapSession: {
+    mapInstanceId,
+    attemptedTargetIds: [],
+    failureBattleAvoidanceUsed: false
+  }
+}
 ```
 
-Inputs:
+数组按稳定 ID 去重。`theftTier` 在 MVP 只允许 `摸索者`、`巧手`、
+`无形手`；`藏锋盗客` 只能作为未来内容值预留，活动代码不得写入。
 
-- `relevantSkillRank` is the rank of the action skill used on this item or
-  effect, never a general character level.
-- `preparationBonus` is clamped to `0..15`: add 1 per verified relevant
-  reconnaissance fact up to 5, add 5 for the correct prepared tool, add 5 for a
-  valid disguise or credential, and add the active Conceal Goods bonus.
-- `actionWindowModifier` is taken once from the action-window table. The
-  Misdirect skill's named bonus is added only for a window that it created.
-- `theftGuBonus` is `0`, `5`, `10`, or `15` as declared by one activated
-  compatible Gu. Multiple success bonuses do not stack.
-- `targetPenalty` is the attachment penalty after explicit skill reductions for
-  a physical item, or the effect difficulty below for a non-item target.
-- `targetGuard` uses the authored security band: unsecured 0, routine 5,
-  trained 10, alert 15, specialist 20, or actively guarded 25.
-- `rankGapPenalty` is taken from the rank-gap table.
-- `mentalStrainPenalty` is 0 for physical theft. For Technique Interceptor and
-  Thought Thief targets it uses strain at attempt start: 0 for `0..39`, 5 for
-  `40..69`, and 15 for `70..89`; `90..100` is blocked before the formula.
-- `minimumEligibleChance` is 35.
+### 13.2 保存时机
 
-| Non-item target | Effect difficulty |
-| --- | ---: |
-| Prepared mundane action or initiative | 10 |
-| Ordinary short-lived buff or recovery tick | 15 |
-| Current intent, attention, or dream image | 15 |
-| Active same-rank Gu technique | 20 |
-| Coherent recent-memory fragment | 20 |
-| Temporary misrecognition | 20 |
-| Replacement false thought | 25 |
+以下动作必须保存：
 
-An authored guaranteed opportunity may set chance to 100 only when the item,
-target, and exact action-window ID all match.
+- 一次偷盗成功或失败结算完成。
+- 熟练、技能点或挑战首次结算。
+- 购买技能节点。
+- 完成层级晋升。
+- 进入新地图并创建新的地图会话。
 
-A canonical starter example is a same-stage concealed-pocket theft using
-`pick_pocket` rank 2, two verified facts, a correct tool, conversation cover
-`(+5)`, item penalty 10, and trained guard 10:
+查看清单、切换清单选中项和关闭界面不保存。
 
-```text
-70 + 16 + 7 + 5 - 10 - 10 = 78 percent
-```
+### 13.3 迁移
 
-### Failure Detection
+旧存档 payload 可以无损保留，但活动偷盗系统只创建并读取本章列出的精简
+分支。无法映射的旧能力不自动兑换技能点，也不改变物品。
 
-This check is rolled only after the final success check fails.
+## 14. 内容编写要求
 
-```text
-failureDetectionChance =
-  clamp(
-    45
-    + targetAlert
-    + witnessPressure
-    + detectionAttachment
-    + detectionRankGap
-    - relevantSkillRank * 8
-    - sceneCover
-    - activeMisdirection
-    - maskPresenceBonus
-    - concealmentGuBonus
-    - failureConcealmentBonus,
-    5,
-    95
-  )
-```
+每个可偷目标必须：
 
-Inputs:
+- 使用稳定角色 ID。
+- 明确每条 `stealableEntryId`。
+- 只配置实体物品。
+- 给每个条目指定五种合法 `itemClass` 之一。
+- 给成年衣物条目提供安全立绘回退。
+- 给失败战斗使用已注册的普通战斗 ID。
+- 保证目标至少有一条当前层级可选内容，或不显示偷盗按钮。
 
-- `targetAlert`: unaware 0, relaxed 5, routine 10, suspicious 20, alarmed 30.
-- `witnessPressure`: none 0, one inattentive 5, one attentive 10, small group
-  15, dedicated guard 20, or multiple guards/sensor coverage 25.
-- `detectionAttachment`: unattended 0, pocket/open pouch 5, concealed
-  pocket/closed pouch 10, exposed worn item 15, fastened worn item 20, or
-  fastened armor/adult intimate garment 25.
-- `detectionRankGap`: taken from the rank-gap table.
-- `sceneCover`: open 0, partial 5, good 10, prepared 15, total 20.
-- `activeMisdirection`: 0 or the Misdirect rank value 10, 15, or 20.
-- `maskPresenceBonus`: 0 unless Mask Presence is actively used, then 10, 20, or
-  30 by its rank.
-- `concealmentGuBonus`: `0`, `5`, `10`, or `15` from one activated compatible
-  Gu; multiple Gu do not stack.
-- `failureConcealmentBonus` is the sum of explicit failure-only bonuses such as
-  Conceal Goods rank 2 and Unfasten rank 3, clamped to `0..20`.
+内容作者不得在单条物品上添加额外成功率、二次判定、重掷次数或隐藏失败
+倍率。
 
-### Failure Attribution
+## 15. 验收标准
 
-This check is rolled only when the theft failed and that failed attempt was
-detected.
+### 15.1 交互
 
-```text
-failureAttributionChance =
-  clamp(
-    30
-    + evidenceStrength
-    + targetFamiliarity
-    + knownMethodSignature
-    - activeTalkOutReduction
-    - falseTrailStrength
-    - disguiseStrength,
-    0,
-    95
-  )
-```
+- 玩家必须先靠近角色，才能打开偷盗清单。
+- 玩家能查看可偷内容并且一次只选择一件。
+- 每名目标每次地图访问只能提交一次。
+- 关闭未提交清单不消耗资格或随机游标。
 
-Inputs:
+### 15.2 公式
 
-- `evidenceStrength` is the sum of discovered, non-disproved evidence from this
-  failed attempt visible to the investigating faction, clamped to `0..50`.
-- `targetFamiliarity`: stranger 0, seen before 5, acquaintance 10, familiar 15,
-  or intimate knowledge of habits 20.
-- `knownMethodSignature`: none 0, weak match 5, repeated match 10, or validated
-  signature 15.
-- `activeTalkOutReduction`: 0 unless Talk Out is successfully invoked for this
-  accusation, then 10, 20, or 30 by rank.
-- `falseTrailStrength`: 0 to 30.
-- `disguiseStrength`: none 0, improvised 5, prepared 10, or validated role 15.
+- 公式文本和运算顺序与总契约一致。
+- 同境界、运气 `50`、盗道熟练 `50`、普通物品得到 `65%`。
+- 任意合法输入都被限制在 `15..95`。
+- 所有技能成长只通过 `theftMastery` 和类别解锁进入既有公式。
 
-After clamping and all reductions, failed-attempt hard evidence sets the highest
-applicable floor:
+### 15.3 结果
 
-- Trusted direct witness: minimum 40.
-- Player caught with a theft tool in hand: minimum 70.
-- Validated technique or psychic residue: minimum 80.
+- 成功只转移所选一件物品。
+- 成功物品立即成为普通行囊物品。
+- 保存完成后成功事件结束。
+- 失败不转移物品，也不创建跨场景状态。
+- 读档不重掷、不复制物品、不重复奖励熟练或技能点。
 
-The one attribution roll produces exactly one status:
+### 15.4 技能树
 
-| Roll result | `failureAttributionStatus` |
-| --- | --- |
-| `roll <= failureAttributionChance` | `player_confirmed` |
-| `failureAttributionChance < roll <= min(100, failureAttributionChance + 15)` | `player_suspected` |
-| Higher | `unattributed` |
+- 约序列 8、7、6 三层在 MVP 可完整晋升。
+- 约序列 5 有完整接口与条件，但不可在 MVP 解锁。
+- 序列 4 半神及以上没有节点、公式或隐性实现。
+- 重复刷同一角色和类别不提供成长资源。
 
-An active credible Frame Target rank-3 effect may replace `player_suspected`
-with `alternative_suspect`; it cannot replace `player_confirmed` created under
-a hard-evidence floor.
+### 15.5 表现
 
-One failed incident makes at most one attribution roll. A later authored
-investigation may make one new check only when new hard evidence exists and it
-uses a unique persisted `investigationEventId`.
-
-### Final Outcomes
-
-| Success | Failure detected | Failure attribution status | Final state |
-| --- | --- | --- | --- |
-| Yes | Not rolled | Not rolled | Target transfers to player; all success deltas apply; theft closes |
-| No | No | Not rolled | No transfer; failed attempt remains unknown; theft closes |
-| No | Yes | `unattributed` | No transfer; general alert and scene-local response |
-| No | Yes | `player_suspected` or `alternative_suspect` | No transfer; questioning, search, or short escape consequence |
-| No | Yes | `player_confirmed` | No transfer; identified failure, confrontation, escape, or pursuit |
-
-A deterministic roll is an integer from 1 through 100 and succeeds when it is
-less than or equal to the chance. A failed success roll is a near miss only when
-`roll <= theftSuccessChance + 10`. Near miss is informational and does not
-override failure detection.
-
-### Atomic Resolution Order
-
-One theft attempt resolves in this exact order:
-
-1. Validate target existence, slot/effect visibility, adulthood restrictions,
-   action window, skill rank, Gu functions, rank gap, time, essence, tools, and
-   duplicate-attempt guards. Rejected input changes no state.
-2. Read `attemptOrdinal = theftAttemptCounter`, create
-   `theftAttemptId = "theft-attempt:" + attemptOrdinal`, snapshot every numeric
-   input, charge time and consumable costs, deduct essence, and persist
-   `theftAttemptCounter = attemptOrdinal + 1`.
-3. Roll final success and increment the random cursor.
-4. If successful, atomically transfer ownership to the player, remove the prior
-   equipment/effect, apply portrait, sprite, emotion, schedule, quest, and
-   combat deltas, record `completedSuccessfulTheftIds`, add strain/practice/
-   milestones, autosave, and close. Do not roll detection or attribution; do not
-   create evidence, heat, pursuit, recovery, or anti-thief adaptation.
-5. If failed, transfer nothing and roll failure detection, then increment the
-   cursor.
-6. If the failure was not detected, add strain/practice as allowed, autosave,
-   and close with no evidence or heat.
-7. If the failure was detected, create failed-attempt evidence, roll failure
-   attribution, increment the cursor, and apply the corresponding failure-only
-   heat, confrontation, escape/pursuit, and adaptation.
-8. Add strain/practice as allowed, autosave the complete failed result, and
-   enter its consequence scene.
-
-No callback may expose an item in both inventories or in neither inventory.
-Presentation animation starts only after the relevant success or failure
-transaction commits.
-
-## Deterministic Randomness
-
-Each save persists:
-
-- `theftRngVersion = "fnv1a32-xorshift32-v1"`
-- `theftSeed`
-- `theftAttemptCounter`
-- `theftRandomCursor`
-
-Each phase result is keyed by:
-
-```text
-theftSeed
-+ attemptOrdinal
-+ targetId
-+ itemOrEffectId
-+ actionId
-+ phaseId
-+ theftRandomCursor
-```
-
-At commit start, `attemptOrdinal` is the current `theftAttemptCounter`,
-`theftAttemptId = "theft-attempt:" + attemptOrdinal`, and the persisted counter
-becomes `attemptOrdinal + 1`. The first attempt therefore uses ordinal `0`.
-
-Serialization is canonical:
-
-- Use exactly the seven fields above in that order.
-- Encode `attemptOrdinal` and `theftRandomCursor` as unsigned base-10 integers
-  with no leading zeroes; zero is `"0"`.
-- Stable IDs are ASCII and are used byte-for-byte. Composite item IDs are
-  constructed by the Two-Item Pick Pocket rule before serialization.
-- No field may be empty or contain byte `0x1f`.
-- UTF-8 encode each field and join fields with the single unit-separator byte
-  `0x1f`; do not append a trailing separator.
-
-`phaseId` is exactly `final_success`, `failure_detection`, or
-`failure_attribution:<attemptOrInvestigationEventId>`.
-
-The version-1 roll algorithm is:
-
-```text
-h = 2166136261
-for each key byte:
-  h = unsigned32((h XOR byte) * 16777619)
-if h == 0:
-  h = 0x9e3779b9
-x = h
-x = unsigned32(x XOR (x << 13))
-x = unsigned32(x XOR (x >>> 17))
-x = unsigned32(x XOR (x << 5))
-roll = (x modulo 100) + 1
-```
-
-Implementations must use 32-bit integer multiplication semantics. The cursor
-increments only after an actually required roll commits; a skipped attribution
-check consumes no cursor value. Saving and loading cannot reroll the same chosen
-action. Cancelling before commit consumes neither attempt counter nor cursor.
-Changing a choice after commit creates a new attempt.
-
-### Fixed RNG Fixture
-
-The cross-runtime fixture uses:
-
-- `theftSeed = "00000000"`
-- `attemptOrdinal = 0`
-- `targetId = "char_test_target"`
-- `itemOrEffectId = "item_test_coin"`
-- `actionId = "theft_skill_pick_pocket"`
-
-| Phase ID | Cursor | FNV-1a hash | Xorshift result | Roll |
-| --- | ---: | --- | --- | ---: |
-| `final_success` | 0 | `413bf9f2` | `feb178f0` | 97 |
-| `failure_detection` | 1 | `4d5afe6b` | `40657320` | 33 |
-| `failure_attribution:theft-attempt:0` | 2 | `9cb15391` | `6ea636f0` | 1 |
-
-Any supported runtime that produces a different hash, xorshift value, or roll
-for this fixture violates `theftRngVersion`.
-
-## Final Ownership
-
-```text
-success: held_by_prior_holder -> owned_by_player
-failure: held_by_prior_holder -> held_by_prior_holder
-```
-
-Success transfers the item or bounded effect directly to final player ownership.
-There is no provisional, hot, contested, laundering, owner-recovery, or
-post-success attribution state.
-
-- Quest ownership and inventory ownership change in the same success
-  transaction.
-- The former holder cannot recover the item through battle defeat, pursuit,
-  investigation, save/load, or a delayed callback from this theft.
-- The player may later consume, trade, equip, gift, discard, or voluntarily
-  return the item through a new ordinary action. That new action does not reopen
-  the completed theft.
-- `successResolutionId` is recorded before presentation. The same ID cannot
-  transfer value or apply success deltas twice.
-- A new daily or respawned opportunity increments its persisted
-  `spawnCycleOrdinal`; changing save/load time does not increment it.
-
-## Failed-Attempt Evidence And Heat
-
-Evidence types are:
-
-- `evidence_witness`
-- `evidence_scent_or_aura`
-- `evidence_tracking_mark`
-- `evidence_method_signature`
-- `evidence_false_credential`
-- `evidence_schedule_anomaly`
-- `evidence_technique_residue`
-- `evidence_psychic_residue`
-
-Each evidence record stores source, strength 0 to 50, discovering faction,
-known suspect IDs, expiry or persistence, and whether it has been disproved. An
-evidence record may be created only from a detected failed attempt.
-
-Heat is directed and faction-specific:
-
-```text
-heatByFaction[factionId] = 0..100
-```
-
-Heat gained from one incident is:
-
-- Failed attempt detected: +5 once.
-- `player_suspected`: +5.
-- `player_confirmed`: +15 instead of the suspected +5.
-- `unattributed` or `alternative_suspect`: +0 player-attribution heat.
-- Attempted key or quest item: +10.
-- Protected faction property: +5.
-- Authored incident modifier: `-10..+10`.
-
-Clamp the total incident delta to `0..30`, then clamp faction heat to `0..100`.
-An undetected failed attempt and every successful theft add zero heat.
-
-The bands are:
-
-- 0-19: no organized response.
-- 20-39: extra questions and routine searches.
-- 40-59: changed patrols, locked storage, targeted inspection.
-- 60-79: active pursuit, bounties, decoys, tracking Gu.
-- 80-100: faction-wide hostile response and specialist countermeasures.
-
-After three consecutive full game days without a new relevant incident, heat
-falls by 5 per additional full quiet day. It cannot decay below 20 while a
-confirmed failed-attempt case or active bounty remains. An authored amnesty,
-payment, or frame resolution may change heat directly but must use an idempotent
-event delta.
-
-Heat does not replace character relationships or Fang Yuan's separate alert
-state.
-
-## Target Adaptation
-
-After a detected failed attempt, targets may:
-
-- Move items to a different slot or location.
-- Change route or schedule.
-- Add guards, seals, witnesses, decoys, or tracking marks.
-- Carry less value.
-- Ask another faction for help.
-- Publicize a false item to bait the thief.
-- Start private negotiation or blackmail.
-
-After success, none of those anti-thief responses is created by that incident.
-The target may equip an authored replacement and run the item's declared
-emotion, schedule, quest, and combat effects, but gains no clue about the
-player. The same equipment slot cannot be stolen repeatedly while empty.
-Replacement requires an authored item, resource cost, and schedule event.
-
-## Emotion, Quest, And Combat Effects
-
-An item does not apply one universal success bonus. It declares concrete
-effects.
-
-Examples:
-
-- Stolen uniform: target leaves post, a disguise route opens, familiar-NPC
-  recognition risk rises.
-- Stolen footwear: movement may fall by one and target seeks replacement.
-- Stolen armor: defense falls according to the item's actual armor value.
-- Stolen weapon: related actions become unavailable until replacement.
-- Stolen keepsake: target may become anxious, angry, or negotiable depending on
-  personality.
-- Successful intimate-garment theft: the dedicated embarrassment state
-  interrupts schedule and lowers composure, but also raises vigilance.
-
-Mood modifies authored checks through named state values:
-
-- `composure`: -30 to +30.
-- `vigilance`: 0 to 100.
-- `trust`, `enmity`, `debt`, and `interest`: existing directed relationship
-  dimensions.
-
-The sum of temporary item-loss and mood modifiers to one task check is clamped
-to `-30..+30` percentage points. A content record must identify the affected
-task check; there is no global "embarrassed target is easier" modifier.
-
-A successful theft cannot directly change a target-to-player relationship
-dimension because success provides no attribution. A later quest may change a
-relationship only from a separate witnessed interaction.
-
-## UI Contract
-
-### Theft Inspect View
-
-The view contains:
-
-- Target name and current observed emotion.
-- A body/equipment slot layout with only discovered slots.
-- Item visibility, access state, and blocked reason.
-- Action-window duration.
-- Final success chance, plus conditional failure-detection and
-  failure-attribution risk.
-- Selected skills, Gu functions, tools, and preparation bonus.
-- Failed-attempt evidence forecast.
-- Escape route and current faction heat, explicitly labeled as failure-only.
-
-Information precision depends on `read_opening` rank:
-
-- Rank 1: safe, risky, blocked.
-- Rank 2: percentage bands in increments of 10.
-- Rank 3: exact percentages and individual modifiers.
-
-### Theft Progression View
-
-The progression view contains:
-
-- Current theft tier, cultivation gate, technique-point balance, essence, and
-  mental strain.
-- One column per tier and one node per skill; every node has stable dimensions
-  and displays rank `0..3`.
-- For the selected skill, current qualifying-use count, distinct-target count,
-  technique-point cost, mastery challenge ID/status, Gu-function requirement,
-  and exact unmet condition.
-- For the next tier, a live checklist of all nine promotion conditions and the
-  trial retry time when cooling down.
-- The visible but disabled `theft_tier_demigod_sealed` node with no previewable
-  abilities or fabricated requirements.
-
-A purchase confirmation must show the point cost and controlled-retraining
-rule. The control is disabled when any requirement is unmet and never spends a
-point optimistically.
-
-### Immediate Theft Feedback
-
-After success:
-
-- Remove the item from the target slot and add final player ownership in one
-  transaction.
-- Update portrait, sprite, emotion, schedule, quest, and combat layers.
-- Show the successful item/effect and close the theft interaction.
-- Do not show detection, attribution, evidence, heat, pursuit, or recovery
-  follow-up.
-
-After failure:
-
-- Keep ownership and equipment unchanged.
-- Show whether the failed attempt was detected and attributed.
-- Display failed-attempt evidence without revealing evidence the player has not
-  perceived.
-- Open escape, confrontation, pursuit, or normal return according to the failed
-  outcome.
-
-When `emotion_embarrassed_intimate_theft` activates, the target panel switches
-to `portrait_intimate_item_stolen_embarrassed`, the equipment slot shows the
-specific missing item, and the schedule/quest strip shows the interruption.
-This is a dedicated state, not a generic low-composure portrait.
-
-### Portrait And Sprite Fallback
-
-If a specific missing-item image is unavailable:
-
-1. Remove the stolen optional layer.
-2. Render the protected base-coverage layer.
-3. Use the nearest valid adult emotion portrait.
-4. Display the explicit missing-item status in UI text.
-
-Missing art must never produce nudity, a blank character, or a broken image.
-
-## Save-State Design
-
-A future runtime contract must persist an equivalent of:
-
-```text
-settings:
-  allowAdultIntimateTheft
-
-theft:
-  tierId
-  techniquePoints
-  mentalStrain
-  skillRanks
-  skillRankLedger
-  qualifyingUseLedger
-  completedMilestoneIds
-  completedMasteryIds
-  completedPromotionConditionIds
-  completedTierTrialIds
-  availableTierTrialIds
-  activeTierTrial
-  tierTrialAttemptCounterById
-  tierTrialCooldownById
-  theftRngVersion
-  theftSeed
-  theftAttemptCounter
-  theftRandomCursor
-  heatByFaction
-  evidenceLedger
-  attributionLedger
-  failedAttemptLedger
-  completedSuccessfulTheftIds
-  activeTheftPayloads
-```
-
-Character state must persist equipped item IDs, replacement state, current
-emotion, schedule interruption, `missingItemIds`, and whether each missing item
-has been replaced. Non-item targets also persist active source-mutation IDs and
-their exact expiry.
-
-Migration from an older save:
-
-- Continue the read order and non-destructive key behavior in
-  `contracts/game-state-v3.md`; the legacy
-  `tianwai-daojuren-save-v2` key is never deleted.
-- Preserve existing `player.theftRank` byte-for-byte. If it is a finite number,
-  also copy it to `theft.legacyTheftRank`; the old score is not interpreted as a
-  higher conceptual tier.
-- Map every current prototype save to `theft_tier_shadow_thief`, because the
-  prototype contains only physical theft and has no evidence of later-tier
-  unlocks.
-- Grant exactly the defined starting skill ranks, zero technique points, zero
-  mental strain, `starting_grant` rank-ledger records, and otherwise empty
-  ledgers. Do this only when the theft branch is absent, so migration is
-  idempotent.
-- Add `settings.allowAdultIntimateTheft = false` only when the setting is
-  absent. Never infer consent from existing character or inventory state.
-- Set `theftRngVersion` to `fnv1a32-xorshift32-v1`.
-- Generate `theftSeed` deterministically once: use the existing
-  `wilderness.expeditionSeed` when present; otherwise use canonical JSON of the
-  preserved legacy payload with object keys sorted lexicographically. Hash
-  `"theft-v1" + 0x1f + seedSource` with the FNV-1a step defined above and store
-  the eight-digit lowercase hexadecimal result.
-- Preserves all unrelated player, quest, item, relationship, and world fields.
-
-No runtime migration is implemented by this design-only commit.
-
-## Content Authoring Requirements
-
-Every authored theft target declares:
-
-- Target ID, item/effect instance ID, `successResolutionId`, and current holder.
-- Required scene and time window.
-- Discoverable and hidden item slots.
-- `securityRating` and the exact guard, alert, witness, and cover bands.
-- Strong-window eligibility.
-- Required or optional skills.
-- Preparation opportunities.
-- Gu functional tags.
-- Success item/effect ID and attachment or effect difficulty.
-- For a non-item target, exact payload type, source mutation, use/duration
-  bound, and compatible Gu-function content.
-- Atomic success ownership, equipment, emotion, schedule, quest, combat, and
-  replacement effects. Successful content cannot declare evidence, heat,
-  attribution, pursuit, recovery, or anti-thief adaptation.
-- Separate `onFailureUndetected`, `onFailureDetected`, and
-  `onFailureAttributed` effects.
-- Separate attribution handling for `unattributed`, `player_suspected`,
-  `player_confirmed`, and `alternative_suspect`.
-- Failed-attempt evidence, relationship, faction heat, escape/pursuit, and
-  adaptation deltas.
-- Unique milestone, mastery, promotion-condition, and trial IDs.
-
-Any `slot_intimate_garment` target additionally declares `isAdult: true`, the
-protected base-coverage visual, dedicated successful-loss portrait, emotion,
-dialogue, schedule interruption, quest handoff, combat effect, and fallback.
-Validation rejects the entire slot rather than silently supplying any of those
-fields.
-
-Unknown IDs and out-of-range modifiers must fail future content validation.
-
-## Acceptance Criteria
-
-An implementation plan based on this design must include tests proving:
-
-1. The canonical starter pocket fixture calculates exactly 78 percent
-   final success chance.
-2. An eligible attempt never falls below 35 percent; an impossible attempt is
-   blocked instead.
-3. Success skips failure detection and attribution and creates zero evidence,
-   heat, pursuit, recovery, or anti-thief adaptation.
-4. Failure detection is rolled only after failure; attribution is rolled only
-   after a detected failure.
-5. Save/load does not reroll a committed choice.
-6. The same milestone cannot award technique points twice.
-7. Repeating one low-value target cannot unlock a tier.
-8. Every skill rank transition enforces practice, target diversity, points, and
-   mastery requirements.
-9. Every tier promotion enforces cultivation, skill, feat, Gu-function, and
-   trial conditions.
-10. A full-rank gap permits only exposed external items during a strong window.
-11. A two-rank gap blocks direct body theft.
-12. Post-battle search gives no theft progression.
-13. Successful combat theft gives final ownership immediately.
-14. A later battle defeat cannot reverse a completed successful theft.
-15. Failed combat theft transfers nothing.
-16. Successful garment theft updates ownership, equipment, portrait, sprite,
-    emotion, schedule, quest, and combat state atomically.
-17. An intimate-garment slot is absent unless the persisted, default-off player
-    setting is enabled and the character is explicitly marked adult.
-18. An adult intimate-garment theft always preserves a base-coverage visual and
-    uses the dedicated emotion, portrait, dialogue, quest, schedule, and combat
-    IDs.
-19. Its dedicated embarrassment and vigilance deltas trigger exactly once on
-    success, reveal nothing about the player, and cannot modify any theft
-    formula or anti-thief adaptation.
-20. Mood affects only authored task checks and cannot create a global success
-   bonus.
-21. Empty slots cannot be stolen repeatedly.
-22. Replacement items require an authored replacement event and cannot recover
-    the successfully stolen original.
-23. Failed-attempt evidence, heat, attribution, and adaptation persist through
-    save/load.
-24. Caught-tool and validated-residue evidence enforce their attribution floors.
-25. Decoys cannot reproduce Gu, soul marks, bloodline checks, or unique powers.
-26. Thought-tier skills cannot permanently steal identity, values, loyalty, or
-   deep memory.
-27. The demigod gate remains disabled and has no executable effect.
-28. No promotion gate requires a skill from the tier it unlocks.
-29. Trial success unlocks a tier and grants three points exactly once; trial
-    failure persists consequences and a one-day cooldown.
-30. Essence is charged before rolls and is not refunded on an eligible failure.
-31. Starting mental strain contributes success penalties 0, 5, or 15, persists
-    through battle end/save/load, and blocks new supernatural theft at 90.
-32. The fixed RNG fixture produces rolls 97, 33, and 1 with the listed hashes
-    and xorshift values in every supported runtime.
-33. Success consumes one cursor value, undetected failure consumes two, and
-    detected failure consumes three; skipped checks consume none.
-34. Controlled retraining charges two time and five stones, preserves all grant
-    floors/unlocked tiers, and refunds exactly the persisted expenditure of
-    removed purchased ranks.
-35. Only explicitly external, unrefined, unowned, or sealed Gu containers are
-    physically stealable; aperture-bound refined Gu remain blocked.
-36. UI inspection costs no time, blocked input costs no time, and every
-    committed phase costs exactly the value in the time table.
-37. Heat is zero on success; detected failures change it once, respect the
-    30-point incident cap, and obey quiet-day decay floors.
-38. A repeated success ID cannot duplicate an item or reapply success deltas.
-39. The former holder cannot recover a successfully stolen item through battle,
-    pursuit, investigation, save/load, or delayed callbacks.
-40. Success UI shows final ownership and closes without presenting failure-only
-    detection, attribution, evidence, heat, or pursuit.
-41. Every non-item success creates exactly one declared player-owned bounded
-    payload and one source mutation atomically.
-42. Leave False Thought consumes a stolen-intent payload only as a Take Intent
-    rider and never makes an independent success roll.
-43. Failure attribution maps one roll to `player_confirmed`,
-    `player_suspected`, `unattributed`, or an eligible `alternative_suspect`
-    using the exact 15-point band.
-44. A two-item Pick Pocket uses canonical composite IDs, one roll, one failure
-    chain, capacity prevalidation, and all-or-nothing transfer.
-45. `theftAttemptId`, integer encoding, field order, separators, and phase IDs
-    match the deterministic serialization contract.
-46. All 27 promotion-condition IDs latch once, trial availability persists, and
-    cooldown is stored by trial ID.
-47. A scripted rank grant records a non-refundable source and immediately
-    refunds any purchased record it replaces exactly once.
-48. Content ID validation rejects reserved delimiters, and unique, renewable,
-    composite, payload, attempt, and trial IDs cannot collide through
-    concatenation.
-
-## Follow-Up Boundary
-
-After human approval of this written specification, the next planning stage may
-define:
-
-- Stable theft IDs in the central ID registry.
-- JSON Schemas for skills, items, equipment, evidence, and authored targets.
-- Balance JSON copied from the formulas and tables above.
-- Runtime modules, migrations, UI, art-state manifest updates, and tests.
-
-Those are implementation-planning outputs and are not part of this design-only
-document.
+- 只有成年角色拥有贴身物品条目。
+- 衣物成功后直接切换立绘与一个情绪标签。
+- 不显示数值心情条。
+- 地图 Q 版角色不切换衣物或情绪差分。
