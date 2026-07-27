@@ -67,6 +67,28 @@ const q01Ids = [
   "D_Q01_TAVERN_KEEPER_RESULT_MISSED_01",
 ];
 
+const q02Ids = [
+  "D_Q02_ACADEMY_ELDER_01",
+  "I_Q02_CLAN_ARCHIVE_01",
+  "I_Q02_WINE_TRAIL_ENTRY_01",
+  "I_Q02_MOUNTAIN_CRACK_01",
+  "I_Q02_SHADOW_WALL_01",
+  "D_Q02_CLAN_STEWARD_CLAIM_01",
+  "D_Q02_QING_SHU_CLAIM_01",
+  "D_Q02_FANG_YUAN_CLAIM_01",
+  "I_Q02_EARTH_FLOWER_01",
+  "I_Q02_WHITE_BOAR_TRAINING_01",
+  "I_Q02_STRENGTH_GATE_01",
+  "I_Q02_JADE_CHAMBER_01",
+  "I_Q02_HIDDEN_CHAMBER_01",
+  "I_Q02_SECRET_MAP_01",
+  "D_Q02_CLAN_STEWARD_SETTLEMENT_01",
+  "D_Q02_ACADEMY_ELDER_RESULT_01",
+  "D_Q02_ACADEMY_ELDER_FAILED_01",
+  "D_Q02_ACADEMY_ELDER_REFUSED_01",
+  "D_Q02_ACADEMY_ELDER_MISSED_01",
+];
+
 function readScript(file) {
   return readFileSync(`${scriptRoot}${file}`, "utf8");
 }
@@ -117,6 +139,14 @@ test("provides every Wine Worm route and terminal response", () => {
   const ids = new Set(recordFiles.flatMap(parseRecords).map(({ id }) => id));
 
   for (const id of q01Ids) {
+    assert.equal(ids.has(id), true, `${id} must exist`);
+  }
+});
+
+test("provides every Flower Wine entrance, chamber, and terminal response", () => {
+  const ids = new Set(recordFiles.flatMap(parseRecords).map(({ id }) => id));
+
+  for (const id of q02Ids) {
     assert.equal(ids.has(id), true, `${id} must exist`);
   }
 });
