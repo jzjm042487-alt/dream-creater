@@ -772,6 +772,11 @@ on_expire：none
 “证据够了，现在谈谁承担。稳妥改线需要至少两项准备；准备不足可以冒险救援；你也可以顶替我的
 前锋位置，或者先单独处理退出决定。没有哪项会因为你知道危险就自动成功。”
 
+选择 A 可用条件：quest.q05.preparation_count >= 2
+选择 B 可用条件：always
+选择 C 可用条件：always
+选择 D 可用条件：always
+
 [选择 A]
 [玩家]
 “按新路线稳妥救援。两类证据、至少两项准备都已确认。”
@@ -787,6 +792,7 @@ quest.q05.intent = "stable_rescue"
 quest.q05.stage = "departure_pending"
 operation.q05_rescue = "ready"
 world.flags.q05_operation_unlocked = true
+world.flags.q05_decision_actor = "qing_shu"
 
 [结束]
 END
@@ -806,6 +812,7 @@ quest.q05.intent = "costly_rescue"
 quest.q05.stage = "departure_pending"
 operation.q05_rescue = "ready"
 world.flags.q05_operation_unlocked = true
+world.flags.q05_decision_actor = "qing_shu"
 
 [结束]
 END
@@ -826,6 +833,7 @@ quest.q05.intent = "replace"
 quest.q05.stage = "departure_pending"
 operation.q05_rescue = "ready"
 world.flags.q05_operation_unlocked = true
+world.flags.q05_decision_actor = "qing_shu"
 
 [结束]
 END
@@ -842,6 +850,7 @@ none
 
 [写入]
 world.flags.q05_qing_shu_exit_pending = true
+world.flags.q05_decision_actor = "qing_shu"
 
 [结束]
 END
@@ -860,7 +869,7 @@ topic：替代决策
 requires：
 - quest.q05.stage == "warning_ready"
 - quest.q05.evidence_family_count == 2
-- world.flags.q05_recruiter == "qing_shu_deputy"
+- world.flags.q05_recruiter == "qing_shu_deputy" or npc.qing_shu.alive == false
 excludes：
 - world.village_closed == true
 - world.flags.q05_deputy_exit_pending == true
@@ -870,6 +879,11 @@ on_expire：none
 [青书副手]
 “青书不在集合点，由我按队伍权限决定。稳妥改线、冒险救援、由你顶替前锋、撤回或拒绝都可以；
 我不能替青书预先承诺他的私人信物。退出决定会在下一次交谈单独确认。”
+
+选择 A 可用条件：quest.q05.preparation_count >= 2
+选择 B 可用条件：always
+选择 C 可用条件：always
+选择 D 可用条件：always
 
 [选择 A]
 [玩家]
@@ -886,6 +900,7 @@ quest.q05.intent = "stable_rescue"
 quest.q05.stage = "departure_pending"
 operation.q05_rescue = "ready"
 world.flags.q05_operation_unlocked = true
+world.flags.q05_decision_actor = "qing_shu_deputy"
 
 [结束]
 END
@@ -905,6 +920,7 @@ quest.q05.intent = "costly_rescue"
 quest.q05.stage = "departure_pending"
 operation.q05_rescue = "ready"
 world.flags.q05_operation_unlocked = true
+world.flags.q05_decision_actor = "qing_shu_deputy"
 
 [结束]
 END
@@ -924,6 +940,7 @@ quest.q05.intent = "replace"
 quest.q05.stage = "departure_pending"
 operation.q05_rescue = "ready"
 world.flags.q05_operation_unlocked = true
+world.flags.q05_decision_actor = "qing_shu_deputy"
 
 [结束]
 END
@@ -940,6 +957,7 @@ none
 
 [写入]
 world.flags.q05_deputy_exit_pending = true
+world.flags.q05_decision_actor = "qing_shu_deputy"
 
 [结束]
 END
@@ -1368,6 +1386,7 @@ requires：
 - npc.qing_shu.alive == true
 excludes：
 - world.village_closed == true
+- world.flags.q05_decision_actor == "qing_shu_deputy"
 once：true
 on_expire：none
 
@@ -1400,6 +1419,61 @@ none
 
 [古月青书]
 “两点调查功绩，不含行动奖励。”
+
+[写入]
+player.resources.clan_merit += 2
+
+[结束]
+END
+
+## D_Q05_QING_SHU_DEPUTY_RESULT_WITHDREW_01
+
+类型：dialogue
+ID：D_Q05_QING_SHU_DEPUTY_RESULT_WITHDREW_01
+所属：Q05
+拥有者：npc.qing_shu_deputy
+地点：east_wall_muster
+available_from：D24_morning
+expires_after：D30_evening
+priority：70
+topic：替代撤回结算
+requires：
+- world.flags.q05_decision_actor == "qing_shu_deputy"
+- quest.q05.result == "withdrew"
+excludes：
+- world.village_closed == true
+once：true
+on_expire：none
+
+[青书副手]
+“你在出发前撤回，记录由我结。已提交的证据和准备仍归队伍使用，未交物资仍归你；没有行动信物
+和护符，也不记临阵脱队。”
+
+[选择 A]
+[玩家]
+“确认物资边界，按撤回结果封账。”
+
+[判定]
+none
+
+[青书副手]
+“清单已分开。队伍不会追收你没有明确交付的物资。”
+
+[写入]
+world.flags.q05_withdrawal_acknowledged = true
+
+[结束]
+END
+
+[选择 B]
+[玩家]
+“只结算已经核验的两类证据。”
+
+[判定]
+none
+
+[青书副手]
+“两点普通调查功绩，不含行动奖励。”
 
 [写入]
 player.resources.clan_merit += 2
@@ -1480,6 +1554,7 @@ requires：
 - quest.q05.result == "refused"
 excludes：
 - world.village_closed == true
+- world.flags.q05_decision_actor == "qing_shu_deputy"
 once：true
 on_expire：none
 
@@ -1511,6 +1586,60 @@ none
 
 [古月青书]
 “证据功绩两点，与救援结果分开。”
+
+[写入]
+player.resources.clan_merit += 2
+
+[结束]
+END
+
+## D_Q05_QING_SHU_DEPUTY_RESULT_REFUSED_01
+
+类型：dialogue
+ID：D_Q05_QING_SHU_DEPUTY_RESULT_REFUSED_01
+所属：Q05
+拥有者：npc.qing_shu_deputy
+地点：east_wall_muster
+available_from：D24_morning
+expires_after：D30_evening
+priority：70
+topic：替代拒绝结算
+requires：
+- world.flags.q05_decision_actor == "qing_shu_deputy"
+- quest.q05.result == "refused"
+excludes：
+- world.village_closed == true
+once：true
+on_expire：none
+
+[青书副手]
+“你明确拒绝了行动。已提交事实留在任务档案，未交物资归你；队伍不发信物、护符和救援支援。”
+
+[选择 A]
+[玩家]
+“确认拒绝，不领取行动奖励。”
+
+[判定]
+none
+
+[青书副手]
+“已封账。后续狼潮任务仍按你的普通资格开放。”
+
+[写入]
+world.flags.q05_refusal_acknowledged = true
+
+[结束]
+END
+
+[选择 B]
+[玩家]
+“只领取已核验证据的普通功绩。”
+
+[判定]
+none
+
+[青书副手]
+“两点调查功绩，与未参加的行动分开。”
 
 [写入]
 player.resources.clan_merit += 2

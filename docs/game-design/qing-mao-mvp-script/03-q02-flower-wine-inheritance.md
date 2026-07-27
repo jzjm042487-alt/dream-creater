@@ -1293,3 +1293,14 @@ and quest.q02.result == "none"
 
 所有仍以 `object.*` 为持有人的 Q02 限定物写入 `missed_permanently`。已经归玩家、家族或其他 NPC
 所有的物品不被复制或追溯改写。
+
+## 系统规则：默认个人主张
+
+玩家可以完全不找任何主张者。首次从遗藏取得唯一物品前，系统执行：
+
+```text
+quest.q02.claim == "none"
+-> quest.q02.claim = "player"
+```
+
+该规则只填补空值，不覆盖已经由族务执事、青书或玩家选择写入的 `shared`、`clan` 或 `player`。

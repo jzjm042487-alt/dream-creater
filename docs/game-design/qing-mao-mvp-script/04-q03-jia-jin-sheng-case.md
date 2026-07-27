@@ -1355,6 +1355,16 @@ quest.q03.stage == "evidence_disposition"
 -> 根据来源边界与 player_contradiction 数量写入
    quest.q03.investigation_result = cleared / doubtful / pursuit
 -> quest.q03.stage = "settled"
+
+quest.q03.route == "observer"
+and quest.q03.stage == "settled"
+and quest.q03.result == "none"
+-> quest.q03.result = "observer"
+
+quest.q03.route in ["legal", "black_market"]
+and quest.q03.stage == "settled"
+and quest.q03.result == "none"
+-> quest.q03.result = "failed"
 ```
 
 合法奖励与黑市奖励互斥。一方写入玩家所有权时，另一方全部写入 `missed_permanently`。

@@ -530,6 +530,36 @@ world.flags.q04_jiang_offer_declined = true
 [结束]
 END
 
+[选择 D]
+[玩家]
+“我不买卖。只要药圃换班与警戒规律，风险和后果由我承担。”
+
+[判定]
+交涉 + 市井通达，对抗难度 66
+
+[成功]
+[江牙]
+“东墙钟响后换班，药圃有一刻空档。话只说一次；你若被抓，我不会承认是我给的。”
+
+[写入]
+quest.q04.route = "theft"
+quest.q04.stage = "claim_selected"
+world.flags.q04_theft_unlocked = true
+npc.jiang_ya.transactions.nine_leaf_patrol_info = true
+
+[结束]
+END
+
+[失败]
+[江牙]
+“这种消息比蛊还容易惹事。没有更高价，也没有能让我信你的理由，我不卖。”
+
+[写入]
+world.flags.q04_theft_unlocked = false
+
+[结束]
+END
+
 ## D_Q04_HE_NIANG_02
 
 类型：dialogue
@@ -1042,3 +1072,6 @@ quest.q04.result == "none"
 
 所有路线最终只能写入 `player`、`medicine_hall`、`npc.jiang_ya`、`npc.uncle` 或
 `missed_permanently` 中的一种所有权。Q04 结果不参与主线离山门槛。
+
+`I_Q04_NINE_LEAF_GRASS_01` 的操作 C 只在 `world.flags.q04_theft_unlocked == true` 时显示；
+未解锁时不允许通过直接选中文字绕过江牙提供的药圃时辰。

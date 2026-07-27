@@ -122,3 +122,194 @@ Q05 稳妥救援，并取得紫金石与最后商队隐藏物。每件唯一物�
 - 低资质且无相关天赋：学堂奖励较少，普通任务仍开放，最终可紧急离山。
 - 社交天赋：可降低说服难度，不代替证据或物品，最终可任意满足条件的路线离山。
 - 高修炼天赋：更容易炼化与取得学堂资源，不自动取得支线奖励，最终仍需主动离山。
+
+三类 Roll 都必须经过：
+
+```text
+quest.main.stage = identity_registered
+-> quest.main.stage = academy_established
+-> quest.main.stage = departed
+```
+
+### Q01 成功与失去
+
+玩家成功：
+
+```text
+unavailable
+-> D_Q01_TAVERN_KEEPER_01: smell_found
+-> D_Q01_TAVERN_KEEPER_02: back_room_open
+-> I_Q01_BACK_ROOM_JAR_01: trail_found
+-> I_Q01_WINE_SCENT_TRAIL_01: wine_worm_hideout=true
+-> I_Q01_WINE_WORM_01: item.owner=player, stage=refining
+-> I_Q01_DORM_REFINING_01: result=player_acquired
+-> D_Q01_TAVERN_KEEPER_RESULT_PLAYER_01
+```
+
+失去：
+
+```text
+捕捉失败
+-> item.owner=npc.fang_yuan 或 npc.ordinary_wine_worm_holder
+-> 可选交易成功则回到 refining
+-> 不交易或再失败则 result=other_acquired
+-> D_Q01_TAVERN_KEEPER_RESULT_OTHER_01
+```
+
+不接触方源的成功路线使用酒饵或直接捕捉；上缴族库则写入 `clan_custody`。拒绝与 D10 超时分别
+进入 `refused` 和 `missed`，不会复用失败对白。
+
+### Q02 深度一、二、三
+
+任一入口：
+
+```text
+wine_trail / archive / field
+-> entry_known
+-> I_Q02_SHADOW_WALL_01
+-> chambers_open
+```
+
+深度一：
+
+```text
+I_Q02_EARTH_FLOWER_01
+-> I_Q02_WHITE_BOAR_TRAINING_01
+-> GU_WHITE_BOAR.owner=player
+-> depth=1
+-> settling -> completed
+```
+
+深度二：
+
+```text
+深度一
+-> I_Q02_STRENGTH_GATE_01
+-> I_Q02_JADE_CHAMBER_01
+-> GU_JADE_SKIN.owner=player
+-> depth=2
+-> settling -> completed
+```
+
+深度三：
+
+```text
+深度二
+-> I_Q02_HIDDEN_CHAMBER_01
+-> I_Q02_SECRET_MAP_01
+-> GU_HIDDEN_STONE.owner=player
+-> ITEM_FLOWER_WINE_MAP.owner=player
+-> depth=3
+-> settling -> completed
+```
+
+未找方源、未完成 Q01 时，档案或野外入口仍可完成深度三。D25 后，仍在物件上的奖励全部变为
+`missed_permanently`。
+
+### Q03 合法与黑市
+
+合法：
+
+```text
+D_Q03_CARAVAN_ACCOUNTANT_01 或 D_Q03_JIA_JIN_SHENG_02
+-> route=legal
+-> 守卫登记与山路行动
+-> case_open
+-> 完整证据提交
+-> ITEM_JIA_PASS.owner=player
+-> result=legal
+```
+
+黑市：
+
+```text
+D_Q03_JIA_JIN_SHENG_02
+-> route=black_market
+-> I_Q03_UNREGISTERED_CRATE_01
+-> 山路行动
+-> 部分保留私货线
+-> GU_SLEEVE_POUCH.owner=player
+-> ITEM_BLACK_LEDGER.owner=player
+-> result=black_market
+```
+
+取得一组奖励时，另一组立即写入 `missed_permanently`。旁观路线在 D27 复核后写
+`result=observer`；拒绝、调查失败和未在 D15 封账前参与分别进入独立终点。全流程不需要方源。
+
+### Q04 自留、上缴与失去
+
+自留：
+
+```text
+ownership_rumored
+-> parent_ledger + custody_record
+-> lawful_claim
+-> I_Q04_NINE_LEAF_GRASS_01 成功
+-> GU_NINE_LEAF.owner=player
+-> result=player_owned
+```
+
+上缴：
+
+```text
+确认玩家所有权
+-> route=surrender
+-> I_Q04_NINE_LEAF_GRASS_01 上缴
+-> GU_NINE_LEAF.owner=medicine_hall
+-> ITEM_MEDICINE_PROTECTION.owner=player
+-> result=medicine_hall_owned
+```
+
+失去：
+
+```text
+合法主张失败或偷取失败
+-> GU_NINE_LEAF.owner=npc.uncle
+-> result=failed
+```
+
+合法交易给江牙则写 `owner=npc.jiang_ya`；明确放弃写 `refused`；D24 未完成任何有效转移写
+`missed`。每条路线只有一个最终持有人，均不阻断离山。
+
+### Q05 七种终局
+
+共同前半：
+
+```text
+青书或副手招募
+-> 狼路/幸存者组成证据家族一
+-> 冰痕组成证据家族二
+-> evidence_family_count=2
+-> 至少准备药包、护具、标记、信号中的可用项目
+-> 最终决定
+```
+
+终局矩阵：
+
+| 选择与操作结果 | 任务结果 | 结算角色 |
+| --- | --- | --- |
+| 稳妥救援成功，准备至少两项 | `saved_stable` | 青书 |
+| 稳妥救援部分成功 | `saved_costly` | 青书 |
+| 冒险救援成功或部分成功 | `saved_costly` | 青书 |
+| 顶替成功或部分成功 | `replaced` | 青书 |
+| 出发前撤回 | `withdrew` | 青书或副手 |
+| 明确拒绝 | `refused` | 青书或副手 |
+| 操作失败或青书死亡 | `dead` | 青书副手 |
+
+未在 D25 前决定则是第八个非操作终点 `missed`。不与白凝冰交谈时，`I_Q05_ICE_TRACE_01` 独立
+满足第二证据家族。每条终局都写 `stage=resolved` 或 `stage=missed`。
+
+### 第 30 日超时紧急流亡
+
+```text
+D30_morning
+-> quest.main.stage=departure_open
+-> world.departure_open=true
+-> 玩家不触发任何离山确认
+-> 推进超过 D30_evening
+-> quest.main.departure_route=emergency
+-> quest.main.stage=departed
+-> world.village_closed=true
+```
+
+该兜底不播放强制对话，不检查支线、Roll 或是否见过任何 NPC。

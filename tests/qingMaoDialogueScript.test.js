@@ -23,6 +23,15 @@ const recordFiles = targetFiles.filter((file) =>
   /^(?:01|02|03|04|05|06|07)-/.test(file),
 );
 
+const supersededFiles = [
+  "01-main-days-00-10.md",
+  "02-main-days-11-20.md",
+  "03-main-days-21-30.md",
+  "04-side-quests-q01-q03.md",
+  "05-side-quests-q04-q05.md",
+  "06-repeatable-dialogue.md",
+];
+
 const earlyMainlineIds = [
   "D_MAIN_CLAN_STEWARD_01",
   "D_MAIN_OLD_CONTACT_01",
@@ -147,8 +156,10 @@ const q05Ids = [
   "D_Q05_QING_SHU_RESULT_COSTLY_01",
   "D_Q05_QING_SHU_RESULT_REPLACED_01",
   "D_Q05_QING_SHU_RESULT_WITHDREW_01",
+  "D_Q05_QING_SHU_DEPUTY_RESULT_WITHDREW_01",
   "D_Q05_QING_SHU_DEPUTY_RESULT_DEAD_01",
   "D_Q05_QING_SHU_RESULT_REFUSED_01",
+  "D_Q05_QING_SHU_DEPUTY_RESULT_REFUSED_01",
   "D_Q05_QING_SHU_DEPUTY_MISSED_01",
 ];
 
@@ -232,9 +243,25 @@ function choiceBlocks(record, label) {
     .slice(1);
 }
 
+function catalogEntries(heading) {
+  const source = readScript("08-schedules-states-rewards.md");
+  const match = source.match(
+    new RegExp(`^## ${heading}\\r?\\n\\r?\\n\`\`\`text\\r?\\n([\\s\\S]*?)\\r?\\n\`\`\``, "m"),
+  );
+
+  assert.ok(match, `catalog ${heading} must be a text block`);
+  return new Set(match[1].split(/\r?\n/).map((line) => line.trim()).filter(Boolean));
+}
+
 test("provides every replacement Qing Mao script file", () => {
   for (const file of targetFiles) {
     assert.equal(existsSync(`${scriptRoot}${file}`), true, `${file} must exist`);
+  }
+});
+
+test("removes every superseded continuous-play script", () => {
+  for (const file of supersededFiles) {
+    assert.equal(existsSync(`${scriptRoot}${file}`), false, `${file} must be removed`);
   }
 });
 
@@ -384,6 +411,113 @@ test("gives every record a complete single-interaction body", () => {
       assert.match(record.text, /^\[结束\]\r?\nEND$/m);
     }
   }
+});
+
+test("indexes production IDs, schedules, state schemas, and reward ownership", () => {
+  const source = readScript("08-schedules-states-rewards.md");
+
+  for (const heading of [
+    "NPC_IDS",
+    "OBJECT_IDS",
+    "LOCATION_IDS",
+    "ITEM_IDS",
+    "TEMPLATE_VARIABLES",
+    "STATE_KEYS_AND_VALUES",
+    "NPC 日程",
+    "唯一物品所有权",
+  ]) {
+    assert.match(source, new RegExp(`^## ${heading}$`, "m"), `index lacks ${heading}`);
+  }
+});
+
+test("resolves every production owner, location, entity, item, and template reference", () => {
+  const catalogs = {
+    npc: catalogEntries("NPC_IDS"),
+    object: catalogEntries("OBJECT_IDS"),
+    location: catalogEntries("LOCATION_IDS"),
+    item: catalogEntries("ITEM_IDS"),
+    template: catalogEntries("TEMPLATE_VARIABLES"),
+  };
+
+  for (const record of recordFiles.flatMap(parseRecords)) {
+    const owner = fieldValue(record, "拥有者");
+    const location = fieldValue(record, "地点");
+    const ownerMatch = owner.match(/^(npc|object)\.([a-z0-9_]+)$/);
+
+    assert.ok(ownerMatch, `${record.id} has malformed owner ${owner}`);
+    assert.equal(catalogs[ownerMatch[1]].has(ownerMatch[2]), true, `${record.id} has unknown owner ${owner}`);
+    assert.equal(catalogs.location.has(location), true, `${record.id} has unknown location ${location}`);
+
+    for (const [, kind, id] of record.text.matchAll(/\b(npc|object)\.([a-z0-9_]+)\b/g)) {
+      assert.equal(catalogs[kind].has(id), true, `${record.id} references unknown ${kind}.${id}`);
+    }
+
+    for (const [item] of record.text.matchAll(/\b(?:GU|ITEM)_[A-Z0-9_]+\b/g)) {
+      assert.equal(catalogs.item.has(item), true, `${record.id} references unknown item ${item}`);
+    }
+
+    for (const [, template] of record.text.matchAll(/\{([a-z0-9_]+)\}/g)) {
+      assert.equal(
+        catalogs.template.has(template),
+        true,
+        `${record.id} references unknown template {${template}}`,
+      );
+    }
+  }
+});
+
+test("documents every required success, loss, refusal, and fallback walkthrough", () => {
+  const source = readScript("00-quest-overview.md");
+
+  for (const walkthrough of [
+    "纯主线",
+    "不接触方源",
+    "全部错过",
+    "Q01 成功与失去",
+    "Q02 深度一、二、三",
+    "Q03 合法与黑市",
+    "Q04 自留、上缴与失去",
+    "Q05 七种终局",
+    "全限定收集",
+    "不同 Roll",
+    "第 30 日超时紧急流亡",
+  ]) {
+    assert.match(source, new RegExp(`^### ${walkthrough}$`, "m"), `overview lacks ${walkthrough}`);
+  }
+});
+
+test("never makes Fang Yuan a mainline prerequisite", () => {
+  for (const record of parseRecords("01-main-quest.md")) {
+    const requires = record.text.match(/^requires：([\s\S]*?)^excludes：/m)?.[1] ?? "";
+    assert.equal(requires.includes("fang_yuan"), false, `${record.id} requires Fang Yuan`);
+  }
+});
+
+test("settles every allowed Q05 operation outcome", () => {
+  const source = readScript("06-q05-qing-shu-fate.md");
+
+  assert.match(source, /partial \+ stable_rescue[\s\S]*saved_costly/);
+  assert.match(source, /failure 或 npc\.qing_shu\.alive == false[\s\S]*dead/);
+  assert.match(source, /每种组合必须且只能命中一个终局/);
+  assert.match(source, /选择 A 可用条件：quest\.q05\.preparation_count >= 2/);
+  assert.match(
+    source,
+    /world\.flags\.q05_decision_actor == "qing_shu_deputy"[\s\S]*quest\.q05\.result == "withdrew"/,
+  );
+  assert.match(
+    source,
+    /world\.flags\.q05_decision_actor == "qing_shu_deputy"[\s\S]*quest\.q05\.result == "refused"/,
+  );
+});
+
+test("closes default-claim, observer, and theft route state bridges", () => {
+  const q02 = readScript("03-q02-flower-wine-inheritance.md");
+  const q03 = readScript("04-q03-jia-jin-sheng-case.md");
+  const q04 = readScript("05-q04-nine-leaf-vitality-grass.md");
+
+  assert.match(q02, /quest\.q02\.claim == "none"[\s\S]*quest\.q02\.claim = "player"/);
+  assert.match(q03, /quest\.q03\.route == "observer"[\s\S]*quest\.q03\.result = "observer"/);
+  assert.match(q04, /world\.flags\.q04_theft_unlocked = true/);
 });
 
 test("keeps production records free of visual-novel directions", () => {
