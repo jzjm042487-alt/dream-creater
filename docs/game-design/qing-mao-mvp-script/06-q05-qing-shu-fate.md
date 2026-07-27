@@ -764,12 +764,13 @@ requires：
 - npc.qing_shu.alive == true
 excludes：
 - world.village_closed == true
-once：true
+- world.flags.q05_qing_shu_exit_pending == true
+once：false
 on_expire：none
 
 [古月青书]
 “证据够了，现在谈谁承担。稳妥改线需要至少两项准备；准备不足可以冒险救援；你也可以顶替我的
-前锋位置、在出发前撤回，或者明确拒绝。没有哪项会因为你知道危险就自动成功。”
+前锋位置，或者先单独处理退出决定。没有哪项会因为你知道危险就自动成功。”
 
 [选择 A]
 [玩家]
@@ -831,40 +832,16 @@ END
 
 [选择 D]
 [玩家]
-“我在出发前撤回。证据与准备留给队伍，我不参加行动。”
+“我不准备立刻出发。下一次交谈再明确是出发前撤回，还是彻底拒绝。”
 
 [判定]
 none
 
 [古月青书]
-“可以。你没有临阵脱队，准备仍归队伍使用；私人救援奖励关闭。”
+“可以。这次只记你进入退出确认，不替你做决定。再次找我时，可以撤回、拒绝，或返回行动方案。”
 
 [写入]
-quest.q05.intent = "withdraw"
-quest.q05.operation_result = "not_started"
-quest.q05.result = "withdrew"
-quest.q05.stage = "resolved"
-operation.q05_rescue = "skipped"
-
-[结束]
-END
-
-[选择 E]
-[玩家]
-“我拒绝这次行动，也不提供个人物资。”
-
-[判定]
-none
-
-[古月青书]
-“拒绝记录成立。之前提交的事实留在任务档案，未交付的物资仍归你。”
-
-[写入]
-quest.q05.intent = "refuse"
-quest.q05.operation_result = "not_started"
-quest.q05.result = "refused"
-quest.q05.stage = "resolved"
-operation.q05_rescue = "skipped"
+world.flags.q05_qing_shu_exit_pending = true
 
 [结束]
 END
@@ -886,12 +863,13 @@ requires：
 - world.flags.q05_recruiter == "qing_shu_deputy"
 excludes：
 - world.village_closed == true
-once：true
+- world.flags.q05_deputy_exit_pending == true
+once：false
 on_expire：none
 
 [青书副手]
 “青书不在集合点，由我按队伍权限决定。稳妥改线、冒险救援、由你顶替前锋、撤回或拒绝都可以；
-我不能替青书预先承诺他的私人信物。”
+我不能替青书预先承诺他的私人信物。退出决定会在下一次交谈单独确认。”
 
 [选择 A]
 [玩家]
@@ -952,7 +930,127 @@ END
 
 [选择 D]
 [玩家]
-“我撤回，但已交付准备留给队伍。”
+“我不准备立刻出发。下一次交谈再确认撤回或拒绝。”
+
+[判定]
+none
+
+[青书副手]
+“这次只开启退出确认，不替你选。再次找我时仍可返回行动方案。”
+
+[写入]
+world.flags.q05_deputy_exit_pending = true
+
+[结束]
+END
+
+## D_Q05_QING_SHU_EXIT_01
+
+类型：dialogue
+ID：D_Q05_QING_SHU_EXIT_01
+所属：Q05
+拥有者：npc.qing_shu
+地点：east_wall_muster
+available_from：D24_morning
+expires_after：D25_evening
+priority：80
+topic：退出决定
+requires：
+- quest.q05.stage == "warning_ready"
+- world.flags.q05_qing_shu_exit_pending == true
+- npc.qing_shu.alive == true
+excludes：
+- world.village_closed == true
+once：false
+on_expire：none
+
+[古月青书]
+“现在确认退出方式。撤回表示保留已交证据和物资给队伍，但你不出发；拒绝表示不参加，也不交
+尚未交付的个人物资。你也可以返回行动方案。”
+
+[选择 A]
+[玩家]
+“我在出发前撤回。已交证据和准备留给队伍，我不参加行动。”
+
+[判定]
+none
+
+[古月青书]
+“记录为出发前撤回，不记临阵脱队；私人救援奖励关闭。”
+
+[写入]
+quest.q05.intent = "withdraw"
+quest.q05.operation_result = "not_started"
+quest.q05.result = "withdrew"
+quest.q05.stage = "resolved"
+operation.q05_rescue = "skipped"
+world.flags.q05_qing_shu_exit_pending = false
+
+[结束]
+END
+
+[选择 B]
+[玩家]
+“我拒绝行动，也不交个人物资。”
+
+[判定]
+none
+
+[古月青书]
+“拒绝记录成立。之前提交的事实留在任务档案，未交付的物资仍归你。”
+
+[写入]
+quest.q05.intent = "refuse"
+quest.q05.operation_result = "not_started"
+quest.q05.result = "refused"
+quest.q05.stage = "resolved"
+operation.q05_rescue = "skipped"
+world.flags.q05_qing_shu_exit_pending = false
+
+[结束]
+END
+
+[选择 C]
+[玩家]
+“我返回行动方案，现在不退出。”
+
+[判定]
+none
+
+[古月青书]
+“可以。退出确认取消，下一次交谈重新选择行动。”
+
+[写入]
+world.flags.q05_qing_shu_exit_pending = false
+
+[结束]
+END
+
+## D_Q05_QING_SHU_DEPUTY_EXIT_01
+
+类型：dialogue
+ID：D_Q05_QING_SHU_DEPUTY_EXIT_01
+所属：Q05
+拥有者：npc.qing_shu_deputy
+地点：east_wall_muster
+available_from：D24_morning
+expires_after：D25_evening
+priority：80
+topic：替代退出决定
+requires：
+- quest.q05.stage == "warning_ready"
+- world.flags.q05_deputy_exit_pending == true
+excludes：
+- world.village_closed == true
+once：false
+on_expire：none
+
+[青书副手]
+“现在确认：出发前撤回、彻底拒绝，或者返回行动方案。三种都会分别记账。”
+
+[选择 A]
+[玩家]
+“我撤回，但已交证据和准备留给队伍。”
 
 [判定]
 none
@@ -966,13 +1064,14 @@ quest.q05.operation_result = "not_started"
 quest.q05.result = "withdrew"
 quest.q05.stage = "resolved"
 operation.q05_rescue = "skipped"
+world.flags.q05_deputy_exit_pending = false
 
 [结束]
 END
 
-[选择 E]
+[选择 B]
 [玩家]
-“我拒绝行动，也不交个人物资。”
+“我拒绝行动，也不交尚未交付的个人物资。”
 
 [判定]
 none
@@ -986,6 +1085,23 @@ quest.q05.operation_result = "not_started"
 quest.q05.result = "refused"
 quest.q05.stage = "resolved"
 operation.q05_rescue = "skipped"
+world.flags.q05_deputy_exit_pending = false
+
+[结束]
+END
+
+[选择 C]
+[玩家]
+“返回行动方案。”
+
+[判定]
+none
+
+[青书副手]
+“退出确认取消。下一次交谈重新选择行动。”
+
+[写入]
+world.flags.q05_deputy_exit_pending = false
 
 [结束]
 END

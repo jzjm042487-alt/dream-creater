@@ -141,6 +141,8 @@ const q05Ids = [
   "I_Q05_RETREAT_MARKERS_01",
   "D_Q05_QING_SHU_03",
   "D_Q05_QING_SHU_DEPUTY_03",
+  "D_Q05_QING_SHU_EXIT_01",
+  "D_Q05_QING_SHU_DEPUTY_EXIT_01",
   "D_Q05_QING_SHU_RESULT_SAVED_01",
   "D_Q05_QING_SHU_RESULT_COSTLY_01",
   "D_Q05_QING_SHU_RESULT_REPLACED_01",
@@ -187,6 +189,24 @@ const barkIds = [
   "B_FANG_YUAN_Q02_AFTER_01",
 ];
 
+const requiredHeaders = [
+  "类型",
+  "ID",
+  "所属",
+  "拥有者",
+  "地点",
+  "available_from",
+  "expires_after",
+  "priority",
+  "topic",
+  "requires",
+  "excludes",
+  "once",
+  "on_expire",
+];
+
+const allowedPriorities = new Set(["100", "80", "70", "60", "30", "10"]);
+
 function readScript(file) {
   return readFileSync(`${scriptRoot}${file}`, "utf8");
 }
@@ -200,6 +220,16 @@ function parseRecords(file) {
     file,
     text: source.slice(match.index, matches[index + 1]?.index ?? source.length),
   }));
+}
+
+function fieldValue(record, label) {
+  return record.text.match(new RegExp(`^${label}：([^\\r\\n]*)`, "m"))?.[1].trim();
+}
+
+function choiceBlocks(record, label) {
+  return record.text
+    .split(new RegExp(`^\\[${label} [A-Z]\\]\\r?$`, "m"))
+    .slice(1);
 }
 
 test("provides every replacement Qing Mao script file", () => {
@@ -292,6 +322,67 @@ test("keeps optional Fang Yuan barks on ordinary NPC facts", () => {
     "countermeasure",
   ]) {
     assert.equal(source.includes(forbidden), false, `${forbidden} must not appear`);
+  }
+});
+
+test("uses globally unique canonical record headers", () => {
+  const records = recordFiles.flatMap(parseRecords);
+  const seen = new Set();
+
+  for (const record of records) {
+    assert.equal(seen.has(record.id), false, `duplicate record ${record.id}`);
+    seen.add(record.id);
+
+    for (const header of requiredHeaders) {
+      assert.match(record.text, new RegExp(`^${header}：`, "m"), `${record.id} lacks ${header}`);
+    }
+
+    assert.equal(fieldValue(record, "ID"), record.id);
+    assert.match(fieldValue(record, "类型"), /^(?:dialogue|interaction|bark)$/);
+    assert.match(fieldValue(record, "所属"), /^(?:MAIN|Q01|Q02|Q03|Q04|Q05|GENERAL)$/);
+    assert.match(fieldValue(record, "available_from"), /^D\d{2}_(?:morning|noon|afternoon|evening)$/);
+    assert.match(fieldValue(record, "expires_after"), /^D\d{2}_(?:morning|noon|afternoon|evening)$/);
+    assert.equal(allowedPriorities.has(fieldValue(record, "priority")), true);
+    assert.match(fieldValue(record, "once"), /^(?:true|false)$/);
+  }
+});
+
+test("gives every record a complete single-interaction body", () => {
+  const records = recordFiles.flatMap(parseRecords);
+
+  for (const record of records) {
+    const type = fieldValue(record, "类型");
+    const owner = fieldValue(record, "拥有者");
+
+    if (type === "dialogue") {
+      const choices = choiceBlocks(record, "选择");
+      assert.match(owner, /^npc\./, `${record.id} must be owned by an NPC`);
+      assert.ok(choices.length >= 2 && choices.length <= 4, `${record.id} must have 2-4 choices`);
+
+      for (const block of choices) {
+        assert.match(block, /^\[玩家\]$/m, `${record.id} choice lacks player speech`);
+        assert.match(block, /^\[判定\]$/m, `${record.id} choice lacks judgment`);
+        assert.match(block, /^\[写入\]$/m, `${record.id} choice lacks writes`);
+        assert.match(block, /^\[结束\]\r?\nEND$/m, `${record.id} choice lacks END`);
+      }
+    } else if (type === "interaction") {
+      const operations = choiceBlocks(record, "操作");
+      assert.match(owner, /^object\./, `${record.id} must be owned by an object`);
+      assert.ok(operations.length >= 1, `${record.id} must have an operation`);
+
+      for (const block of operations) {
+        assert.match(block, /^\[判定\]$/m, `${record.id} operation lacks judgment`);
+        assert.match(block, /^\[事实结果\]$/m, `${record.id} operation lacks factual result`);
+        assert.match(block, /^\[写入\]$/m, `${record.id} operation lacks writes`);
+        assert.match(block, /^\[结束\]\r?\nEND$/m, `${record.id} operation lacks END`);
+      }
+    } else {
+      assert.match(owner, /^npc\./, `${record.id} must be owned by an NPC`);
+      assert.equal(record.text.includes("[选择 "), false, `${record.id} bark has a choice`);
+      assert.equal(record.text.includes("[操作 "), false, `${record.id} bark has an operation`);
+      assert.match(record.text, /^\[写入\]$/m);
+      assert.match(record.text, /^\[结束\]\r?\nEND$/m);
+    }
   }
 });
 
