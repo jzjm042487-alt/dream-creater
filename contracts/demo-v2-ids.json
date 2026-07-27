@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "id": "demo-v2-ids",
-  "version": 3,
+  "version": 4,
   "stableIds": {
     "characters": [
       "char_player",
@@ -230,6 +230,49 @@
       "panel_talent_roster",
       "panel_canon_lookup"
     ],
+    "battleAiDifficulties": [
+      "ai_difficulty_beginner",
+      "ai_difficulty_standard",
+      "ai_difficulty_hard",
+      "ai_difficulty_prodigy"
+    ],
+    "battleAiProfiles": [
+      "ai_profile_melee_pursuer",
+      "ai_profile_charger",
+      "ai_profile_ranged_skirmisher",
+      "ai_profile_guardian",
+      "ai_profile_duelist",
+      "ai_profile_pack_hunter",
+      "ai_profile_boss_hunter"
+    ],
+    "battleAiIntents": [
+      "finish",
+      "attack",
+      "reposition",
+      "defend",
+      "conserve",
+      "phase_action"
+    ],
+    "battleActionCategories": [
+      "damage",
+      "control",
+      "defend",
+      "reposition",
+      "pass"
+    ],
+    "battleBalanceReferenceBuilds": [
+      "reference_minimum",
+      "reference_balanced",
+      "reference_specialist"
+    ],
+    "battleBalancePlayerPolicies": [
+      "player_policy_aggressive",
+      "player_policy_kiting",
+      "player_policy_defensive",
+      "player_policy_conserving",
+      "player_policy_retreat_aware"
+    ],
+    "battleAiDiagnostics": ["ai_no_legal_plan"],
     "characterLifeStatuses": ["alive", "wounded", "dead", "departed"],
     "equipmentSlots": ["weapon", "armor", "artifact"],
     "guAbilityFamilies": ["gu_family_cultivation_support"],

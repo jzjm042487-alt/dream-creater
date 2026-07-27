@@ -9,6 +9,8 @@
 - Wilderness map and balance: `systems/balance/demo-v2.json`
 - Hidden-route details: `docs/superpowers/specs/2026-07-26-wilderness-hidden-route-design.md`
 - Low-rank Gu details: `docs/superpowers/specs/2026-07-26-low-rank-gu-acquisition-and-care-design.md`
+- Battle AI and enemy balance:
+  `docs/superpowers/specs/2026-07-27-tactical-combat-ai-and-enemy-balance-design.md`
 
 New content must use registered IDs. IDs under `legacyIds` are readable only for
 save migration and are invalid in new authoring data.
@@ -144,7 +146,11 @@ Actions are physical attack, one Gu skill, one killer move, defend, item, or
 retreat. There are no interrupts or reaction windows.
 
 Default encounters are `1v1`; a small authored subset may be `1v2`. Damage and
-enemy path selection are deterministic. Retreat is available from a board edge.
+enemy decisions are deterministic. Enemy AI combines registered behavior
+profiles, legal turn-plan enumeration, utility scoring, and difficulty-bounded
+search. Beginner, standard, hard, and prodigy difficulty share the same enemy
+stats, skills, rewards, and battle rules. Retreat is available from a board
+edge.
 
 ## Gu Loadout
 
