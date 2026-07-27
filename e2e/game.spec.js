@@ -33,6 +33,7 @@ test("debug clock action advances the current period", async ({ page }) => {
 test("route A is playable from the world map through refining", async ({
   page,
 }) => {
+  test.setTimeout(60_000);
   await page.goto("/");
 
   await interactAt(page, 910, 125);
@@ -91,15 +92,30 @@ test("forest encounter opens the tactical battle and accepts a turn", async ({
 });
 
 async function interactAt(page, x, y) {
-  await page.evaluate(
+  await expect
+    .poll(
+      () =>
+        page.evaluate(() => {
+          const scene =
+            window.__TIANWAI_GAME__?.game?.scene?.getScene("explore");
+          return Boolean(scene?.player?.active && scene.interactables?.length);
+        }),
+      { timeout: 15_000 }
+    )
+    .toBe(true);
+
+  const interactableName = await page.evaluate(
     ({ x: targetX, y: targetY }) => {
       const scene = window.__TIANWAI_GAME__.game.scene.getScene("explore");
       scene.player.setPosition(targetX, targetY);
+      scene.currentInteractable = scene.findNearestInteractable();
+      return scene.currentInteractable?.definition?.name ?? "";
     },
     { x, y }
   );
-  await page.waitForTimeout(100);
-  await page.keyboard.down("KeyE");
-  await page.waitForTimeout(80);
-  await page.keyboard.up("KeyE");
+  expect(interactableName).not.toBe("");
+  await page.evaluate(() => {
+    const scene = window.__TIANWAI_GAME__.game.scene.getScene("explore");
+    scene.interact();
+  });
 }

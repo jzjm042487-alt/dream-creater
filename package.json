@@ -13,6 +13,7 @@
     "start": "vite --host 127.0.0.1"
   },
   "dependencies": {
+    "lucide": "^1.27.0",
     "phaser": "3.90.0"
   },
   "devDependencies": {
