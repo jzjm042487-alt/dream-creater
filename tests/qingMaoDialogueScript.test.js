@@ -89,6 +89,27 @@ const q02Ids = [
   "D_Q02_ACADEMY_ELDER_MISSED_01",
 ];
 
+const q03Ids = [
+  "D_Q03_JIA_JIN_SHENG_01",
+  "D_Q03_CARAVAN_ACCOUNTANT_01",
+  "D_Q03_JIA_JIN_SHENG_02",
+  "I_Q03_UNREGISTERED_CRATE_01",
+  "D_Q03_JIA_JIN_SHENG_03",
+  "D_Q03_CARAVAN_GUARD_01",
+  "I_Q03_MOUNTAIN_ROAD_01",
+  "I_Q03_CRIME_SCENE_01",
+  "D_Q03_WITNESS_01",
+  "D_Q03_JIA_FU_01",
+  "D_Q03_JIA_FU_02",
+  "D_Q03_TIE_RUO_NAN_01",
+  "D_Q03_TIE_RUO_NAN_02",
+  "D_Q03_JIA_FU_REWARD_LEGAL_01",
+  "D_Q03_BLACK_MARKET_BROKER_REWARD_01",
+  "D_Q03_JIA_FU_FAILED_01",
+  "D_Q03_JIA_FU_REFUSED_01",
+  "D_Q03_JIA_FU_MISSED_01",
+];
+
 function readScript(file) {
   return readFileSync(`${scriptRoot}${file}`, "utf8");
 }
@@ -147,6 +168,14 @@ test("provides every Flower Wine entrance, chamber, and terminal response", () =
   const ids = new Set(recordFiles.flatMap(parseRecords).map(({ id }) => id));
 
   for (const id of q02Ids) {
+    assert.equal(ids.has(id), true, `${id} must exist`);
+  }
+});
+
+test("provides every Jia Jin Sheng route, investigation, and endpoint", () => {
+  const ids = new Set(recordFiles.flatMap(parseRecords).map(({ id }) => id));
+
+  for (const id of q03Ids) {
     assert.equal(ids.has(id), true, `${id} must exist`);
   }
 });
