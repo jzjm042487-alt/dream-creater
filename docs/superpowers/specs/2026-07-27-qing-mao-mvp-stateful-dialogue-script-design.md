@@ -109,9 +109,10 @@
 | 30 | 已完成任务的重复状态回应 |
 | 10 | 日常重复台词 |
 
-解析器先选择最高有效优先级。该优先级只有一个节点时直接进入；存在两个或更多节点时，这些节点
-必须各自声明简短 `topic`，系统只显示这些同优先级话题供玩家选择。相同优先级的显示顺序按节点 ID
-升序固定。缺少 `topic` 的并列节点属于内容错误。
+解析器在当前交互拥有者的候选记录中选择最高有效优先级。该优先级只有一个记录时直接进入；存在
+两个或更多记录时，这些记录必须各自声明简短 `topic`，系统只显示这些同优先级话题供玩家选择。
+相同优先级的显示顺序按 ID 升序固定。缺少 `topic` 的并列记录属于内容错误。NPC 与物件遵守同一
+并列规则。
 
 ### 4.3 对话运行器
 
@@ -137,26 +138,30 @@ NPC 开场
 
 ### 5.1 必需字段
 
-三类记录共用：
+三类记录使用同一份固定头部，不允许省略字段：
 
 ```text
-节点类型
-节点 ID
-所属主线或支线
-地点
-日期或时间窗口
-优先级
-触发条件
-排除条件
-是否一次性
-状态修改
-END
-过期与补救规则
+类型：dialogue / interaction / bark
+ID：全局唯一 ID，与二级标题一致
+所属：MAIN / Q01 / Q02 / Q03 / Q04 / Q05 / GENERAL
+拥有者：npc.<id> / object.<id>
+地点：规范地点 ID
+available_from：包含边界的日期时段 ID
+expires_after：包含边界的日期时段 ID
+priority：100 / 80 / 70 / 60 / 30 / 10
+topic：并列时显示的短话题；不适用写 none
+requires：全部必需条件；没有写 none
+excludes：任一成立即排除的条件；没有写 none
+once：true / false
+on_expire：到期时的状态写入；没有写 none
 ```
 
-`dialogue` 另外必须包含角色、NPC 开场台词、玩家选项、每项 NPC 回应与可选判定。
-`interaction` 另外必须包含物件、交互提示、可选操作和事实结果。
-`bark` 另外必须包含角色、该角色可知的一段状态台词。
+字段值 `none` 是正式值，不得用空白、省略号或“无”代替。`once=true` 时系统以 `visited(ID)` 自动
+排除已经完成的记录，不需要在 `excludes` 中重复书写。
+
+`dialogue` 正文必须包含角色、NPC 开场台词，以及每项玩家选择各自的判定、NPC 回应、写入和
+`END`。`interaction` 正文必须包含物件提示，以及每项操作各自的判定、事实结果、写入和 `END`。
+`bark` 正文必须包含角色可知的一段状态台词、写入和 `END`。
 
 对话节点 ID 全局唯一，格式为：
 
@@ -172,12 +177,19 @@ D_<任务ID或MAIN>_<角色ID>_<两位序号>
 ## D_Q01_TAVERN_KEEPER_02
 
 类型：dialogue
-角色：酒肆掌柜
-地点：山脚酒肆
-时间：第 5–8 日，午后或傍晚
-条件：quest.q01.stage == "smell_found"
-排除：visited(D_Q01_TAVERN_KEEPER_02)
-优先级：支线新节点
+ID：D_Q01_TAVERN_KEEPER_02
+所属：Q01
+拥有者：npc.tavern_keeper
+地点：tavern
+available_from：D05_afternoon
+expires_after：D08_evening
+priority：60
+topic：none
+requires：
+- quest.q01.stage == "smell_found"
+excludes：none
+once：false
+on_expire：none
 
 [酒肆掌柜]
 “又是你。后院那两坛酒我挪开了，你若还惦记，就先告诉我它们有什么问题。”
@@ -186,11 +198,30 @@ D_<任务ID或MAIN>_<角色ID>_<两位序号>
 [玩家]
 “酒没有坏。是里面的东西在找酒气。”
 
+[判定]
+none
+
 [酒肆掌柜]
 “听着不像酒客的话。你想查可以，出了事别说是我放你进去的。”
 
 [写入]
 quest.q01.stage = "back_room_open"
+
+[结束]
+END
+
+[选择 B]
+[玩家]
+“没什么，只是确认你没有把坏酒卖给我。”
+
+[判定]
+none
+
+[酒肆掌柜]
+“真喝坏了，拿酒坛来找我。没凭没据，就别惦记我的后院。”
+
+[写入]
+none
 
 [结束]
 END
@@ -240,16 +271,29 @@ END
 ## I_Q01_BACK_ROOM_JAR_01
 
 类型：interaction
-物件：后院异香酒坛
-地点：山脚酒肆后院
-时间：第 5–8 日
-条件：quest.q01.stage == "back_room_open"
-提示：检查酒坛
+ID：I_Q01_BACK_ROOM_JAR_01
+所属：Q01
+拥有者：object.back_room_jar
+地点：tavern_back_room
+available_from：D05_afternoon
+expires_after：D08_evening
+priority：60
+topic：none
+requires：
+- quest.q01.stage == "back_room_open"
+excludes：none
+once：false
+on_expire：
+- quest.q01.stage = "missed_tavern_window"
 
-[可选操作]
-- 辨认酒香
-- 查看封泥
-- 离开
+[提示]
+检查后院异香酒坛
+
+[操作 A]
+辨认酒香
+
+[判定]
+none
 
 [事实结果]
 “封泥没有漏，异香来自酒坛内部，并且正缓慢向墙缝移动。”
@@ -257,6 +301,36 @@ END
 [写入]
 quest.q01.stage = "trail_found"
 player.knowledge += "wine_scent_moves"
+
+[结束]
+END
+
+[操作 B]
+查看封泥
+
+[判定]
+none
+
+[事实结果]
+“封泥完整，没有重新开启过；坛口残留的酒气与普通青竹酒不同。”
+
+[写入]
+player.knowledge += "jar_seal_intact"
+
+[结束]
+END
+
+[操作 C]
+离开
+
+[判定]
+none
+
+[事实结果]
+“未进行检查。”
+
+[写入]
+none
 
 [结束]
 END
@@ -273,12 +347,25 @@ END
 ## B_TAVERN_KEEPER_Q01_COMPLETE_01
 
 类型：bark
-角色：酒肆掌柜
-条件：quest.q01.result == "player_acquired"
-优先级：30
+ID：B_TAVERN_KEEPER_Q01_COMPLETE_01
+所属：Q01
+拥有者：npc.tavern_keeper
+地点：tavern
+available_from：D05_afternoon
+expires_after：D30_evening
+priority：30
+topic：none
+requires：
+- quest.q01.result == "player_acquired"
+excludes：none
+once：false
+on_expire：none
 
 [酒肆掌柜]
 “后院清净了。你拿走了什么我不问，别再把同样的麻烦带回来。”
+
+[写入]
+none
 
 [结束]
 END
@@ -286,6 +373,19 @@ END
 
 `bark` ID 使用 `B_<角色ID>_<状态ID>_<两位序号>`。它由所写角色拥有，只能包含该角色能知道的
 事实。纯日常台词使用状态 ID `AMBIENT`，优先级为 10。
+
+### 5.6 不属于剧情记录的系统流程
+
+以下内容是系统界面或世界结算，不使用 `dialogue`、`interaction` 或 `bark` 伪装：
+
+- 新游戏中的姓名选择与角色 Roll 确认。
+- 日期和时段推进。
+- 到期状态结算。
+- 第 30 日离山路线确认与限定奖励缺失清单。
+- 最后时段仍未选择路线时的紧急流亡兜底。
+
+这些流程只在 `00-quest-overview.md` 与 `08-schedules-states-rewards.md` 中登记输入、状态写入和后续
+可用节点，不编写镜头、动作或连续剧情。
 
 ## 6. 简化状态模型
 
@@ -304,7 +404,7 @@ player.attributes
 player.traits
 player.inventory
 player.knowledge
-npc.<id>.relationship
+npc.<id>.relationship_state
 item.unique.<item_id>.owner
 visited(<node_id>)
 choice(<node_id>)
@@ -441,7 +541,7 @@ Q02 的信息和进入方式不得只由方源提供。
 
 ### 8.1 台词完整度
 
-每个关键节点必须具备：
+每个关键 `dialogue` 必须具备：
 
 - NPC 开场 1–3 句。
 - 玩家回答 2–4 项。
@@ -449,7 +549,8 @@ Q02 的信息和进入方式不得只由方源提供。
 - 判定存在时的成功与失败回应。
 - 任务结束、失败和错过后的状态对白。
 
-不得只写策划摘要。所有世界内选择必须让玩家知道自己实际说了什么。
+关键 `interaction` 按 5.4 的逐操作格式完整书写，不需要伪造 NPC 开场或玩家口头回答。
+不得只写策划摘要。所有世界内对话选择必须让玩家知道自己实际说了什么。
 
 ### 8.2 玩家台词
 
@@ -475,7 +576,7 @@ Q02 的信息和进入方式不得只由方源提供。
 
 ### 8.4 必写角色与覆盖范围
 
-“关键节点”指满足任一条件的节点：
+“关键记录”指满足任一条件的 `dialogue` 或 `interaction`：
 
 - 修改主线或支线阶段、路线、结果。
 - 转移唯一物品或限定奖励。
@@ -483,7 +584,7 @@ Q02 的信息和进入方式不得只由方源提供。
 - 执行对话判定。
 - 确定主要 NPC 生死、离场或长期关系状态。
 
-所有关键节点必须使用完整台词标准。主要 NPC 明确为：
+关键 `dialogue` 使用完整台词标准，关键 `interaction` 使用逐操作事实结果标准。主要 NPC 明确为：
 
 ```text
 族务执事
@@ -597,6 +698,10 @@ expires_after：最后可用日期与时段，包含该时段
 例如 `available_from=D05_afternoon`、`expires_after=D08_evening` 表示节点从第 5 日午后开始可用，
 并在第 8 日傍晚结束时失效。只有在玩家结束当前交互并主动推进时段后，截止结算器才运行。
 策划表只写日期而省略时段时，默认 `available_from` 为当日早晨，`expires_after` 为当日傍晚结束。
+截止结算器只对到期瞬间仍满足 `requires`、不满足 `excludes` 且尚未因 `once=true` 被消费的记录执行
+`on_expire`。
+同一个任务阶段只能指定一条记录拥有非 `none` 的 `on_expire`；同阶段其他记录必须写
+`on_expire：none`，避免重复结算。
 
 截止结算只修改状态，不播放剧情：
 
@@ -677,6 +782,8 @@ README.md
 实现前的内容校验必须拒绝：
 
 - 重复节点 ID。
+- 缺少 5.1 任一固定头部字段，或用空白代替正式值 `none`。
+- 使用非规范日期时段 ID 或固定表之外的优先级。
 - 引用不存在的 NPC、地点、物品或任务阶段。
 - 未解析的模板变量。
 - 没有 NPC 回应的玩家选项。
@@ -738,7 +845,7 @@ README.md
 
 1. 一条玩家主线与五条支线全部采用条件 `dialogue`、`interaction` 与 `bark` 记录。
 2. 所有关键对话节点具有完整 NPC 台词、玩家选项和逐项回应。
-3. 所有推进来自玩家在正确地点主动找到角色或物件。
+3. 除第 30 日最后时段的紧急流亡兜底外，所有推进都来自玩家在正确地点主动找到角色或物件。
 4. 日期只改变世界状态、角色出场和截止，不自动播放连续剧情。
 5. 方源是普通、可完全跳过的配角。
 6. 玩家不接触方源也能完成全部必需主线。
