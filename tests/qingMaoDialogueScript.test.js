@@ -51,6 +51,22 @@ const laterMainlineIds = [
   "I_MAIN_EMERGENCY_EXIT_01",
 ];
 
+const q01Ids = [
+  "D_Q01_TAVERN_KEEPER_01",
+  "D_Q01_TAVERN_KEEPER_02",
+  "I_Q01_BACK_ROOM_JAR_01",
+  "I_Q01_WINE_SCENT_TRAIL_01",
+  "D_Q01_HELPER_01",
+  "I_Q01_WINE_WORM_01",
+  "I_Q01_DORM_REFINING_01",
+  "D_Q01_CLAN_STOREKEEPER_01",
+  "D_Q01_FANG_YUAN_01",
+  "D_Q01_TAVERN_KEEPER_RESULT_PLAYER_01",
+  "D_Q01_TAVERN_KEEPER_RESULT_OTHER_01",
+  "D_Q01_TAVERN_KEEPER_RESULT_REFUSED_01",
+  "D_Q01_TAVERN_KEEPER_RESULT_MISSED_01",
+];
+
 function readScript(file) {
   return readFileSync(`${scriptRoot}${file}`, "utf8");
 }
@@ -93,6 +109,14 @@ test("provides caravan, crisis, and permanent-departure interactions", () => {
   const ids = new Set(recordFiles.flatMap(parseRecords).map(({ id }) => id));
 
   for (const id of laterMainlineIds) {
+    assert.equal(ids.has(id), true, `${id} must exist`);
+  }
+});
+
+test("provides every Wine Worm route and terminal response", () => {
+  const ids = new Set(recordFiles.flatMap(parseRecords).map(({ id }) => id));
+
+  for (const id of q01Ids) {
     assert.equal(ids.has(id), true, `${id} must exist`);
   }
 });
