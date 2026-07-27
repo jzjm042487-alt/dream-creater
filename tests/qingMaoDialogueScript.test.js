@@ -150,6 +150,43 @@ const q05Ids = [
   "D_Q05_QING_SHU_DEPUTY_MISSED_01",
 ];
 
+const barkIds = [
+  "B_CLAN_STEWARD_MAIN_ACTIVE_01",
+  "B_CLAN_STEWARD_MAIN_COMPLETE_01",
+  "B_ACADEMY_ELDER_MAIN_HIGH_01",
+  "B_ACADEMY_ELDER_MAIN_LOW_01",
+  "B_FANG_ZHENG_AMBIENT_01",
+  "B_FANG_ZHENG_AFTER_AWAKENING_01",
+  "B_TAVERN_KEEPER_Q01_COMPLETE_01",
+  "B_TAVERN_KEEPER_Q01_OTHER_OWNER_01",
+  "B_TAVERN_KEEPER_Q01_MISSED_01",
+  "B_HE_NIANG_DEBT_01",
+  "B_HE_NIANG_SETTLED_01",
+  "B_CLAN_STEWARD_Q02_CLAN_OWNED_01",
+  "B_ACADEMY_ELDER_Q02_PLAYER_DEPTH_01",
+  "B_QING_SHU_Q02_SHARED_01",
+  "B_MEDICINE_ELDER_Q04_PLAYER_OWNS_01",
+  "B_MEDICINE_ELDER_Q04_SURRENDERED_01",
+  "B_JIANG_YA_Q04_DEAL_01",
+  "B_UNCLE_Q04_LOST_01",
+  "B_AUNT_Q04_LOST_01",
+  "B_JIA_JIN_SHENG_Q03_LEGAL_01",
+  "B_JIA_JIN_SHENG_Q03_BLACK_MARKET_01",
+  "B_JIA_JIN_SHENG_Q03_RESCUED_01",
+  "B_JIA_FU_Q03_LEGAL_01",
+  "B_JIA_FU_Q03_DOUBTFUL_01",
+  "B_TIE_RUO_NAN_Q03_CLEARED_01",
+  "B_TIE_RUO_NAN_Q03_PURSUIT_01",
+  "B_QING_SHU_Q05_ACTIVE_01",
+  "B_QING_SHU_Q05_SAVED_01",
+  "B_QING_SHU_DEPUTY_Q05_DEAD_01",
+  "B_BAI_NING_BING_Q05_AFTER_01",
+  "B_FANG_YUAN_AMBIENT_01",
+  "B_FANG_YUAN_TRADE_01",
+  "B_FANG_YUAN_CONFLICT_01",
+  "B_FANG_YUAN_Q02_AFTER_01",
+];
+
 function readScript(file) {
   return readFileSync(`${scriptRoot}${file}`, "utf8");
 }
@@ -233,6 +270,28 @@ test("provides every Qing Shu evidence, preparation, decision, and endpoint", ()
 
   for (const id of q05Ids) {
     assert.equal(ids.has(id), true, `${id} must exist`);
+  }
+});
+
+test("provides state-aware barks for all major quest consequences", () => {
+  const ids = new Set(recordFiles.flatMap(parseRecords).map(({ id }) => id));
+
+  for (const id of barkIds) {
+    assert.equal(ids.has(id), true, `${id} must exist`);
+  }
+});
+
+test("keeps optional Fang Yuan barks on ordinary NPC facts", () => {
+  const source = readScript("07-npc-state-dialogue.md");
+
+  for (const forbidden of [
+    "npc.fang_yuan.alert",
+    "hostility",
+    "source_sync",
+    "daily_plan",
+    "countermeasure",
+  ]) {
+    assert.equal(source.includes(forbidden), false, `${forbidden} must not appear`);
   }
 });
 
