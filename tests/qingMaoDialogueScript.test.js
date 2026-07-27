@@ -36,6 +36,21 @@ const earlyMainlineIds = [
   "D_MAIN_ACADEMY_ELDER_03",
 ];
 
+const laterMainlineIds = [
+  "D_MAIN_CARAVAN_ACCOUNTANT_01",
+  "I_MAIN_PURPLE_GOLD_STONE_01",
+  "D_MAIN_CARAVAN_MERCHANT_01",
+  "D_MAIN_CARAVAN_MERCHANT_02",
+  "D_MAIN_ACADEMY_ELDER_04",
+  "D_MAIN_VILLAGE_GUARD_01",
+  "D_MAIN_CLAN_STEWARD_02",
+  "D_MAIN_CARAVAN_ACCOUNTANT_02",
+  "D_MAIN_BLACK_MARKET_BROKER_01",
+  "D_MAIN_QING_SHU_DEPUTY_01",
+  "I_MAIN_FLOWER_WINE_EXIT_01",
+  "I_MAIN_EMERGENCY_EXIT_01",
+];
+
 function readScript(file) {
   return readFileSync(`${scriptRoot}${file}`, "utf8");
 }
@@ -70,6 +85,14 @@ test("provides the complete early-mainline interaction inventory", () => {
   const ids = new Set(recordFiles.flatMap(parseRecords).map(({ id }) => id));
 
   for (const id of earlyMainlineIds) {
+    assert.equal(ids.has(id), true, `${id} must exist`);
+  }
+});
+
+test("provides caravan, crisis, and permanent-departure interactions", () => {
+  const ids = new Set(recordFiles.flatMap(parseRecords).map(({ id }) => id));
+
+  for (const id of laterMainlineIds) {
     assert.equal(ids.has(id), true, `${id} must exist`);
   }
 });

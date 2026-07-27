@@ -106,6 +106,7 @@ player.attributes.<id>: integer
 player.traits.<id>: true / false
 player.inventory: set<ITEM_IDS>
 player.knowledge.<id>: true / false
+player.resources.primeval_stones: integer >= 0
 
 npc.<id>.alive: true / false
 npc.<id>.met_player: true / false

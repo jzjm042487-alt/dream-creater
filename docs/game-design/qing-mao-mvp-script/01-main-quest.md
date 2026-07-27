@@ -894,3 +894,866 @@ player.knowledge.independent_build_rule = true
 
 [结束]
 END
+
+## D_MAIN_CARAVAN_ACCOUNTANT_01
+
+类型：dialogue
+ID：D_MAIN_CARAVAN_ACCOUNTANT_01
+所属：MAIN
+拥有者：npc.caravan_accountant
+地点：caravan_accounting_tent
+available_from：D11_morning
+expires_after：D15_evening
+priority：60
+topic：none
+requires：
+- quest.main.stage == "academy_established"
+excludes：
+- world.village_closed == true
+once：true
+on_expire：none
+
+[商队账房]
+“古月家的年轻蛊师？先说好，商队不收一句‘想出山’当路费。正式路签要有担保、货物份额或连续
+三日的差役记录。临时同行也要押金。”
+
+[选择 A]
+[玩家]
+“把三种办法的价码分别说清楚。我只比较能兑现的条件。”
+
+[判定]
+none
+
+[商队账房]
+“家族担保最省钱，但离队要报备；货物份额要四十块元石；差役不用先付钱，却要搬货、守夜、验
+封条，缺一次便清零。你自己选成本。”
+
+[写入]
+quest.main.stage = "route_preparing"
+player.knowledge.jia_caravan_pass_terms = true
+npc.caravan_accountant.met_player = true
+npc.caravan_accountant.relationship_state = "normal"
+
+[结束]
+END
+
+[选择 B]
+[玩家]
+“我可以做差役。先给我一项能留下正式记录的工作，不接只靠口头作证的活。”
+
+[判定]
+none
+
+[商队账房]
+“懂得要记录，省得日后争。去找东侧验货人，他会把时辰和封条号写进账。三次合格记录可以抵一半
+押金，也能在贾家商路上证明身份。”
+
+[写入]
+quest.main.stage = "route_preparing"
+world.flags.caravan_labor_unlocked = true
+player.knowledge.jia_caravan_pass_terms = true
+npc.caravan_accountant.met_player = true
+npc.caravan_accountant.relationship_state = "cooperative"
+
+[结束]
+END
+
+[选择 C]
+[玩家]
+“我暂时不跟商队走，只想知道青茅山以外最近的落脚点。”
+
+[判定]
+none
+
+[商队账房]
+“向南两日是白骨山旧驿，向东要过河谷。没有路签也不是不能走，只是关卡、客栈和商队都按无籍
+流民看你。”
+
+[写入]
+quest.main.stage = "route_preparing"
+player.knowledge.nearest_outside_routes = true
+npc.caravan_accountant.met_player = true
+npc.caravan_accountant.relationship_state = "normal"
+
+[结束]
+END
+
+## I_MAIN_PURPLE_GOLD_STONE_01
+
+类型：interaction
+ID：I_MAIN_PURPLE_GOLD_STONE_01
+所属：MAIN
+拥有者：object.purple_gold_stone
+地点：caravan_gambling_stall
+available_from：D12_morning
+expires_after：D12_evening
+priority：60
+topic：none
+requires：
+- quest.main.stage == "route_preparing"
+excludes：
+- world.village_closed == true
+- item.unique.GU_MUDSKIN_TOAD.owner != "object.purple_gold_stone"
+once：false
+on_expire：
+- item.unique.GU_MUDSKIN_TOAD.owner = "missed_permanently"
+
+[提示]
+查看赌石摊最后一枚紫金石
+
+[操作 A]
+检查重量、温度和石皮回声
+
+[判定]
+洞察 + 细察入微，对抗难度 62
+
+[成功]
+[事实结果]
+“石块下半部比同体积紫金石轻，贴近时有间歇性的微弱温差。内部不是空洞，更像一只进入休眠的
+活物。”
+
+[写入]
+player.knowledge.purple_gold_stone_alive = true
+world.flags.purple_gold_discount = true
+
+[结束]
+END
+
+[失败]
+[事实结果]
+“石皮回声混乱，重量也在紫金石的正常误差内。没有取得足以判断内部物的可靠证据。”
+
+[写入]
+player.knowledge.purple_gold_stone_examined = true
+
+[结束]
+END
+
+[操作 B]
+按摊价购买并请摊主当场解石
+
+[判定]
+none
+
+[事实结果]
+“石皮解开后，休眠的癞土蛤蟆恢复呼吸。交易已经完成，蛊虫归玩家所有。”
+
+[写入]
+player.resources.primeval_stones -= 18
+player.inventory += "GU_MUDSKIN_TOAD"
+item.unique.GU_MUDSKIN_TOAD.owner = "player"
+
+[结束]
+END
+
+[操作 C]
+放弃购买
+
+[判定]
+none
+
+[事实结果]
+“没有发生交易。紫金石在 D12_evening 后随赌石摊离开。”
+
+[写入]
+none
+
+[结束]
+END
+
+## D_MAIN_CARAVAN_MERCHANT_01
+
+类型：dialogue
+ID：D_MAIN_CARAVAN_MERCHANT_01
+所属：MAIN
+拥有者：npc.caravan_gambling_merchant
+地点：caravan_gambling_stall
+available_from：D12_morning
+expires_after：D12_evening
+priority：70
+topic：none
+requires：
+- item.unique.GU_MUDSKIN_TOAD.owner == "player"
+excludes：
+- world.village_closed == true
+- npc.caravan_gambling_merchant.transactions.mudskin_toad_settled == true
+once：true
+on_expire：none
+
+[赌石商]
+“好眼力也好，好运也罢，石头开出来便不退。癞土蛤蟆不适合你现在斗战，我出三十二块元石收回；
+你也可以留下，等遇到炼道蛊师再谈。”
+
+[选择 A]
+[玩家]
+“三十五块，当场结清。你省下找下一位买家的时间。”
+
+[判定]
+交涉 + 市井通达，对抗难度 58
+
+[成功]
+[赌石商]
+“三十五。你把它的腹印留给我拓一份，往后出了别的配方，别说我没提醒你。”
+
+[写入]
+player.inventory -= "GU_MUDSKIN_TOAD"
+player.resources.primeval_stones += 35
+item.unique.GU_MUDSKIN_TOAD.owner = "npc.caravan_gambling_merchant"
+npc.caravan_gambling_merchant.transactions.mudskin_toad_settled = true
+
+[结束]
+END
+
+[失败]
+[赌石商]
+“三十二，一块不加。你若不卖，今晚我也带不走你的蛊。”
+
+[写入]
+player.inventory -= "GU_MUDSKIN_TOAD"
+player.resources.primeval_stones += 32
+item.unique.GU_MUDSKIN_TOAD.owner = "npc.caravan_gambling_merchant"
+npc.caravan_gambling_merchant.transactions.mudskin_toad_settled = true
+
+[结束]
+END
+
+[选择 B]
+[玩家]
+“我不卖。告诉我最低限度的喂养方法，这桩赌石交易便到此为止。”
+
+[判定]
+none
+
+[赌石商]
+“湿土、细碎矿粉，七日喂一次。它的价值不在斗战，在胃囊能压住某些炼材杂气。养不起时再找
+炼道铺，别饿死了才来估价。”
+
+[写入]
+player.knowledge.mudskin_toad_feeding = true
+npc.caravan_gambling_merchant.transactions.mudskin_toad_settled = true
+
+[结束]
+END
+
+## D_MAIN_CARAVAN_MERCHANT_02
+
+类型：dialogue
+ID：D_MAIN_CARAVAN_MERCHANT_02
+所属：MAIN
+拥有者：npc.last_supply_merchant
+地点：last_caravan_supply_cart
+available_from：D23_morning
+expires_after：D23_evening
+priority：80
+topic：最后补给
+requires：
+- quest.main.stage == "route_preparing"
+- player.resources.primeval_stones >= 55
+- item.unique.GU_RED_IRON_RELIC.owner == "npc.last_supply_merchant"
+excludes：
+- world.village_closed == true
+once：true
+on_expire：
+- item.unique.GU_RED_IRON_RELIC.owner = "missed_permanently"
+
+[最后商队商人]
+“赤铁舍利蛊一只，五十五块元石。它能直接抬高一转小境界，不能替你补根基。我们日落开拔，
+不赊、不换货，也不等你筹钱。”
+
+[选择 A]
+[玩家]
+“五十五块，当场验明活性和所有权，交易后不留寄售名目。”
+
+[判定]
+none
+
+[最后商队商人]
+“行。封蜡、气息、账号都在这里。你付钱以后，它只记你的真元，商队也不再对它主张任何权利。”
+
+[写入]
+player.resources.primeval_stones -= 55
+player.inventory += "GU_RED_IRON_RELIC"
+item.unique.GU_RED_IRON_RELIC.owner = "player"
+npc.last_supply_merchant.transactions.red_iron_relic = true
+
+[结束]
+END
+
+[选择 B]
+[玩家]
+“我不买。把这只蛊的真假识别方法告诉我，算我付一块问价费。”
+
+[判定]
+none
+
+[最后商队商人]
+“舍利蛊受真元一触会亮三息，假货只热不亮。问价费我收了，蛊不留。日落以后，你在青茅山找
+不到第二只。”
+
+[写入]
+player.resources.primeval_stones -= 1
+player.knowledge.red_iron_relic_authentication = true
+
+[结束]
+END
+
+## D_MAIN_ACADEMY_ELDER_04
+
+类型：dialogue
+ID：D_MAIN_ACADEMY_ELDER_04
+所属：MAIN
+拥有者：npc.academy_elder
+地点：academy_hall
+available_from：D13_morning
+expires_after：D22_evening
+priority：60
+topic：外勤准备
+requires：
+- quest.main.stage == "academy_established"
+excludes：
+- world.village_closed == true
+once：true
+on_expire：none
+
+[学堂家老]
+“学堂阶段到这里便不再替你安排每一步。接下来三种去处：跟族中队伍做有护卫的差役，接普通
+野外任务，或者自行筹备蛊虫和离山身份。没有一种免风险。”
+
+[选择 A]
+[玩家]
+“我跟族中队伍。先建立稳定功绩和同队记录。”
+
+[判定]
+none
+
+[学堂家老]
+“去守备堂登记。收入少一些，出事时有人接应。你必须服从撤退号令，不能为了私人物品让整队
+回头。”
+
+[写入]
+quest.main.stage = "route_preparing"
+world.flags.main_preparation_route = "clan_guarded"
+player.knowledge.clan_field_team = true
+
+[结束]
+END
+
+[选择 B]
+[玩家]
+“我接普通野外任务。风险和收益由我自己筛。”
+
+[判定]
+none
+
+[学堂家老]
+“任务板会标明最低修为，不会标明所有意外。接任务以前留一份路线；失联后族里是否找你，要看
+任务等级和当时人手。”
+
+[写入]
+quest.main.stage = "route_preparing"
+world.flags.main_preparation_route = "ordinary_field"
+player.knowledge.field_mission_board = true
+
+[结束]
+END
+
+[选择 C]
+[玩家]
+“我自行准备。只保留族规要求的报备，不占队伍名额。”
+
+[判定]
+none
+
+[学堂家老]
+“准。你可以和商队、药堂、猎户或灰市交易，所得后果也由你承担。狼潮迹象已经出现，别把准备
+拖到寨门关闭以后。”
+
+[写入]
+quest.main.stage = "route_preparing"
+world.flags.main_preparation_route = "independent"
+player.knowledge.wolf_tide_warning = true
+
+[结束]
+END
+
+## D_MAIN_VILLAGE_GUARD_01
+
+类型：dialogue
+ID：D_MAIN_VILLAGE_GUARD_01
+所属：MAIN
+拥有者：npc.village_guard
+地点：south_gate
+available_from：D26_morning
+expires_after：D29_evening
+priority：80
+topic：狼潮封寨
+requires：
+- quest.main.stage == "route_preparing"
+excludes：
+- world.village_closed == true
+once：true
+on_expire：none
+
+[守寨蛊师]
+“南门从现在起只进不出。狼群已经切断两条山路，守备堂征用治疗蛊和运输蛊师。你有正式队伍便去
+报到，没有便登记撤离位置，别在警钟响后乱跑。”
+
+[选择 A]
+[玩家]
+“我登记守寨差役。把集合点、撤退号和失守后的备用门告诉我。”
+
+[判定]
+none
+
+[守寨蛊师]
+“东墙三号台集合，三短一长是撤退号。东门失守便退内寨，不许自行开南门。你的名字记入轮值，
+具体战斗由守备堂安排。”
+
+[写入]
+quest.main.stage = "wolf_crisis"
+world.flags.wolf_crisis_duty = "wall"
+player.knowledge.crisis_retreat_signal = true
+
+[结束]
+END
+
+[选择 B]
+[玩家]
+“我不占守墙位置，登记物资转运和伤员撤离。”
+
+[判定]
+none
+
+[守寨蛊师]
+“药堂与内寨之间缺人。你去领白布臂带，见到三道红纹的伤员先送，普通轻伤让他们自己走。”
+
+[写入]
+quest.main.stage = "wolf_crisis"
+world.flags.wolf_crisis_duty = "evacuation"
+player.knowledge.crisis_casualty_priority = true
+
+[结束]
+END
+
+[选择 C]
+[玩家]
+“我不接差役，只登记个人避难和离山准备。”
+
+[判定]
+none
+
+[守寨蛊师]
+“记下了。族里不会替你保留外门通道，警钟后擅开封锁会被当成破坏守备。第三十日若还有路，
+你只能从系统开放的撤离点确认。”
+
+[写入]
+quest.main.stage = "wolf_crisis"
+world.flags.wolf_crisis_duty = "none"
+player.knowledge.departure_confirmation_rule = true
+
+[结束]
+END
+
+## D_MAIN_CLAN_STEWARD_02
+
+类型：dialogue
+ID：D_MAIN_CLAN_STEWARD_02
+所属：MAIN
+拥有者：npc.clan_steward
+地点：inner_village_muster
+available_from：D30_morning
+expires_after：D30_evening
+priority：100
+topic：家族撤离
+requires：
+- quest.main.stage == "departure_open"
+- world.departure_open == true
+- world.flags.clan_departure_eligible == true
+excludes：
+- world.village_closed == true
+once：false
+on_expire：none
+
+[族务执事]
+“你的名字在内寨撤离册上。跟家族队伍走，身份和基本供给有人担保；作为代价，离山后第一个落脚
+点由队伍决定，中途不能擅自脱离。”
+
+[选择 A]
+[玩家]
+“把家族撤离列为我的离山选择，打开不可逆确认。”
+
+[判定]
+none
+
+[族务执事]
+“可以。确认界面会列出你仍未取得的已知限定物。你按下确认以后，旧屋、任务和这里的人都不会再
+作为可返回地点保留。”
+
+[写入]
+world.flags.departure_confirmation_source = "D_MAIN_CLAN_STEWARD_02"
+
+[结束]
+END
+
+[选择 B]
+[玩家]
+“我先不确认。撤离册保留到什么时候？”
+
+[判定]
+none
+
+[族务执事]
+“只到今晚。最后一声警钟以后，队伍不再等单个人。”
+
+[写入]
+player.knowledge.departure_deadline = true
+
+[结束]
+END
+
+## D_MAIN_CARAVAN_ACCOUNTANT_02
+
+类型：dialogue
+ID：D_MAIN_CARAVAN_ACCOUNTANT_02
+所属：MAIN
+拥有者：npc.caravan_accountant
+地点：south_road_caravan_point
+available_from：D30_morning
+expires_after：D30_evening
+priority：100
+topic：贾家商路
+requires：
+- quest.main.stage == "departure_open"
+- world.departure_open == true
+- player.inventory contains "ITEM_JIA_PASS"
+excludes：
+- world.village_closed == true
+once：false
+on_expire：none
+
+[商队账房]
+“通行商令是真的，账号也对。我们带你过第一道山关，之后按商队雇员登记。货车优先，不保证替你
+保任何没上清单的私人物品。”
+
+[选择 A]
+[玩家]
+“按商令登记，把贾家商路列为我的离山选择并打开确认。”
+
+[判定]
+none
+
+[商队账房]
+“名字已录。确认以后跟紧第三辆车，掉队不会折返。”
+
+[写入]
+world.flags.departure_confirmation_source = "D_MAIN_CARAVAN_ACCOUNTANT_02"
+
+[结束]
+END
+
+[选择 B]
+[玩家]
+“暂不确认。我先处理随身物品。”
+
+[判定]
+none
+
+[商队账房]
+“日落前回来。过时商令仍是真的，车队却不会还在这里。”
+
+[写入]
+none
+
+[结束]
+END
+
+## D_MAIN_BLACK_MARKET_BROKER_01
+
+类型：dialogue
+ID：D_MAIN_BLACK_MARKET_BROKER_01
+所属：MAIN
+拥有者：npc.black_market_broker
+地点：dry_well_passage
+available_from：D30_morning
+expires_after：D30_evening
+priority：100
+topic：黑市暗道
+requires：
+- quest.main.stage == "departure_open"
+- world.departure_open == true
+- player.inventory contains "ITEM_BLACK_LEDGER"
+excludes：
+- world.village_closed == true
+once：false
+on_expire：none
+
+[黑市掮客]
+“名册能证明你不是临时跟来的眼线。暗道只保你出寨，不保山外身份；出去以后，你欠名单上第一个
+落脚点一趟货。”
+
+[选择 A]
+[玩家]
+“债和风险我听清了。把黑市暗道列为离山选择，打开确认。”
+
+[判定]
+none
+
+[黑市掮客]
+“确认后烧掉你手里的明页，只留暗记。旧身份在关卡上帮不了你，名单上的人却会认这笔债。”
+
+[写入]
+world.flags.departure_confirmation_source = "D_MAIN_BLACK_MARKET_BROKER_01"
+
+[结束]
+END
+
+[选择 B]
+[玩家]
+“我不确认。名册仍由我保管。”
+
+[判定]
+none
+
+[黑市掮客]
+“保管可以。寨子毁了以后，纸上的名字有些是门，有些是追债的人。”
+
+[写入]
+none
+
+[结束]
+END
+
+## D_MAIN_QING_SHU_DEPUTY_01
+
+类型：dialogue
+ID：D_MAIN_QING_SHU_DEPUTY_01
+所属：MAIN
+拥有者：npc.qing_shu_deputy
+地点：east_wall_survivor_point
+available_from：D30_morning
+expires_after：D30_evening
+priority：100
+topic：青书遗民
+requires：
+- quest.main.stage == "departure_open"
+- world.departure_open == true
+- player.inventory contains "ITEM_QING_SHU_SUPPORT"
+excludes：
+- world.village_closed == true
+once：false
+on_expire：none
+
+[青书副手]
+“我们欠你一次完整的接应。东墙旧藤桥还能撑一趟，队伍会带你过断崖；过桥以后，大家以遗民身份
+共同寻找落脚地，不接受临时甩下伤员。”
+
+[选择 A]
+[玩家]
+“我接受共同撤离。把青书遗民路线列为离山选择，打开确认。”
+
+[判定]
+none
+
+[青书副手]
+“我把你的名字放在中段。确认以后听队伍信号，不要独自抢桥。”
+
+[写入]
+world.flags.departure_confirmation_source = "D_MAIN_QING_SHU_DEPUTY_01"
+
+[结束]
+END
+
+[选择 B]
+[玩家]
+“我暂不确认。把我的位置让给伤员。”
+
+[判定]
+none
+
+[青书副手]
+“位置不是一次性的名额，但时间是。今晚以前回来，我们仍会接你。”
+
+[写入]
+npc.qing_shu_deputy.relationship_state = "cooperative"
+
+[结束]
+END
+
+## I_MAIN_FLOWER_WINE_EXIT_01
+
+类型：interaction
+ID：I_MAIN_FLOWER_WINE_EXIT_01
+所属：MAIN
+拥有者：object.flower_wine_exit
+地点：flower_wine_escape_tunnel
+available_from：D30_morning
+expires_after：D30_evening
+priority：100
+topic：花酒密道
+requires：
+- quest.main.stage == "departure_open"
+- world.departure_open == true
+- player.inventory contains "ITEM_FLOWER_WINE_MAP"
+excludes：
+- world.village_closed == true
+once：false
+on_expire：none
+
+[提示]
+使用花酒密道离山
+
+[操作 A]
+核对地图并打开离山确认
+
+[判定]
+none
+
+[事实结果]
+“地图与石壁刻痕吻合。密道通向山体南侧，路线只能容纳玩家及随身物品，不提供山外合法身份。”
+
+[写入]
+world.flags.departure_confirmation_source = "I_MAIN_FLOWER_WINE_EXIT_01"
+
+[结束]
+END
+
+[操作 B]
+检查密道是否还能返回
+
+[判定]
+none
+
+[事实结果]
+“出口段有单向塌落机关。确认离山后，密道与青茅山地图一起永久关闭。”
+
+[写入]
+player.knowledge.flower_wine_exit_one_way = true
+
+[结束]
+END
+
+[操作 C]
+离开出口
+
+[判定]
+none
+
+[事实结果]
+“没有启动离山确认，当前世界状态不变。”
+
+[写入]
+none
+
+[结束]
+END
+
+## I_MAIN_EMERGENCY_EXIT_01
+
+类型：interaction
+ID：I_MAIN_EMERGENCY_EXIT_01
+所属：MAIN
+拥有者：object.emergency_exit
+地点：north_cliff_emergency_path
+available_from：D30_morning
+expires_after：D30_evening
+priority：100
+topic：负伤出山
+requires：
+- quest.main.stage == "departure_open"
+- world.departure_open == true
+excludes：
+- world.village_closed == true
+once：false
+on_expire：none
+
+[提示]
+从北崖应急山路离开
+
+[操作 A]
+选择无身份担保的应急路线并打开确认
+
+[判定]
+none
+
+[事实结果]
+“路线不要求任何支线物品。系统提示：玩家一定能够离山，但会按负伤、失散物资和无登记流亡者
+身份结算具体代价。”
+
+[写入]
+world.flags.departure_confirmation_source = "I_MAIN_EMERGENCY_EXIT_01"
+
+[结束]
+END
+
+[操作 B]
+查看已知限定物缺失清单
+
+[判定]
+none
+
+[事实结果]
+“系统列出玩家已经发现但尚未取得的限定物名称、最后取得地点与关闭原因；未发现物只显示为
+‘仍有未确认的限定资源’。”
+
+[写入]
+world.flags.departure_review_requested = true
+
+[结束]
+END
+
+[操作 C]
+暂不离山
+
+[判定]
+none
+
+[事实结果]
+“没有启动离山确认。推进超过 D30_evening 时仍会自动结算紧急流亡。”
+
+[写入]
+none
+
+[结束]
+END
+
+## 系统流程：离山确认
+
+离山确认读取 `world.flags.departure_confirmation_source`，显示不可逆提示和已知限定物缺失清单。
+玩家取消时只清空确认来源；玩家确认时执行：
+
+```text
+D_MAIN_CLAN_STEWARD_02
+-> quest.main.departure_route = "clan"
+
+D_MAIN_CARAVAN_ACCOUNTANT_02
+-> quest.main.departure_route = "jia_caravan"
+
+D_MAIN_BLACK_MARKET_BROKER_01
+-> quest.main.departure_route = "black_market"
+
+D_MAIN_QING_SHU_DEPUTY_01
+-> quest.main.departure_route = "qing_shu_survivors"
+
+I_MAIN_FLOWER_WINE_EXIT_01
+-> quest.main.departure_route = "flower_wine"
+
+I_MAIN_EMERGENCY_EXIT_01
+-> quest.main.departure_route = "emergency"
+```
+
+每一种确认都继续写入：
+
+```text
+quest.main.stage = "departed"
+world.village_closed = true
+world.departure_open = false
+```
+
+推进超过 `D30_evening` 且尚未确认时，不播放对话，直接写入：
+
+```text
+quest.main.departure_route = "emergency"
+quest.main.stage = "departed"
+world.village_closed = true
+world.departure_open = false
+```
