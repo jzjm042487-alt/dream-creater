@@ -1,19 +1,31 @@
 import { createIcons, icons } from "lucide";
-import { icon, iconButton, meter, scenePath, statusBadge } from "./components.js";
 import {
+  createBattleState,
+  reduceBattle,
+} from "../game/rules/battleRules.js";
+import { icon, iconButton, scenePath, statusBadge } from "./components.js";
+import {
+  DAY_END_ACTIONS,
   DEMO_STATE,
+  DIALOGUE_CHOICES,
+  ENDING_ROUTES,
   GU_WORMS,
-  INVENTORY_ITEMS,
-  MAP_LOCATIONS,
   QUESTS,
-  RELATIONSHIPS,
+  RELATION_GROUPS,
+  RIVALS,
   ROLL_CARDS,
   SOURCE_OPPORTUNITIES,
+  THEFT_TARGETS,
+  TOWN_INTERACTABLES,
+  WILDERNESS_NODES,
+  calculateTheftChance,
   filterSourceOpportunities,
+  findNearbyTownTarget,
+  moveTownPosition,
 } from "./mockState.js";
 import { UI_GROUPS, UI_PANELS, getPanel } from "./panelRegistry.js";
-import { renderCreationPanel } from "./panels/creationPanels.js";
 import { renderActionPanel } from "./panels/actionPanels.js";
+import { renderCreationPanel } from "./panels/creationPanels.js";
 import { renderEndgamePanel } from "./panels/endgamePanels.js";
 import {
   renderSourceDetail,
@@ -22,19 +34,79 @@ import {
 } from "./panels/worldPanels.js";
 
 const root = document.querySelector("#ui-prototype");
-const state = structuredClone(DEMO_STATE);
+let state = structuredClone(DEMO_STATE);
 let toastTimer;
+let travelTimer;
+let townMoveTimer;
+let townMoveAnimation;
+let townQueuedDirection;
+let townHeldDirection;
+let townMoveSequence = 0;
+
+const TOWN_STEP_DURATION_MS = 320;
+
+function createDemoBattle() {
+  return createBattleState(
+    "fangYuan",
+    {
+      player: {
+        hp: state.player.health.current,
+        maxHp: state.player.health.max,
+        essence: state.player.essence.current,
+        maxEssence: state.player.essence.max,
+      },
+      flags: {
+        fangYuanActionWindow: false,
+      },
+    },
+    {
+      player: { x: 1, y: 4, move: 3 },
+      enemy: { x: 6, y: 1, hp: 42, maxHp: 42, attack: 9, move: 2 },
+    }
+  );
+}
+
+state.combat = createDemoBattle();
+
+function resolveTheftTarget(targetId) {
+  const explicit = THEFT_TARGETS.find(({ id }) => id === targetId);
+  if (explicit) {
+    return explicit;
+  }
+
+  const rival = RIVALS.find(({ id }) => id === targetId);
+  if (!rival) {
+    return THEFT_TARGETS[0];
+  }
+
+  const level = rival.realm.startsWith("三转")
+    ? 3
+    : rival.realm.startsWith("二转")
+      ? 2
+      : 1;
+
+  return {
+    id: rival.id,
+    name: rival.name,
+    realm: rival.realm,
+    level,
+    portrait: rival.portrait,
+    items: [
+      { id: `${rival.id}-stones`, name: "元石袋", description: "随身修炼资源" },
+      { id: `${rival.id}-gu-food`, name: "常用蛊材", description: `${rival.gu}的食料` },
+      { id: `${rival.id}-token`, name: "随身令牌", description: "当前身份凭证" },
+    ],
+  };
+}
 
 function renderPanel(panelId) {
-  const panelNumber = Number(panelId.slice(2));
-
-  if (panelNumber <= 4) {
+  if (["UI00", "UI01", "UI02", "UI03", "UI04"].includes(panelId)) {
     return renderCreationPanel(panelId, state);
   }
-  if (panelNumber <= 10) {
+  if (["UI05", "UI06", "UI07", "UI08", "UI09", "UI10"].includes(panelId)) {
     return renderWorldPanel(panelId, state);
   }
-  if (panelNumber <= 14) {
+  if (["UI11", "UI12", "UI13"].includes(panelId)) {
     return renderActionPanel(panelId, state);
   }
   return renderEndgamePanel(panelId, state);
@@ -52,21 +124,16 @@ function renderNavigation() {
             .map(
               (panel) => `
                 <button
-                  class="nav-item ${
-                    state.ui.selectedPanel === panel.id ? "is-active" : ""
-                  } ${panel.featured ? "is-featured" : ""}"
+                  class="nav-item ${state.ui.selectedPanel === panel.id ? "is-active" : ""} ${
+                    panel.featured ? "is-featured" : ""
+                  }"
                   type="button"
                   data-panel-id="${panel.id}"
-                  aria-current="${
-                    state.ui.selectedPanel === panel.id ? "page" : "false"
-                  }"
+                  aria-current="${state.ui.selectedPanel === panel.id ? "page" : "false"}"
                   title="${panel.title}"
                 >
                   <span class="nav-icon">${icon(panel.icon)}</span>
-                  <span class="nav-copy">
-                    <small>${panel.id}</small>
-                    <strong>${panel.title}</strong>
-                  </span>
+                  <span class="nav-copy"><small>${panel.id}</small><strong>${panel.title}</strong></span>
                   ${panel.featured ? `<i class="feature-dot" aria-label="核心系统"></i>` : ""}
                 </button>
               `
@@ -85,10 +152,7 @@ function renderTopBar(panel) {
     <header class="prototype-topbar">
       <div class="prototype-brand">
         <span class="brand-seal">盗</span>
-        <div>
-          <strong>天外盗客</strong>
-          <small>青茅山 · 全量 UI</small>
-        </div>
+        <div><strong>天外盗客</strong><small>青茅山 · MVP UI</small></div>
       </div>
       <button
         class="icon-button mobile-nav-toggle"
@@ -107,8 +171,8 @@ function renderTopBar(panel) {
         <span>${world.location}</span>
       </div>
       <div class="hud-resources" aria-label="玩家资源">
-        <div class="hud-resource resource-ap" title="本时段行动点">
-          <span>AP</span>
+        <div class="hud-resource resource-ap" title="本时段行动次数">
+          <span>行动</span>
           <strong>${player.ap.current}/${player.ap.max}</strong>
           <i>
             ${Array.from(
@@ -131,14 +195,11 @@ function renderTopBar(panel) {
         </div>
       </div>
       <nav class="topbar-actions" aria-label="系统操作">
-        ${iconButton("save", "保存原型状态", "save-prototype")}
-        ${iconButton("settings", "界面设置", "show-settings")}
+        ${iconButton("save", "保存游戏", "save-prototype")}
+        ${iconButton("folder-open", "读取存档", "load-prototype")}
         ${iconButton("maximize", "切换全屏", "toggle-fullscreen")}
       </nav>
-      <div class="current-panel-mobile">
-        <span>${panel.id}</span>
-        <strong>${panel.title}</strong>
-      </div>
+      <div class="current-panel-mobile"><span>${panel.id}</span><strong>${panel.title}</strong></div>
     </header>
   `;
 }
@@ -146,10 +207,10 @@ function renderTopBar(panel) {
 function renderContextRail(panel) {
   const activeQuest =
     QUESTS.find(({ id }) => id === state.ui.activeQuestId) ?? QUESTS[0];
-  const sourceDelta = 100 - state.generator.sourceSync;
+  const currentRivals = RIVALS.filter(({ status }) => status !== "dead").slice(0, 3);
 
   return `
-    <aside class="context-rail" aria-label="当前情境">
+    <aside class="context-rail simplified-context-rail" aria-label="当前情境">
       <section class="context-scene">
         <img src="${scenePath(panel.scene)}" alt="" />
         <div></div>
@@ -160,75 +221,146 @@ function renderContextRail(panel) {
 
       <section class="context-objective">
         <header>
-          <span>${icon("crosshair")} 当前机缘</span>
+          <span>${icon("crosshair")} 当前任务</span>
           ${statusBadge(activeQuest.statusLabel, "special")}
         </header>
         <small>${activeQuest.id} · ${activeQuest.kind}</small>
         <strong>${activeQuest.title}</strong>
-        <p>${activeQuest.next}</p>
-        ${meter({
-          label: "推进",
-          value: activeQuest.progress,
-          tone: "cinnabar",
-          display: `${activeQuest.progress}%`,
-          compact: true,
-        })}
+        <p>${activeQuest.step}</p>
       </section>
 
       <section class="context-presence">
-        <header>
-          <span>${icon("users-round")} 现场人物</span>
-          <small>2</small>
-        </header>
+        <header><span>${icon("users-round")} 现场人物</span><small>2</small></header>
         <div class="presence-stage">
           <div>
             <img src="${state.player.portrait}" alt="${state.player.name}" />
             <span>${state.player.name}</span>
           </div>
           <i>${icon("move-horizontal")}</i>
-          <div>
-            <img
-              src="/assets/game/characters/chibi/chibi_fang_yuan.png"
-              alt="古月方源"
-            />
+          <button
+            type="button"
+            data-action="open-theft"
+            data-theft-target-id="fang-yuan"
+            aria-label="接近古月方源"
+          >
+            <img src="/assets/game/characters/chibi/chibi_fang_yuan.png" alt="" />
             <span>古月方源</span>
-          </div>
+            <small>${icon("hand")} 偷盗</small>
+          </button>
         </div>
       </section>
 
-      <section class="context-risks">
-        <header><span>${icon("activity")} 世界压力</span></header>
-        ${meter({
-          label: "方源警觉",
-          value: state.fangYuan.alert,
-          tone: "cinnabar",
-          display: `${state.fangYuan.alert}`,
-          compact: true,
-        })}
-        ${meter({
-          label: "身份暴露",
-          value: state.player.exposure,
-          tone: "brass",
-          display: `${state.player.exposure}%`,
-          compact: true,
-        })}
-        ${meter({
-          label: "原文偏移",
-          value: sourceDelta,
-          tone: "violet",
-          display: `${sourceDelta}%`,
-          compact: true,
-        })}
+      <section class="context-rivals">
+        <header><span>${icon("swords")} 附近竞争者</span></header>
+        ${currentRivals
+          .map(
+            (rival) => `
+              <button type="button" data-panel-id="UI10">
+                <img src="${rival.portrait}" alt="" />
+                <span><strong>${rival.name}</strong><small>${rival.realm}</small></span>
+                ${statusBadge(rival.statusLabel, rival.status === "injured" ? "warning" : "good")}
+              </button>
+            `
+          )
+          .join("")}
       </section>
 
       <footer class="context-footer">
-        <span>${icon("radio")} 原文同步</span>
-        <strong>${state.generator.sourceSync}%</strong>
+        <span>${icon("book-open-text")} 原文查询外挂</span>
         <button type="button" data-panel-id="UI08" title="打开原文查询">
-          ${icon("book-open-text")}
+          ${icon("arrow-up-right")}
         </button>
       </footer>
     </aside>
+  `;
+}
+
+function renderTheftModal() {
+  if (!state.ui.theftOpen) {
+    return "";
+  }
+
+  const target = resolveTheftTarget(state.ui.theftTargetId);
+  const selectedItem =
+    target.items.find(({ id }) => id === state.ui.theftItemId) ?? target.items[0];
+  const luck =
+    state.player.attributes.find(({ id }) => id === "luck")?.value ?? 50;
+  const theft =
+    state.player.attributes.find(({ id }) => id === "theft")?.value ?? 50;
+  const chance = calculateTheftChance({
+    luck,
+    theft,
+    levelGap: state.player.level - target.level,
+  });
+
+  return `
+    <div class="theft-modal-backdrop" data-action="close-theft">
+      <section
+        class="theft-modal"
+        role="dialog"
+        aria-modal="true"
+        aria-label="偷盗 ${target.name}"
+        data-theft-dialog
+      >
+        <header>
+          <div>
+            <span>${icon("hand")} 靠近人物</span>
+            <h2>偷盗 ${target.name}</h2>
+            <p>选择一件物品，然后进行一次成功或失败判定。</p>
+          </div>
+          <button class="icon-button" type="button" data-action="close-theft" aria-label="关闭偷盗">${icon("x")}</button>
+        </header>
+        <div class="theft-modal-body">
+          <aside class="theft-target">
+            <img src="${target.portrait}" alt="${target.name}" />
+            <strong>${target.name}</strong>
+            <span>${target.realm}</span>
+          </aside>
+          <div class="theft-picker">
+            <div class="section-title">
+              <span>${icon("package-search")} 可偷盗内容</span>
+              ${statusBadge(`成功率 ${chance}%`, chance >= 60 ? "good" : chance >= 30 ? "warning" : "danger")}
+            </div>
+            <div class="theft-item-list">
+              ${target.items
+                .map(
+                  (item) => `
+                    <button
+                      type="button"
+                      data-action="select-theft-item"
+                      data-theft-item-id="${item.id}"
+                      class="${selectedItem.id === item.id ? "is-selected" : ""}"
+                    >
+                      <span>${icon("package")}</span>
+                      <span><strong>${item.name}</strong><small>${item.description}</small></span>
+                      ${icon("check")}
+                    </button>
+                  `
+                )
+                .join("")}
+            </div>
+            <div class="theft-chance-note">
+              ${icon("dices")}
+              <span>概率由气运、盗道与双方境界差计算，任何角色都至少保留 5% 成功率。</span>
+            </div>
+            ${
+              state.ui.theftResult
+                ? `
+                  <div class="theft-result ${state.ui.theftResult.startsWith("成功") ? "is-success" : "is-failure"}" data-theft-result>
+                    ${icon(state.ui.theftResult.startsWith("成功") ? "circle-check-big" : "circle-x")}
+                    <strong>${state.ui.theftResult}</strong>
+                  </div>
+                `
+                : `
+                  <button class="primary-command full-command" type="button" data-action="attempt-theft">
+                    ${icon("hand")} 偷取 ${selectedItem.name}
+                  </button>
+                `
+            }
+          </div>
+        </div>
+      </section>
+    </div>
   `;
 }
 
@@ -242,13 +374,8 @@ function renderMobileDock() {
         .map((panelId) => {
           const item = getPanel(panelId);
           return `
-            <button
-              type="button"
-              data-panel-id="${item.id}"
-              class="${panel.id === item.id ? "is-active" : ""}"
-            >
-              ${icon(item.icon)}
-              <span>${item.shortTitle}</span>
+            <button type="button" data-panel-id="${item.id}" class="${panel.id === item.id ? "is-active" : ""}">
+              ${icon(item.icon)}<span>${item.shortTitle}</span>
             </button>
           `;
         })
@@ -258,13 +385,14 @@ function renderMobileDock() {
 }
 
 function renderApp() {
+  if (townMoveAnimation) {
+    cancelTownMovement();
+  }
   const panel = getPanel(state.ui.selectedPanel);
 
   root.innerHTML = `
     <div
-      class="ui-shell panel-${panel.id.toLowerCase()} ${
-        state.ui.navigationOpen ? "navigation-open" : ""
-      }"
+      class="ui-shell panel-${panel.id.toLowerCase()} ${state.ui.navigationOpen ? "navigation-open" : ""}"
       data-active-panel="${panel.id}"
     >
       <img class="shell-backdrop" src="${scenePath(panel.scene)}" alt="" />
@@ -274,7 +402,7 @@ function renderApp() {
         <aside class="panel-navigation" aria-label="全部游戏界面">
           <header class="nav-header">
             <span>界面总览</span>
-            <strong>18</strong>
+            <strong>${UI_PANELS.length}</strong>
             <button
               class="icon-button close-mobile-nav"
               type="button"
@@ -292,12 +420,11 @@ function renderApp() {
             </a>
           </footer>
         </aside>
-        <main class="panel-workspace" id="panel-workspace" tabindex="-1">
-          ${renderPanel(panel.id)}
-        </main>
+        <main class="panel-workspace" id="panel-workspace" tabindex="-1">${renderPanel(panel.id)}</main>
         ${renderContextRail(panel)}
       </div>
       ${renderMobileDock()}
+      ${renderTheftModal()}
       <div class="app-toast" role="status" aria-live="polite" hidden></div>
     </div>
   `;
@@ -319,11 +446,7 @@ function flash(message, tone = "neutral") {
   clearTimeout(toastTimer);
   toast.className = `app-toast tone-${tone}`;
   toast.innerHTML = `${icon(
-    tone === "danger"
-      ? "triangle-alert"
-      : tone === "good"
-        ? "circle-check"
-        : "info"
+    tone === "danger" ? "triangle-alert" : tone === "good" ? "circle-check" : "info"
   )}<span>${message}</span>`;
   toast.hidden = false;
   createIcons({ icons, attrs: { "stroke-width": 1.8 } });
@@ -337,6 +460,9 @@ function navigate(panelId) {
     return;
   }
 
+  if (state.ui.selectedPanel === "UI12" && panelId !== "UI12") {
+    cancelTownMovement();
+  }
   state.ui.selectedPanel = panelId;
   state.ui.navigationOpen = false;
   renderApp();
@@ -368,6 +494,270 @@ function rerenderAndFlash(message, tone = "neutral") {
   flash(message, tone);
 }
 
+function getTownDirection(key) {
+  return {
+    ArrowUp: "up",
+    w: "up",
+    W: "up",
+    ArrowDown: "down",
+    s: "down",
+    S: "down",
+    ArrowLeft: "left",
+    a: "left",
+    A: "left",
+    ArrowRight: "right",
+    d: "right",
+    D: "right",
+  }[key];
+}
+
+function updateTownPlayerPresentation(direction, { moving, blocked }) {
+  const marker = root.querySelector(".town-player-marker");
+  if (!marker) {
+    return null;
+  }
+
+  for (const facing of ["up", "down", "left", "right"]) {
+    marker.classList.remove(`is-facing-${facing}`);
+  }
+  marker.classList.add(`is-facing-${direction}`);
+  marker.classList.toggle("is-moving", moving);
+  marker.classList.toggle("is-blocked", blocked);
+
+  const actionLabel = root.querySelector("[data-town-action] b");
+  const emotionLabel = root.querySelector("[data-town-emotion] b");
+  if (actionLabel) {
+    actionLabel.textContent = moving ? "奔跑" : blocked ? "受阻" : "待机";
+  }
+  if (emotionLabel) {
+    emotionLabel.textContent = blocked
+      ? "谨慎"
+      : moving
+        ? state.ui.townEmotion === "alert"
+          ? "警觉"
+          : "专注"
+        : state.ui.townEmotion === "alert"
+          ? "警觉"
+          : "平静";
+  }
+
+  return marker;
+}
+
+function cancelTownMovement() {
+  townMoveSequence += 1;
+  townMoveAnimation?.cancel();
+  townMoveAnimation = undefined;
+  townQueuedDirection = undefined;
+  townHeldDirection = undefined;
+  clearTimeout(townMoveTimer);
+  state.ui.townMoving = false;
+  state.ui.townBlocked = false;
+  state.ui.townAction = "idle";
+}
+
+function settleTownMovement(direction) {
+  state.ui.townMoving = false;
+  state.ui.townBlocked = false;
+  state.ui.townAction = "idle";
+  state.ui.townEmotion =
+    findNearbyTownTarget(state.ui.townPosition)?.kind === "npc"
+      ? "alert"
+      : "calm";
+
+  if (state.ui.selectedPanel === "UI12") {
+    renderApp();
+  } else {
+    updateTownPlayerPresentation(direction, {
+      moving: false,
+      blocked: false,
+    });
+  }
+}
+
+function showBlockedTownMovement(direction) {
+  townQueuedDirection = undefined;
+  townHeldDirection = undefined;
+  state.ui.townMoving = false;
+  state.ui.townBlocked = true;
+  state.ui.townAction = "blocked";
+  state.ui.townEmotion = "cautious";
+  updateTownPlayerPresentation(direction, {
+    moving: false,
+    blocked: true,
+  });
+
+  clearTimeout(townMoveTimer);
+  townMoveTimer = window.setTimeout(() => {
+    state.ui.townBlocked = false;
+    state.ui.townAction = "idle";
+    state.ui.townEmotion =
+      findNearbyTownTarget(state.ui.townPosition)?.kind === "npc"
+        ? "alert"
+        : "calm";
+    if (state.ui.selectedPanel === "UI12") {
+      renderApp();
+    } else {
+      updateTownPlayerPresentation(direction, {
+        moving: false,
+        blocked: false,
+      });
+    }
+  }, 260);
+}
+
+function completeTownStep({ animation, direction, marker, next, sequence }) {
+  if (sequence !== townMoveSequence || townMoveAnimation !== animation) {
+    return;
+  }
+
+  marker.style.left = `${next.x}%`;
+  marker.style.top = `${next.y}%`;
+  animation.cancel();
+  townMoveAnimation = undefined;
+  state.ui.townMoveFrom = next;
+  state.ui.townPosition = next;
+
+  const nextDirection = townQueuedDirection ?? townHeldDirection;
+  townQueuedDirection = undefined;
+  if (nextDirection) {
+    moveTownPlayer(nextDirection);
+    return;
+  }
+
+  settleTownMovement(direction);
+}
+
+function moveTownPlayer(direction) {
+  if (!direction) {
+    return;
+  }
+
+  if (townMoveAnimation) {
+    townQueuedDirection = direction;
+    return;
+  }
+
+  const current = state.ui.townPosition ?? { x: 44, y: 56 };
+  const next = moveTownPosition(current, direction);
+  const moved = next.x !== current.x || next.y !== current.y;
+  state.ui.townFacing = direction;
+
+  if (!moved) {
+    showBlockedTownMovement(direction);
+    return;
+  }
+
+  clearTimeout(townMoveTimer);
+  state.ui.townMoveFrom = current;
+  state.ui.townMoving = true;
+  state.ui.townBlocked = false;
+  state.ui.townAction = "run";
+  state.ui.townEmotion = moved
+    ? findNearbyTownTarget(next)?.kind === "npc"
+      ? "alert"
+      : "focused"
+    : "cautious";
+
+  const marker = updateTownPlayerPresentation(direction, {
+    moving: true,
+    blocked: false,
+  });
+  if (!marker || typeof marker.animate !== "function") {
+    state.ui.townPosition = next;
+    settleTownMovement(direction);
+    return;
+  }
+
+  const sequence = ++townMoveSequence;
+  const animation = marker.animate(
+    [
+      { left: `${current.x}%`, top: `${current.y}%` },
+      { left: `${next.x}%`, top: `${next.y}%` },
+    ],
+    {
+      duration: TOWN_STEP_DURATION_MS,
+      easing: "linear",
+      fill: "forwards",
+    }
+  );
+  townMoveAnimation = animation;
+  animation.finished
+    .then(() =>
+      completeTownStep({ animation, direction, marker, next, sequence })
+    )
+    .catch(() => {});
+}
+
+function getTownTarget(targetId) {
+  return (
+    TOWN_INTERACTABLES.find(({ id }) => id === targetId) ??
+    findNearbyTownTarget(state.ui.townPosition ?? { x: 44, y: 56 })
+  );
+}
+
+function showTownMoment(action, emotion, message, tone = "good") {
+  cancelTownMovement();
+  state.ui.townMoving = false;
+  state.ui.townBlocked = false;
+  state.ui.townAction = action;
+  state.ui.townEmotion = emotion;
+  clearTimeout(townMoveTimer);
+  renderApp();
+  flash(message, tone);
+
+  townMoveTimer = window.setTimeout(() => {
+    state.ui.townAction = "idle";
+    state.ui.townEmotion =
+      findNearbyTownTarget(state.ui.townPosition)?.kind === "npc"
+        ? "alert"
+        : "calm";
+    if (state.ui.selectedPanel === "UI12" && !state.ui.theftOpen) {
+      renderApp();
+    }
+  }, 700);
+}
+
+function syncBattlePlayer() {
+  state.player.health.current = state.combat.player.hp;
+  state.player.essence.current = state.combat.player.essence;
+}
+
+function resolveBattleAction(action) {
+  try {
+    const previousResult = state.combat.result;
+    state.combat = reduceBattle(state.combat, action);
+    syncBattlePlayer();
+
+    if (!previousResult && state.combat.result === "victory") {
+      state.player.combatExperience = Math.min(
+        100,
+        state.player.combatExperience + 18
+      );
+      state.player.cultivation = Math.min(100, state.player.cultivation + 18);
+    }
+
+    if (action.type === "MOVE") {
+      state.ui.battleMoved = true;
+    } else {
+      state.ui.battleMoved = false;
+      state.ui.battleAction = "";
+    }
+    renderApp();
+    return true;
+  } catch (error) {
+    const message = error.message.includes("range")
+      ? "目标不在攻击距离内，请先移动"
+      : error.message.includes("edge")
+        ? "必须移动到棋盘边缘才能撤离"
+        : error.message.includes("essence")
+          ? "真元不足"
+          : "当前行动无法执行";
+    flash(message, "danger");
+    return false;
+  }
+}
+
 function handlePanelAction(action, target) {
   switch (action) {
     case "toggle-navigation":
@@ -375,11 +765,20 @@ function handlePanelAction(action, target) {
       renderApp();
       break;
     case "save-prototype":
-      flash("原型状态已暂存到当前会话", "good");
+      localStorage.setItem("tianwai-mvp-save", JSON.stringify(state));
+      flash("游戏已保存", "good");
       break;
-    case "show-settings":
-      flash("界面缩放 100% · 动效标准 · 信息密度高");
+    case "load-prototype": {
+      const saved = localStorage.getItem("tianwai-mvp-save");
+      if (!saved) {
+        flash("还没有可读取的存档");
+        break;
+      }
+      state = JSON.parse(saved);
+      renderApp();
+      flash("存档已读取", "good");
       break;
+    }
     case "toggle-fullscreen":
       if (document.fullscreenElement) {
         document.exitFullscreen();
@@ -389,47 +788,43 @@ function handlePanelAction(action, target) {
       break;
     case "generator-reset":
       state.ui.generatorStage = "checking";
-      rerenderAndFlash("开始重新校验世界规则与可变归属");
+      rerenderAndFlash("正在重新读取人物、势力与机缘索引");
       break;
     case "generator-advance":
       if (state.ui.generatorStage === "ready") {
         state.ui.generatorStage = "entered";
-        rerenderAndFlash("世界载入完成 · 当前同步率 92%", "good");
+        rerenderAndFlash("自由世界已载入", "good");
       } else if (state.ui.generatorStage === "checking") {
         state.ui.generatorStage = "ready";
-        rerenderAndFlash("原文校验完成", "good");
+        rerenderAndFlash("原文索引读取完成", "good");
       } else {
         navigate("UI01");
       }
       break;
-    case "reroll": {
+    case "reroll":
       state.ui.rollIndex = (state.ui.rollIndex + 1) % ROLL_CARDS.length;
-      state.player.attributes = ROLL_CARDS[state.ui.rollIndex].attributes;
+      state.player.attributes = structuredClone(
+        ROLL_CARDS[state.ui.rollIndex].attributes
+      );
       rerenderAndFlash(`已生成种子 ${ROLL_CARDS[state.ui.rollIndex].seed}`);
       break;
-    }
     case "lock-roll":
       state.ui.rollLocked = true;
-      rerenderAndFlash("角色卡已锁定，族谱与旧屋记录已生成", "good");
+      rerenderAndFlash("角色卡已确认", "good");
       break;
-    case "cycle-portrait": {
-      const states = ["normal", "alert", "injured", "critical"];
-      const currentIndex = states.indexOf(state.ui.portraitState ?? "normal");
-      state.ui.portraitState = states[(currentIndex + 1) % states.length];
+    case "cycle-player-view": {
+      const views = ["overview", "combat", "injured"];
+      const index = views.indexOf(state.ui.playerView ?? "overview");
+      state.ui.playerView = views[(index + 1) % views.length];
       renderApp();
       break;
     }
-    case "set-portrait-state":
-      state.ui.portraitState = target.dataset.stateId;
+    case "set-player-view":
+      state.ui.playerView = target.dataset.viewId;
       renderApp();
       break;
-    case "set-cultivation-method":
-      state.ui.cultivationMethod = target.dataset.methodId;
-      renderApp();
-      break;
-    case "preview-cultivation":
-      state.ui.dayEndAction = "cultivate";
-      navigate("UI15");
+    case "start-combat":
+      navigate("UI13");
       break;
     case "select-gu":
       state.ui.activeGuId = target.dataset.guId;
@@ -442,7 +837,7 @@ function handlePanelAction(action, target) {
     }
     case "refine-gu": {
       const gu = GU_WORMS.find(({ id }) => id === state.ui.activeGuId);
-      flash(`${gu.name}炼化条件已加入行动预览`);
+      flash(`${gu.name}炼化已加入当前行动`);
       break;
     }
     case "filter-inventory":
@@ -454,30 +849,40 @@ function handlePanelAction(action, target) {
       state.ui.activeItemId = target.dataset.itemId;
       renderApp();
       break;
-    case "select-location":
-      state.ui.activeLocationId = target.dataset.locationId;
-      state.ui.mapRunning = false;
+    case "travel-direction": {
+      const direction = target.dataset.directionId;
+      const current = WILDERNESS_NODES[state.ui.travelNodeId];
+      const next = WILDERNESS_NODES[current.exits[direction]];
+      const labels = {
+        forward: "向前",
+        back: "向后",
+        left: "向左",
+        right: "向右",
+      };
+      state.ui.travelHistory.push({
+        from: current.name,
+        direction: labels[direction],
+        to: next.name,
+      });
+      state.ui.travelNodeId = next.id;
+      state.ui.travelMoving = true;
+      state.world.location = next.name;
       renderApp();
+      clearTimeout(travelTimer);
+      travelTimer = window.setTimeout(() => {
+        state.ui.travelMoving = false;
+        if (state.ui.selectedPanel === "UI06") {
+          renderApp();
+        }
+      }, 650);
       break;
-    case "locate-player":
-      state.ui.activeLocationId = "flower-wine-cave";
-      state.ui.mapRunning = false;
-      renderApp();
-      break;
-    case "simulate-travel":
-      state.ui.mapRunning = !state.ui.mapRunning;
-      rerenderAndFlash(
-        state.ui.mapRunning
-          ? "主角切换 run_side，路径插值开始"
-          : "移动演示已停止"
-      );
-      break;
+    }
     case "select-quest":
       state.ui.activeQuestId = target.dataset.questId;
       renderApp();
       break;
     case "track-quest":
-      rerenderAndFlash("已更新常驻追踪目标", "good");
+      rerenderAndFlash("当前任务已更新", "good");
       break;
     case "set-query-horizon":
       state.ui.queryHorizon = target.dataset.horizonId;
@@ -495,9 +900,15 @@ function handlePanelAction(action, target) {
       const opportunity = SOURCE_OPPORTUNITIES.find(
         ({ id }) => id === state.ui.activeOpportunityId
       );
-      flash(`${opportunity?.title ?? "该机缘"}已转化为追踪任务`, "good");
+      flash(`${opportunity?.title ?? "该机缘"}已标记`, "good");
       break;
     }
+    case "set-relation-group":
+      state.ui.relationGroup = target.dataset.groupId;
+      state.ui.activeRelationId = RELATION_GROUPS[state.ui.relationGroup][0].id;
+      state.ui.npcPortraitState = "normal";
+      renderApp();
+      break;
     case "select-relation":
       state.ui.activeRelationId = target.dataset.relationId;
       state.ui.npcPortraitState = "normal";
@@ -510,64 +921,196 @@ function handlePanelAction(action, target) {
     case "start-dialogue":
       navigate("UI11");
       break;
-    case "select-dialogue-choice":
-      state.ui.activeDialogueChoice = target.dataset.choiceId;
-      renderApp();
+    case "town-move":
+      moveTownPlayer(target.dataset.directionId);
       break;
-    case "confirm-dialogue-choice":
-      state.ui.checkOutcome = "success";
-      navigate("UI12");
+    case "reset-town-position":
+      cancelTownMovement();
+      state.ui.townPosition = { x: 44, y: 56 };
+      state.ui.townMoveFrom = { x: 44, y: 56 };
+      state.ui.townFacing = "up";
+      state.ui.townMoving = false;
+      state.ui.townBlocked = false;
+      state.ui.townAction = "idle";
+      state.ui.townEmotion = "alert";
+      rerenderAndFlash("已回到中央街区", "good");
       break;
-    case "set-check-outcome":
-      state.ui.checkOutcome = target.dataset.outcomeId;
-      renderApp();
+    case "leave-town":
+      navigate("UI06");
       break;
-    case "reroll-check": {
-      const outcomes = ["failure", "partial", "success", "perfect"];
-      const index = outcomes.indexOf(state.ui.checkOutcome);
-      state.ui.checkOutcome = outcomes[(index + 1) % outcomes.length];
+    case "town-interact": {
+      const townTarget = getTownTarget();
+      if (!townTarget) {
+        flash("附近没有可互动目标");
+        break;
+      }
+      showTownMoment(
+        "interact",
+        townTarget.kind === "npc" ? "alert" : "focused",
+        `已接近${townTarget.name}`
+      );
+      break;
+    }
+    case "town-enter": {
+      const townTarget = getTownTarget(target.dataset.townTargetId);
+      if (!townTarget) {
+        flash("入口已不在互动范围");
+        break;
+      }
+      if (townTarget.id === "village-gate") {
+        navigate("UI06");
+        break;
+      }
+      showTownMoment(
+        "interact",
+        "focused",
+        `进入${townTarget.name}`
+      );
+      break;
+    }
+    case "town-examine": {
+      const townTarget = getTownTarget(target.dataset.townTargetId);
+      showTownMoment(
+        "inspect",
+        "focused",
+        `调查${townTarget?.name ?? "附近物件"}`
+      );
+      break;
+    }
+    case "select-dialogue-choice": {
+      const choice = DIALOGUE_CHOICES.find(
+        ({ id }) => id === target.dataset.choiceId
+      );
+      state.ui.activeDialogueChoice = choice.id;
+      state.ui.dialogueLine = choice.response;
       renderApp();
       break;
     }
-    case "accept-check":
-      rerenderAndFlash("判定结果已写入 Q01 与方源观察卡", "good");
-      break;
-    case "select-combat-action":
-      state.ui.combatAction = target.dataset.combatActionId;
+    case "select-rival":
+      state.ui.activeRivalId = target.dataset.rivalId;
       renderApp();
       break;
-    case "resolve-combat-action":
-      state.ui.combatRound = Math.min(3, (state.ui.combatRound ?? 1) + 1);
-      state.ui.combatAction = "";
-      rerenderAndFlash("回合结算完成，距离与资源已更新", "good");
+    case "open-theft": {
+      const requestedId = target.dataset.theftTargetId || "fang-yuan";
+      const theftTarget = resolveTheftTarget(requestedId);
+      if (state.ui.selectedPanel === "UI12") {
+        state.ui.townAction = "steal";
+        state.ui.townEmotion = "focused";
+      }
+      state.ui.theftTargetId = theftTarget.id;
+      state.ui.theftItemId = theftTarget.items[0].id;
+      state.ui.theftResult = "";
+      state.ui.theftOpen = true;
+      renderApp();
       break;
-    case "select-evidence":
-      state.ui.activeEvidenceId = target.dataset.evidenceId;
+    }
+    case "close-theft":
+      state.ui.theftOpen = false;
+      if (state.ui.selectedPanel === "UI12") {
+        state.ui.townAction = "idle";
+      }
+      renderApp();
+      break;
+    case "select-theft-item":
+      state.ui.theftItemId = target.dataset.theftItemId;
+      state.ui.theftResult = "";
+      renderApp();
+      break;
+    case "attempt-theft": {
+      const theftTarget = resolveTheftTarget(state.ui.theftTargetId);
+      const item =
+        theftTarget.items.find(({ id }) => id === state.ui.theftItemId) ??
+        theftTarget.items[0];
+      const luck =
+        state.player.attributes.find(({ id }) => id === "luck")?.value ?? 50;
+      const theft =
+        state.player.attributes.find(({ id }) => id === "theft")?.value ?? 50;
+      const chance = calculateTheftChance({
+        luck,
+        theft,
+        levelGap: state.player.level - theftTarget.level,
+      });
+      const success = Math.random() * 100 < chance;
+      if (success) {
+        state.ui.acquiredItems.push(item.name);
+        state.ui.theftResult = `成功：${item.name}已放入行囊`;
+        state.ui.townEmotion = "confident";
+      } else {
+        state.ui.theftResult = `失败：${theftTarget.name}察觉了你的动作`;
+        state.ui.townEmotion = "tense";
+      }
+      renderApp();
+      break;
+    }
+    case "battle-move":
+      if (state.ui.battleMoved) {
+        flash("本回合已经移动过，请出招或防御");
+        break;
+      }
+      resolveBattleAction({
+        type: "MOVE",
+        x: Number(target.dataset.x),
+        y: Number(target.dataset.y),
+      });
+      break;
+    case "battle-select-action":
+      state.ui.battleAction = target.dataset.battleActionId;
+      renderApp();
+      break;
+    case "battle-target":
+      if (!state.ui.battleAction) {
+        flash("先选择一种攻击或蛊术");
+        break;
+      }
+      resolveBattleAction({ type: state.ui.battleAction });
+      break;
+    case "battle-defend":
+      resolveBattleAction({ type: "DEFEND" });
+      break;
+    case "battle-escape":
+      resolveBattleAction({ type: "ESCAPE" });
+      break;
+    case "reset-battle":
+      state.combat = createDemoBattle();
+      state.ui.battleAction = "";
+      state.ui.battleMoved = false;
       renderApp();
       break;
     case "select-day-end":
       state.ui.dayEndAction = target.dataset.dayActionId;
       renderApp();
       break;
-    case "confirm-day-end":
-      rerenderAndFlash("第 8 日结算预览已锁定", "good");
+    case "confirm-day-end": {
+      const selected =
+        DAY_END_ACTIONS.find(({ id }) => id === state.ui.dayEndAction) ??
+        DAY_END_ACTIONS[0];
+      if (selected.id === "rest") {
+        state.player.health.current = state.player.health.max;
+        state.player.essence.current = state.player.essence.max;
+      }
+      if (selected.id === "cultivate") {
+        state.player.cultivation = Math.min(100, state.player.cultivation + 8);
+      }
+      state.world.day += 1;
+      state.world.time = "卯正";
+      state.player.ap.current = state.player.ap.max;
+      rerenderAndFlash(`第 ${state.world.day} 日开始`, "good");
       break;
-    case "select-rollback":
-      state.ui.rollbackChoice = target.dataset.rollbackId;
-      renderApp();
-      break;
-    case "confirm-rollback":
-      rerenderAndFlash("修正将替换唯一世界记录，请在剧情节点最终确认", "danger");
-      break;
+    }
     case "select-ending":
       state.ui.endingRoute = target.dataset.endingId;
       renderApp();
       break;
-    case "confirm-ending":
-      rerenderAndFlash("永久存档预览已生成，青茅山尚未关闭", "good");
+    case "confirm-ending": {
+      const route =
+        ENDING_ROUTES.find(({ id }) => id === state.ui.endingRoute) ??
+        ENDING_ROUTES[0];
+      localStorage.setItem("tianwai-mvp-save", JSON.stringify(state));
+      rerenderAndFlash(`${route.title}路线已保存`, "good");
       break;
+    }
     default:
-      flash("该入口已纳入原型交互，下一阶段接入正式规则");
+      flash("该入口将在玩法实现阶段接入");
   }
 }
 
@@ -580,6 +1123,13 @@ root.addEventListener("click", (event) => {
 
   const actionTarget = event.target.closest("[data-action]");
   if (!actionTarget || actionTarget.disabled) {
+    return;
+  }
+
+  if (
+    actionTarget.classList.contains("theft-modal-backdrop") &&
+    event.target !== actionTarget
+  ) {
     return;
   }
 
@@ -602,9 +1152,57 @@ root.addEventListener("change", (event) => {
 });
 
 window.addEventListener("keydown", (event) => {
+  if (event.key === "Escape" && state.ui.theftOpen) {
+    state.ui.theftOpen = false;
+    renderApp();
+    return;
+  }
+  if (
+    state.ui.selectedPanel === "UI12" &&
+    !state.ui.theftOpen &&
+    !event.target.closest?.("input, textarea, button")
+  ) {
+    const direction = getTownDirection(event.key);
+
+    if (direction) {
+      event.preventDefault();
+      townHeldDirection = direction;
+      if (!event.repeat) {
+        moveTownPlayer(direction);
+      }
+      return;
+    }
+
+    if (event.key === "e" || event.key === "E" || event.key === " ") {
+      event.preventDefault();
+      const townTarget = getTownTarget();
+      if (townTarget) {
+        showTownMoment(
+          "interact",
+          townTarget.kind === "npc" ? "alert" : "focused",
+          `已接近${townTarget.name}`
+        );
+      } else {
+        flash("附近没有可互动目标");
+      }
+      return;
+    }
+  }
   if (event.key === "Escape" && state.ui.navigationOpen) {
     state.ui.navigationOpen = false;
     renderApp();
+  }
+});
+
+window.addEventListener("keyup", (event) => {
+  const direction = getTownDirection(event.key);
+  if (!direction || townHeldDirection !== direction) {
+    return;
+  }
+
+  townHeldDirection = undefined;
+  if (townQueuedDirection === direction) {
+    townQueuedDirection = undefined;
   }
 });
 

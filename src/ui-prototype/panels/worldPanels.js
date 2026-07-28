@@ -1,12 +1,10 @@
 import {
-  CHIBI_BASE,
-  EVIDENCE,
   INVENTORY_ITEMS,
-  MAP_LOCATIONS,
-  PORTRAIT_BASE,
   QUESTS,
-  RELATIONSHIPS,
+  RELATION_GROUPS,
+  RIVALS,
   SOURCE_OPPORTUNITIES,
+  WILDERNESS_NODES,
   filterSourceOpportunities,
 } from "../mockState.js";
 import {
@@ -15,16 +13,17 @@ import {
   escapeHtml,
   icon,
   iconButton,
-  meter,
   panelHeader,
+  scenePath,
   statusBadge,
 } from "../components.js";
 
 const ITEM_FILTERS = [
   { id: "all", label: "全部" },
-  { id: "quest", label: "任务物" },
-  { id: "stolen", label: "赃物" },
-  { id: "evidence", label: "证据" },
+  { id: "resource", label: "资源" },
+  { id: "material", label: "材料" },
+  { id: "consumable", label: "消耗品" },
+  { id: "key", label: "钥匙令牌" },
 ];
 
 const SOURCE_TYPES = [
@@ -37,25 +36,25 @@ const SOURCE_TYPES = [
 ];
 
 const SOURCE_HORIZONS = [
-  { id: "current", label: "今年", note: "青茅山内可行动" },
-  { id: "one-year", label: "未来一年", note: "含章节后索引" },
-  { id: "three-years", label: "未来三年", note: "远期只读推演" },
+  { id: "current", label: "今年", note: "当前章节" },
+  { id: "one-year", label: "未来一年", note: "离山初期" },
+  { id: "three-years", label: "未来三年", note: "远期机缘" },
 ];
-
-function itemStateTone(state) {
-  return {
-    normal: "neutral",
-    quest: "warning",
-    stolen: "danger",
-    hidden: "special",
-    bound: "good",
-    empty: "neutral",
-  }[state];
-}
 
 function renderInventory(state) {
   const filter = state.ui.inventoryFilter;
-  const visibleItems = INVENTORY_ITEMS.filter(
+  const acquiredItems = state.ui.acquiredItems.map((item, index) => ({
+    id: `acquired-${index}`,
+    name: item,
+    type: "resource",
+    typeLabel: "新取得",
+    count: 1,
+    state: "normal",
+    mark: "得",
+    detail: "通过探索、战斗或偷盗取得。",
+  }));
+  const inventory = [...INVENTORY_ITEMS, ...acquiredItems];
+  const visibleItems = inventory.filter(
     ({ type }) => filter === "all" || type === filter
   );
   const activeItem =
@@ -64,22 +63,22 @@ function renderInventory(state) {
     INVENTORY_ITEMS[0];
 
   return `
-    <article class="panel-page inventory-page" data-testid="panel-UI05">
+    <article class="panel-page inventory-page simplified-inventory-page" data-testid="panel-UI05">
       ${panelHeader({
         id: "UI05",
-        eyebrow: "行囊 / 装备 / 唯一所有权",
-        title: "八格行囊与赃物追踪",
-        summary: "蛊虫、装备、法器、任务物和证据分别占用资源位；物品被拿走不等于所有权已经转移。",
+        eyebrow: "物品 / 装备 / 炼器",
+        title: "行囊与装备",
+        summary: "取得的物品直接进入行囊；这里管理消耗品、蛊材、兵器、防具、法器与炼器配方。",
         tools: `
           ${iconButton("arrow-up-down", "整理行囊", "sort-inventory")}
-          ${iconButton("package-open", "查看袖囊扩展", "show-pouch")}
+          ${iconButton("hammer", "打开炼器", "show-forging")}
         `,
       })}
       <div class="inventory-layout panel-scroll">
         <section class="inventory-grid-section section-block">
           <div class="section-title">
             <span>${icon("backpack")} 行囊</span>
-            <small>7 / 8 格 · 负重 18 / 28</small>
+            <small>${inventory.filter(({ type }) => type !== "empty").length} / 12 格</small>
           </div>
           <div class="segmented-control inventory-filters">
             ${ITEM_FILTERS.map(
@@ -100,9 +99,7 @@ function renderInventory(state) {
                     .map(
                       (item) => `
                         <button
-                          class="item-slot state-${item.state} ${
-                            activeItem.id === item.id ? "is-selected" : ""
-                          }"
+                          class="item-slot state-${item.state} ${activeItem.id === item.id ? "is-selected" : ""}"
                           type="button"
                           data-action="select-item"
                           data-item-id="${item.id}"
@@ -111,44 +108,24 @@ function renderInventory(state) {
                           <span class="item-mark">${item.mark}</span>
                           <strong>${item.name}</strong>
                           <small>${item.typeLabel}</small>
-                          ${
-                            item.count > 1
-                              ? `<b class="item-count">${item.count}</b>`
-                              : ""
-                          }
-                          ${
-                            item.state !== "normal" &&
-                            item.state !== "empty"
-                              ? statusBadge(
-                                  {
-                                    quest: "任务",
-                                    stolen: "赃",
-                                    hidden: "藏",
-                                    bound: "绑",
-                                  }[item.state],
-                                  itemStateTone(item.state),
-                                  "slot-state"
-                                )
-                              : ""
-                          }
+                          ${item.count > 1 ? `<b class="item-count">${item.count}</b>` : ""}
                         </button>
                       `
                     )
                     .join("")
-                : emptyState("package-search", "没有匹配物品", "切换分类查看其他行囊内容")
+                : emptyState("package-search", "没有匹配物品", "切换分类查看其他内容")
             }
           </div>
-          <div class="pouch-line">
-            ${icon("briefcase-business")}
-            <span><strong>袖囊扩展未炼成</strong>炼器 40 后可追加 4 个隐藏格</span>
-            ${statusBadge("配方 2/3", "warning")}
+          <div class="inventory-direct-rule">
+            ${icon("circle-check-big")}
+            <span><strong>取得即入包</strong>战斗、拾取和偷盗成功后都直接加入行囊。</span>
           </div>
         </section>
 
-        <section class="ownership-sheet section-block">
+        <section class="item-detail-sheet section-block">
           <div class="section-title">
-            <span>${icon("fingerprint")} 所有权记录</span>
-            ${statusBadge(activeItem.typeLabel, itemStateTone(activeItem.state))}
+            <span>${icon("package-open")} 物品详情</span>
+            ${statusBadge(activeItem.typeLabel, "good")}
           </div>
           <div class="selected-item">
             <span class="selected-item-mark">${activeItem.mark}</span>
@@ -158,70 +135,40 @@ function renderInventory(state) {
               <span>数量 ${activeItem.count || 1}</span>
             </div>
           </div>
-          <div class="ownership-chain">
-            <div class="chain-node">
-              <span>原所有者</span>
-              <strong>${activeItem.owner || "无主"}</strong>
-            </div>
-            <div class="chain-arrow">${icon("arrow-down")}</div>
-            <div class="chain-node current-holder">
-              <span>当前持有者</span>
-              <strong>${activeItem.heldBy || activeItem.owner || "古月砚"}</strong>
-            </div>
-            <div class="chain-arrow">${icon("arrow-down")}</div>
-            <div class="chain-node ${
-              activeItem.state === "stolen" || activeItem.state === "hidden"
-                ? "chain-risk"
-                : "chain-clear"
-            }">
-              <span>世界判定</span>
-              <strong>${
-                activeItem.state === "stolen"
-                  ? "非法占有 · 可追查"
-                  : activeItem.state === "hidden"
-                    ? "来源隐藏 · 未清洗"
-                    : "合法持有"
-              }</strong>
-            </div>
+          <p class="item-description">${activeItem.detail || "空行囊位。"}</p>
+          <div class="simple-item-actions">
+            <button class="secondary-command" type="button" data-action="use-item" ${activeItem.type === "empty" ? "disabled" : ""}>
+              ${icon("hand")} 使用
+            </button>
+            <button class="secondary-command" type="button" data-action="equip-item" ${activeItem.type === "empty" ? "disabled" : ""}>
+              ${icon("shield-plus")} 装备
+            </button>
           </div>
-          <button
-            class="secondary-command full-command"
-            type="button"
-            data-action="inspect-ownership"
-          >${icon("scan-search")} 查看追查来源</button>
         </section>
 
         <section class="equipment-sheet section-block">
           <div class="section-title">
             <span>${icon("shield")} 装备与法器</span>
-            <small>防护 7 · 隐匿 3</small>
+            <small>4 个槽位</small>
           </div>
           <div class="equipment-slots">
             <button type="button" data-action="inspect-equipment">
-              <span>${icon("shirt")}</span>
-              <strong>学堂短打</strong>
-              <small>衣甲 · 普通</small>
+              <span>${icon("shirt")}</span><strong>学堂短打</strong><small>衣甲 · 普通</small>
             </button>
             <button type="button" data-action="inspect-equipment">
-              <span>${icon("shield-half")}</span>
-              <strong>旧皮护腕</strong>
-              <small>防具 · 防护 +3</small>
+              <span>${icon("shield-half")}</span><strong>旧皮护腕</strong><small>防具 · 防护 +3</small>
             </button>
             <button type="button" data-action="inspect-equipment">
-              <span>${icon("sword")}</span>
-              <strong>拆信短刃</strong>
-              <small>兵器 · 近战 +2</small>
+              <span>${icon("sword")}</span><strong>拆信短刃</strong><small>兵器 · 近战 +2</small>
             </button>
             <button class="is-empty" type="button" data-action="show-forging">
-              <span>${icon("hammer")}</span>
-              <strong>护身法器</strong>
-              <small>空位 · 打开炼器</small>
+              <span>${icon("hammer")}</span><strong>护身法器</strong><small>空位 · 前往炼器</small>
             </button>
           </div>
           <div class="forging-preview">
-            <span>${icon("anvil")} 炼器台</span>
+            <span>${icon("anvil")} 当前配方</span>
             <strong>隐线袖囊</strong>
-            <small>暮蝉蜕 0/2 · 青铜片 3/3 · 炼道理解 31/40</small>
+            <small>暮蝉蜕 0/2 · 青铜碎片 3/3 · 炼道理解 31</small>
           </div>
         </section>
       </div>
@@ -229,292 +176,225 @@ function renderInventory(state) {
   `;
 }
 
-function locationTone(state) {
-  return {
-    open: "good",
-    current: "special",
-    locked: "neutral",
-    blocked: "danger",
-    destroyed: "danger",
-  }[state];
-}
+const DIRECTIONS = [
+  { id: "forward", label: "向前", icon: "arrow-up" },
+  { id: "left", label: "向左", icon: "arrow-left" },
+  { id: "right", label: "向右", icon: "arrow-right" },
+  { id: "back", label: "向后", icon: "arrow-down" },
+];
 
-function renderMap(state) {
-  const activeLocation =
-    MAP_LOCATIONS.find(({ id }) => id === state.ui.activeLocationId) ??
-    MAP_LOCATIONS.find(({ state: locationState }) => locationState === "current");
-  const running = Boolean(state.ui.mapRunning);
+function renderTravel(state) {
+  const node =
+    WILDERNESS_NODES[state.ui.travelNodeId] ?? WILDERNESS_NODES["bamboo-entry"];
+  const moving = state.ui.travelMoving;
+  const nearbyRival =
+    node.id === "wine-cave"
+      ? RIVALS.find(({ id }) => id === "fang-yuan")
+      : null;
 
   return `
-    <article class="panel-page map-page" data-testid="panel-UI06">
+    <article class="panel-page hidden-route-page" data-testid="panel-UI06">
       ${panelHeader({
         id: "UI06",
-        eyebrow: "地点 / AP / 永久世界状态",
-        title: "青茅山旅行图",
-        summary: "旅行消耗行动点并推进时段；封锁、坍塌和毁灭会永久改变路线，不使用临时遮罩伪装可达性。",
-        tools: `
-          ${iconButton("locate-fixed", "回到当前位置", "locate-player")}
-          ${iconButton("route", "切换路线显示", "toggle-routes")}
-        `,
+        eyebrow: "隐式路线 / 相对方向",
+        title: "野外旅行",
+        summary: "玩家只看见当前环境与前后左右四个选择，移动途中触发探索、人物或战斗事件。",
+        tools: iconButton("history", "查看行路记录", "show-travel-history"),
       })}
-      <div class="map-layout panel-scroll">
-        <section class="world-map section-block">
-          <img
-            class="map-background"
-            src="/assets/game/environments/world-map.png"
-            alt="青茅山区域地图"
-          />
-          <div class="map-shade" aria-hidden="true"></div>
-          <div class="map-route route-a" aria-hidden="true"></div>
-          ${MAP_LOCATIONS.map(
-            (location) => `
-              <button
-                class="map-node state-${location.state} ${
-                  activeLocation.id === location.id ? "is-selected" : ""
-                }"
-                style="left: ${location.x}%; top: ${location.y}%"
-                type="button"
-                data-action="select-location"
-                data-location-id="${location.id}"
-                title="${location.name}"
-              >
-                <span>${icon(
-                  location.state === "locked"
-                    ? "lock-keyhole"
-                    : location.state === "current"
-                      ? "map-pin-check"
-                      : "map-pin"
-                )}</span>
-                <strong>${location.name}</strong>
-              </button>
-            `
-          ).join("")}
-          <div
-            class="map-character player-map-character ${
-              running ? "is-running" : ""
-            }"
-            style="left: ${running ? 42 : 29}%; top: ${running ? 56 : 45}%"
-            data-testid="map-player"
-          >
-            <img src="${state.player.portrait}" alt="奔跑中的古月砚" />
-            <span>${running ? "奔跑" : "当前位置"}</span>
+      <div class="hidden-route-layout panel-scroll" data-travel-node="${node.id}">
+        <section class="travel-scene section-block ${nearbyRival ? "has-encounter" : ""}">
+          <img src="${scenePath(node.scene)}" alt="${node.name}" />
+          <div class="travel-scene-shade"></div>
+          <div class="travel-location-copy">
+            <span>${icon("map-pin")} 当前环境</span>
+            <h2>${node.name}</h2>
+            <p>${node.description}</p>
           </div>
-          <div class="map-character fang-map-character" style="left: 37%; top: 48%">
-            <img src="${CHIBI_BASE}/chibi_fang_yuan.png" alt="方源" />
-            <span>方源 · 未知路线</span>
+          <div class="travel-avatar ${moving ? "is-running" : ""}">
+            <img src="${state.player.portrait}" alt="${moving ? "奔跑中的古月砚" : "古月砚"}" />
+            <span>${moving ? "奔跑" : "观察"}</span>
           </div>
-          <div class="map-legend">
-            <span><i class="legend-open"></i>开放</span>
-            <span><i class="legend-current"></i>当前</span>
-            <span><i class="legend-locked"></i>锁定</span>
+          ${
+            nearbyRival
+              ? `
+                <div class="travel-npc-marker">
+                  <img src="${nearbyRival.portrait}" alt="${nearbyRival.name}" />
+                  <span>附近 · ${nearbyRival.name}</span>
+                </div>
+                <div class="travel-encounter-actions" aria-label="附近人物操作">
+                  <div class="travel-encounter-copy">
+                    <small>${icon("scan-face")} 可交互人物</small>
+                    <strong>${nearbyRival.name}</strong>
+                  </div>
+                  <button type="button" data-action="start-dialogue" title="交谈">
+                    ${icon("message-square")}
+                    <span>交谈</span>
+                  </button>
+                  <button
+                    class="is-theft"
+                    type="button"
+                    data-action="open-theft"
+                    data-theft-target-id="${nearbyRival.id}"
+                    title="偷盗"
+                  >
+                    ${icon("hand")}
+                    <span>偷盗</span>
+                  </button>
+                  <button type="button" data-action="start-combat" title="挑战">
+                    ${icon("swords")}
+                    <span>挑战</span>
+                  </button>
+                </div>
+              `
+              : ""
+          }
+          <div class="travel-event-line">
+            ${icon("sparkles")}
+            <span><small>环境信息</small><strong>${node.event}</strong></span>
           </div>
         </section>
 
-        <section class="travel-sheet section-block">
+        <section class="direction-sheet section-block">
           <div class="section-title">
-            <span>${icon("signpost")} 目的地</span>
-            ${statusBadge(
-              activeLocation.state === "current"
-                ? "当前位置"
-                : activeLocation.state === "locked"
-                  ? "未开放"
-                  : "可前往",
-              locationTone(activeLocation.state)
-            )}
+            <span>${icon("navigation")} 选择方向</span>
+            <small>不显示目的地</small>
           </div>
-          <div class="destination-title">
-            <small>${activeLocation.danger}</small>
-            <strong>${activeLocation.name}</strong>
-            <span>${activeLocation.ap} AP · 推进一个时段</span>
+          <div class="travel-direction-grid">
+            ${DIRECTIONS.map(
+              ({ id, label, icon: iconName }) => `
+                <button
+                  class="direction-${id}"
+                  type="button"
+                  data-action="travel-direction"
+                  data-direction-id="${id}"
+                  aria-label="${label}"
+                >
+                  ${icon(iconName)}
+                  <strong>${label}</strong>
+                  <small>${id === "back" ? "回看来路" : "进入未知区域"}</small>
+                </button>
+              `
+            ).join("")}
+            <div class="direction-center">
+              ${icon("footprints")}
+              <strong>${node.name}</strong>
+            </div>
           </div>
-          <div class="travel-facts">
-            ${dataRow("天气", state.world.weather)}
-            ${dataRow("危险", activeLocation.danger)}
-            ${dataRow(
-              "开放条件",
-              activeLocation.condition ?? "已满足"
-            )}
-            ${dataRow("预计抵达", activeLocation.ap === 1 ? "戌初" : "亥初")}
-          </div>
-          <div class="travel-warning">
-            ${icon(activeLocation.state === "locked" ? "lock-keyhole" : "footprints")}
-            <p>${
-              activeLocation.state === "locked"
-                ? activeLocation.condition
-                : "移动会消耗行动点；途中可能触发人物与危险事件。"
-            }</p>
-          </div>
-          <button
-            class="primary-command full-command"
-            type="button"
-            data-action="simulate-travel"
-            ${
-              activeLocation.state === "locked" ||
-              activeLocation.state === "current"
-                ? "disabled"
-                : ""
-            }
-          >
-            ${icon(running ? "pause" : "navigation")}
-            ${running ? "停止移动演示" : "前往此处"}
-          </button>
           <div class="run-readout">
             <span>${icon("gauge")} 主角动作</span>
-            <strong>${running ? "run_side · 12 FPS" : "idle_side · 6 FPS"}</strong>
-            <small>动画事件只在所有权转移帧结算一次</small>
+            <strong>${moving ? "run_side · 12 FPS" : "idle_side · 6 FPS"}</strong>
+            <small>抵达后自动恢复待机</small>
           </div>
         </section>
+
+        <aside class="travel-log section-block">
+          <div class="section-title">
+            <span>${icon("route")} 最近行程</span>
+            <small>${state.ui.travelHistory.length} 步</small>
+          </div>
+          ${
+            state.ui.travelHistory.length
+              ? `<ol>${state.ui.travelHistory
+                  .slice(-5)
+                  .reverse()
+                  .map(
+                    ({ from, direction, to }) => `
+                      <li><span>${direction}</span><strong>${from}</strong>${icon("arrow-right")}<b>${to}</b></li>
+                    `
+                  )
+                  .join("")}</ol>`
+              : emptyState("footprints", "还没有移动", "选择一个方向开始旅行")
+          }
+          <div class="travel-rule-note">
+            ${icon("swords")}
+            <p>危险事件会直接切入棋盘战斗，普通事件则在场景中弹出对话或拾取。</p>
+          </div>
+        </aside>
       </div>
     </article>
   `;
 }
 
-function questStatusTone(status) {
+function questTone(status) {
   return {
-    hinted: "warning",
-    searching: "special",
+    active: "special",
+    available: "good",
+    future: "neutral",
     completed: "good",
-    failed: "danger",
-    expired: "danger",
-    locked: "neutral",
   }[status];
 }
 
 function renderQuestLog(state) {
   const activeQuest =
     QUESTS.find(({ id }) => id === state.ui.activeQuestId) ?? QUESTS[0];
-  const milestones = [
-    { day: 1, label: "进入世界", state: "done" },
-    { day: 3, label: "第一只蛊", state: "done" },
-    { day: 8, label: "酒虫归属", state: "current" },
-    { day: 10, label: "第一次归类", state: "future" },
-    { day: 18, label: "商队", state: "future" },
-    { day: 24, label: "调查", state: "future" },
-    { day: 29, label: "回溯", state: "future" },
-    { day: 30, label: "离山", state: "future" },
-  ];
 
   return `
-    <article class="panel-page quest-page" data-testid="panel-UI07">
+    <article class="panel-page quest-page simplified-quest-page" data-testid="panel-UI07">
       ${panelHeader({
         id: "UI07",
-        eyebrow: "30 日时间轴 / 五条支线",
-        title: "主线与机会窗口",
-        summary: "失败与错过会进入补救分支，不会直接卡关；永久错过只用于改变后续局面与离山资源。",
-        tools: `
-          ${iconButton("calendar-days", "切换日历视图", "toggle-calendar")}
-          ${iconButton("list-filter", "筛选任务状态", "filter-quests")}
-        `,
+        eyebrow: "流程推进 / 清晰下一步",
+        title: "任务日志",
+        summary: "任务按事件流程推进，不需要额外刷数值或维护隐藏条件。",
+        tools: iconButton("list-filter", "筛选任务", "filter-quests"),
       })}
-      <div class="quest-layout panel-scroll">
-        <section class="timeline-sheet section-block">
-          <div class="section-title">
-            <span>${icon("calendar-range")} 青茅山 30 日</span>
-            <small>第 ${state.world.day} 日 / 30</small>
-          </div>
-          <div class="day-ruler">
-            ${Array.from({ length: 30 }, (_, index) => {
-              const day = index + 1;
-              const milestone = milestones.find((item) => item.day === day);
-              return `
-                <span
-                  class="day-tick ${
-                    day < state.world.day
-                      ? "is-past"
-                      : day === state.world.day
-                        ? "is-current"
-                        : ""
-                  } ${milestone ? "has-event" : ""}"
-                  title="${milestone?.label ?? `第 ${day} 日`}"
-                >
-                  <i></i>
-                  ${day % 5 === 0 || day === 1 ? `<b>${day}</b>` : ""}
-                </span>
-              `;
-            }).join("")}
-          </div>
-          <div class="milestone-list">
-            ${milestones
-              .map(
-                ({ day, label, state: milestoneState }) => `
-                  <button
-                    type="button"
-                    class="milestone state-${milestoneState}"
-                    data-action="inspect-day"
-                    data-day="${day}"
-                  >
-                    <span>${String(day).padStart(2, "0")}</span>
-                    <strong>${label}</strong>
-                  </button>
-                `
-              )
-              .join("")}
-          </div>
-        </section>
-
+      <div class="simple-quest-layout panel-scroll">
         <section class="quest-list-section section-block">
           <div class="section-title">
-            <span>${icon("list-tree")} 任务线</span>
+            <span>${icon("list-tree")} 当前任务</span>
             <small>${QUESTS.length} 条</small>
           </div>
           <div class="quest-list">
             ${QUESTS.map(
               (quest) => `
                 <button
-                  class="quest-row ${
-                    activeQuest.id === quest.id ? "is-selected" : ""
-                  }"
+                  class="quest-row ${activeQuest.id === quest.id ? "is-selected" : ""}"
                   type="button"
                   data-action="select-quest"
                   data-quest-id="${quest.id}"
                 >
                   <span class="quest-code">${quest.id}</span>
-                  <span>
-                    <small>${quest.kind} · ${quest.window}</small>
-                    <strong>${quest.title}</strong>
-                    <i><b style="width: ${quest.progress}%"></b></i>
-                  </span>
-                  ${statusBadge(
-                    quest.statusLabel,
-                    questStatusTone(quest.status)
-                  )}
+                  <span><small>${quest.kind}</small><strong>${quest.title}</strong><em>${quest.step}</em></span>
+                  ${statusBadge(quest.statusLabel, questTone(quest.status))}
                 </button>
               `
             ).join("")}
           </div>
         </section>
 
-        <section class="quest-detail section-block">
+        <section class="simple-quest-detail section-block">
           <div class="section-title">
             <span>${icon("scroll-text")} ${activeQuest.id}</span>
-            ${statusBadge(
-              activeQuest.statusLabel,
-              questStatusTone(activeQuest.status)
-            )}
+            ${statusBadge(activeQuest.statusLabel, questTone(activeQuest.status))}
           </div>
           <div class="quest-detail-title">
             <small>${activeQuest.kind}</small>
             <strong>${activeQuest.title}</strong>
-            <span>${activeQuest.window}</span>
           </div>
-          ${meter({
-            label: "当前推进",
-            value: activeQuest.progress,
-            tone: activeQuest.status === "searching" ? "cinnabar" : "brass",
-            display: `${activeQuest.progress}%`,
-          })}
-          <div class="quest-next">
-            <span>${icon("crosshair")} 下一步</span>
-            <p>${activeQuest.next}</p>
-          </div>
-          <div class="quest-repair">
-            <span>${icon("route")} 补救路线</span>
-            <p>${activeQuest.repair}</p>
+          <div class="quest-flow">
+            <div class="is-done">${icon("circle-check")}<span><small>已发生</small><strong>任务进入日志</strong></span></div>
+            <i></i>
+            <div class="${activeQuest.status === "active" ? "is-current" : ""}">
+              ${icon(activeQuest.status === "active" ? "play" : "circle")}
+              <span><small>当前步骤</small><strong>${activeQuest.step}</strong></span>
+            </div>
+            <i></i>
+            <div>${icon("flag")}<span><small>下一步</small><strong>${activeQuest.next}</strong></span></div>
           </div>
           <button class="primary-command full-command" type="button" data-action="track-quest">
-            ${icon("map-pin")} 设为当前追踪
+            ${icon("crosshair")} 设为当前任务
           </button>
         </section>
+
+        <aside class="quest-mvp-note section-block">
+          ${icon("route")}
+          <h2>流程优先</h2>
+          <p>能做的步骤直接显示；当前不能发生的内容不生成按钮，也不额外展示门槛。</p>
+          <div>
+            <span>${icon("check")} 无关系数值门槛</span>
+            <span>${icon("check")} 无多层任务进度</span>
+            <span>${icon("check")} 无隐藏写入清单</span>
+          </div>
+        </aside>
       </div>
     </article>
   `;
@@ -522,11 +402,9 @@ function renderQuestLog(state) {
 
 function provenanceTone(provenance) {
   return {
-    original: "neutral",
-    verified: "good",
+    original: "good",
     inference: "warning",
-    invalid: "danger",
-  }[provenance];
+  }[provenance] ?? "neutral";
 }
 
 function resolveSourceResults(state) {
@@ -556,9 +434,7 @@ export function renderSourceResults(state) {
     .map(
       (opportunity) => `
         <button
-          class="source-result ${
-            active?.id === opportunity.id ? "is-selected" : ""
-          }"
+          class="source-result ${active?.id === opportunity.id ? "is-selected" : ""}"
           type="button"
           data-action="select-opportunity"
           data-opportunity-id="${opportunity.id}"
@@ -578,11 +454,8 @@ export function renderSourceResults(state) {
             <span>${opportunity.window}</span>
           </span>
           <span class="source-result-meta">
-            ${statusBadge(
-              opportunity.provenanceLabel,
-              provenanceTone(opportunity.provenance)
-            )}
-            <b>${opportunity.feasibility}%</b>
+            ${statusBadge(opportunity.provenanceLabel, provenanceTone(opportunity.provenance))}
+            ${icon("chevron-right")}
           </span>
         </button>
       `
@@ -594,64 +467,36 @@ export function renderSourceDetail(state) {
   const { active } = resolveSourceResults(state);
 
   if (!active) {
-    return emptyState(
-      "scan-search",
-      "等待选择节点",
-      "查询结果会在这里显示原归属、截胡方法与后果"
-    );
+    return emptyState("scan-search", "等待选择节点", "查询结果会在这里显示原作未来与截胡方式");
   }
 
   return `
-    <div class="source-detail-head">
+    <div class="source-detail-head simplified-source-head">
       <div>
         <span>${active.horizonLabel} · ${active.typeLabel}</span>
         <h2>${active.title}</h2>
         <p>${active.summary}</p>
       </div>
-      <div class="feasibility-score ${
-        active.feasibility < 35 ? "is-low" : ""
-      }">
-        <span>截胡可行性</span>
-        <strong>${active.feasibility}</strong>
-        <small>/ 100</small>
-      </div>
+      ${statusBadge(active.provenanceLabel, provenanceTone(active.provenance))}
     </div>
     <div class="source-detail-grid">
-      ${dataRow("原归属者", active.owner)}
-      ${dataRow("时间窗口", active.window)}
+      ${dataRow("原作归属", active.owner)}
+      ${dataRow("发生时间", active.window)}
       ${dataRow("发生地点", active.location)}
-      ${dataRow("牵涉势力", active.faction)}
+      ${dataRow("相关势力", active.faction)}
     </div>
     <div class="source-plan">
-      <section>
-        <span>${icon("route")} 截胡方法</span>
-        <p>${active.method}</p>
-      </section>
-      <section>
-        <span>${icon("gem")} 预计收益</span>
-        <p>${active.reward}</p>
-      </section>
-      <section class="is-risk">
-        <span>${icon("triangle-alert")} 世界后果</span>
-        <p>${active.consequence}</p>
-      </section>
+      <section><span>${icon("route")} 截胡思路</span><p>${active.method}</p></section>
+      <section><span>${icon("gem")} 可能收益</span><p>${active.reward}</p></section>
+      <section class="is-risk"><span>${icon("shuffle")} 改变之后</span><p>${active.consequence}</p></section>
     </div>
     <footer class="source-detail-footer">
       <div>
-        ${statusBadge(
-          active.provenanceLabel,
-          provenanceTone(active.provenance)
-        )}
-        <span>${active.reachable ? "可转化为当前任务" : "超出当前地图 · 只读索引"}</span>
+        ${icon("book-open-check")}
+        <span>这是原作未来情报，不是必须维持的命运。</span>
       </div>
-      <button
-        class="primary-command"
-        type="button"
-        data-action="convert-opportunity"
-        ${active.reachable ? "" : "disabled"}
-      >
-        ${icon(active.reachable ? "crosshair" : "lock-keyhole")}
-        ${active.reachable ? "建立截胡任务" : "保存未来索引"}
+      <button class="primary-command" type="button" data-action="convert-opportunity">
+        ${icon("bookmark-plus")} 标记这条机缘
       </button>
     </footer>
   `;
@@ -661,16 +506,13 @@ function renderSourceQuery(state) {
   const { results } = resolveSourceResults(state);
 
   return `
-    <article class="panel-page source-page" data-testid="panel-UI08">
+    <article class="panel-page source-page simplified-source-page" data-testid="panel-UI08">
       ${panelHeader({
         id: "UI08",
-        eyebrow: "天外外挂 / 原文只读索引",
-        title: "查询未来三年的原作机缘",
-        summary: "查询会显示原归属、窗口、截胡方法和世界后果；被玩家改变的节点会从“原作记录”降级为“当前推演”。",
-        tools: `
-          <span class="sync-indicator">${icon("radio")} 同步率 ${state.generator.sourceSync}%</span>
-          ${iconButton("bookmark", "查看已保存索引", "show-bookmarks")}
-        `,
+        eyebrow: "天外外挂 / 原文只读查询",
+        title: "查询今年与未来三年的机缘",
+        summary: "输入人物、蛊虫、势力或地点，查看原作中会发生的奇遇，再决定是否提前截取。",
+        tools: iconButton("bookmark", "查看已标记机缘", "show-bookmarks"),
       })}
       <div class="source-layout panel-scroll">
         <section class="source-controls section-block">
@@ -684,10 +526,7 @@ function renderSourceQuery(state) {
                   data-action="set-query-horizon"
                   data-horizon-id="${id}"
                   class="${state.ui.queryHorizon === id ? "is-active" : ""}"
-                >
-                  <strong>${label}</strong>
-                  <small>${note}</small>
-                </button>
+                ><strong>${label}</strong><small>${note}</small></button>
               `
             ).join("")}
           </div>
@@ -710,15 +549,12 @@ function renderSourceQuery(state) {
                   data-action="set-query-type"
                   data-type-id="${id}"
                   class="${state.ui.queryType === id ? "is-active" : ""}"
-                >
-                  ${icon(iconName)}
-                  <span>${label}</span>
-                </button>
+                >${icon(iconName)}<span>${label}</span></button>
               `
             ).join("")}
           </div>
           <div class="source-count">
-            <span>${icon("database")} 索引结果</span>
+            <span>${icon("database")} 查询结果</span>
             <strong data-source-count>${results.length}</strong>
           </div>
         </section>
@@ -726,11 +562,9 @@ function renderSourceQuery(state) {
         <section class="source-results section-block">
           <div class="section-title">
             <span>${icon("list-filter")} 匹配节点</span>
-            <small>按可行动性排序</small>
+            <small>按时间排列</small>
           </div>
-          <div class="source-result-list" data-source-results>
-            ${renderSourceResults(state)}
-          </div>
+          <div class="source-result-list" data-source-results>${renderSourceResults(state)}</div>
         </section>
 
         <section class="source-detail section-block" data-source-detail>
@@ -746,84 +580,91 @@ function relationPortraitPath(relation, portraitState) {
     return relation.portrait;
   }
 
-  return relation.portrait.replace(
-    "_normal.png",
-    `_${portraitState}.png`
-  );
+  return relation.portrait.replace("_normal.png", `_${portraitState}.png`);
 }
 
 function renderRelationships(state) {
-  const activeRelation =
-    RELATIONSHIPS.find(({ id }) => id === state.ui.activeRelationId) ??
-    RELATIONSHIPS[0];
-  const supportsPortraitStates = activeRelation.portrait.includes("_normal.png");
-  const portraitState = supportsPortraitStates
+  const groupId = state.ui.relationGroup;
+  const relations = RELATION_GROUPS[groupId];
+  const active =
+    relations.find(({ id }) => id === state.ui.activeRelationId) ?? relations[0];
+  const portraitState = active.portrait.includes("_normal.png")
     ? state.ui.npcPortraitState ?? "normal"
     : "normal";
-  const portraitLabels = [
-    { id: "normal", label: "常态" },
-    { id: "outerwear_missing", label: "外衣遗失" },
-    { id: "privacy_layer_missing", label: "隐私层异常" },
+  const portraitStates = [
+    ["normal", "常态"],
+    ["outerwear_missing", "外衣遗失"],
+    ["privacy_layer_missing", "贴身衣物遗失"],
   ];
 
   return `
-    <article class="panel-page relations-page" data-testid="panel-UI09">
+    <article class="panel-page relations-page graph-relations-page" data-testid="panel-UI09">
       ${panelHeader({
         id: "UI09",
-        eyebrow: "信任 / 怀疑 / 杠杆",
-        title: "人物关系与可接触状态",
-        summary: "关系不是单一好感条；信任、怀疑、利益杠杆、生死与角色专属指标会分别改变事件入口。",
-        tools: iconButton("users-round", "切换关系网络", "toggle-network"),
+        eyebrow: "血脉 / 亲朋",
+        title: "人物关系",
+        summary: "关系图只展示角色之间是什么关系、是否在世，以及当前可公开得知的信息。",
+        tools: iconButton("users-round", "查看全部人物", "show-all-relations"),
       })}
-      <div class="relations-layout panel-scroll">
-        <section class="relationship-list section-block">
-          <div class="section-title">
-            <span>${icon("contact")} 已识别人物</span>
-            <small>${RELATIONSHIPS.length} 人</small>
+      <div class="graph-relations-layout panel-scroll">
+        <section class="relationship-graph-sheet section-block">
+          <div class="relation-group-tabs" role="tablist" aria-label="关系类别">
+            <button
+              type="button"
+              role="tab"
+              aria-selected="${groupId === "blood"}"
+              data-action="set-relation-group"
+              data-group-id="blood"
+              class="${groupId === "blood" ? "is-active" : ""}"
+            >${icon("git-fork")} 血脉关系</button>
+            <button
+              type="button"
+              role="tab"
+              aria-selected="${groupId === "social"}"
+              data-action="set-relation-group"
+              data-group-id="social"
+              class="${groupId === "social" ? "is-active" : ""}"
+            >${icon("users")} 亲朋关系</button>
           </div>
-          <div class="relation-list">
-            ${RELATIONSHIPS.map(
-              (relation) => `
-                <button
-                  class="relation-row ${
-                    activeRelation.id === relation.id ? "is-selected" : ""
-                  }"
-                  type="button"
-                  data-action="select-relation"
-                  data-relation-id="${relation.id}"
-                >
-                  <img src="${relation.portrait}" alt="" />
-                  <span>
-                    <small>${relation.role}</small>
-                    <strong>${relation.name}</strong>
-                    <em>${relation.metric}</em>
-                  </span>
-                  <b>${relation.trust}</b>
-                </button>
-              `
-            ).join("")}
+          <div class="relationship-graph">
+            <div class="relationship-lines" aria-hidden="true">
+              <i></i><i></i><i></i>
+            </div>
+            <div class="relation-player-node">
+              <img src="${state.player.portrait}" alt="" />
+              <strong>${state.player.name}</strong>
+              <small>自己</small>
+            </div>
+            ${relations
+              .map(
+                (relation, index) => `
+                  <button
+                    class="relation-graph-node node-${index + 1} ${active.id === relation.id ? "is-selected" : ""}"
+                    type="button"
+                    data-action="select-relation"
+                    data-relation-id="${relation.id}"
+                  >
+                    <img src="${relation.portrait}" alt="" />
+                    <span><strong>${relation.name}</strong><small>${relation.relation}</small></span>
+                  </button>
+                `
+              )
+              .join("")}
           </div>
         </section>
 
-        <section class="relation-portrait section-block">
-          <div class="portrait-frame state-${portraitState}">
-            <img
-              src="${relationPortraitPath(activeRelation, portraitState)}"
-              alt="${escapeHtml(activeRelation.name)}角色立绘"
-            />
-            <div class="portrait-caption">
-              <span>${activeRelation.status}</span>
-              <strong>${activeRelation.name}</strong>
-              <small>${activeRelation.role}</small>
-            </div>
+        <section class="relation-profile section-block">
+          <div class="relation-profile-portrait state-${portraitState}">
+            <img src="${relationPortraitPath(active, portraitState)}" alt="${active.name}角色立绘" />
+            <div><span>${active.status}</span><strong>${active.name}</strong><small>${active.relation}</small></div>
           </div>
           ${
-            supportsPortraitStates
+            active.portrait.includes("_normal.png")
               ? `
                 <div class="segmented-control portrait-preview-control">
-                  ${portraitLabels
+                  ${portraitStates
                     .map(
-                      ({ id, label }) => `
+                      ([id, label]) => `
                         <button
                           type="button"
                           data-action="set-npc-portrait-state"
@@ -834,154 +675,109 @@ function renderRelationships(state) {
                     )
                     .join("")}
                 </div>
-                <p class="portrait-rule-note">${icon("info")} 立绘状态独立于地图 Q 版；Q 版始终使用正常服装静态图。</p>
               `
-              : `
-                <div class="q-static-note">
-                  ${icon("badge-info")}
-                  <span>地图 Q 版静态形象</span>
-                  <strong>不跟随情绪或服装状态切换</strong>
-                </div>
-              `
+              : `<p class="q-static-note">${icon("info")} 地图 Q 版角色始终保持固定形象。</p>`
           }
         </section>
 
-        <section class="relation-detail section-block">
+        <section class="relation-public-info section-block">
           <div class="section-title">
-            <span>${icon("chart-spline")} 关系拆解</span>
-            ${statusBadge(activeRelation.contact, "good")}
+            <span>${icon("contact")} 关系信息</span>
+            ${statusBadge(active.status, "good")}
           </div>
-          <div class="relation-meters">
-            ${meter({
-              label: "信任",
-              value: activeRelation.trust,
-              tone: "jade",
-              display: `${activeRelation.trust}`,
-            })}
-            ${meter({
-              label: "对你怀疑",
-              value: activeRelation.suspicion,
-              tone: "cinnabar",
-              display: `${activeRelation.suspicion}`,
-            })}
-            ${meter({
-              label: "利益杠杆",
-              value: activeRelation.leverage,
-              tone: "brass",
-              display: `${activeRelation.leverage}`,
-            })}
+          ${dataRow("姓名", active.name)}
+          ${dataRow("与你的关系", active.relation)}
+          ${dataRow("当前状态", active.status)}
+          <div class="relation-note">
+            <span>${icon("message-circle")} 已知近况</span>
+            <p>${active.note}</p>
           </div>
-          <div class="relation-facts">
-            ${dataRow("生死状态", activeRelation.status)}
-            ${dataRow("接触状态", activeRelation.contact)}
-            ${dataRow("专属指标", activeRelation.metric)}
-          </div>
-          <div class="last-relation-event">
-            <span>${icon("clock-3")} 最近变化</span>
-            <p>${activeRelation.lastEvent}</p>
-          </div>
-          <div class="relation-actions">
-            <button class="secondary-command" type="button" data-action="inspect-leverage">
-              ${icon("key-round")} 查看筹码
-            </button>
-            <button class="primary-command" type="button" data-action="start-dialogue">
-              ${icon("messages-square")} 安排接触
-            </button>
-          </div>
+          <button class="primary-command full-command" type="button" data-action="start-dialogue">
+            ${icon("messages-square")} 与此人交谈
+          </button>
         </section>
       </div>
     </article>
   `;
 }
 
-function renderFangYuan(state) {
-  const fang = state.fangYuan;
+function rivalStatusTone(status) {
+  return {
+    active: "good",
+    injured: "warning",
+    dead: "danger",
+  }[status];
+}
+
+function renderRivals(state) {
+  const active =
+    RIVALS.find(({ id }) => id === state.ui.activeRivalId) ?? RIVALS[0];
 
   return `
-    <article class="panel-page fang-page" data-testid="panel-UI10">
+    <article class="panel-page rivals-page" data-testid="panel-UI10">
       ${panelHeader({
         id: "UI10",
-        eyebrow: "只显示已验证认知",
-        title: "古月方源 · 观察卡",
-        summary: "警觉是长期记录，不等于敌意；未知想法不会被伪造成可读数值，只有玩家验证过的事实进入面板。",
-        tools: iconButton("scan-eye", "查看观察来源", "inspect-fang-sources"),
+        eyebrow: "天骄 / 竞争者 / 生死状态",
+        title: "青茅山竞争者",
+        summary: "方源只是众多竞争者之一；所有角色都可以被击败或杀死，结果由当前世界承接。",
+        tools: iconButton("swords", "查看交战记录", "show-rival-history"),
       })}
-      <div class="fang-layout panel-scroll">
-        <section class="fang-portrait section-block">
-          <div class="fang-stage">
-            <span class="fang-moon" aria-hidden="true">源</span>
-            <img src="${CHIBI_BASE}/chibi_fang_yuan.png" alt="古月方源 Q 版角色" />
-            <div class="gaze-line" aria-hidden="true"></div>
+      <div class="rivals-layout panel-scroll">
+        <section class="rival-roster section-block">
+          <div class="section-title">
+            <span>${icon("users-round")} 已知天骄</span>
+            <small>${RIVALS.length} 人</small>
           </div>
-          <div class="fang-identity">
-            <span>古月旁支 · 同届</span>
-            <strong>古月方源</strong>
-            <small>当前可接触 · 位于洞口附近</small>
-          </div>
-          ${meter({
-            label: "方源警觉",
-            value: fang.alert,
-            tone: "cinnabar",
-            display: `${fang.alert} / 100`,
-          })}
-          <div class="alert-thresholds">
-            <span class="is-past">注意 20</span>
-            <span>试探 40</span>
-            <span>反制 60</span>
-            <span>敌对 80</span>
+          <div class="rival-list">
+            ${RIVALS.map(
+              (rival) => `
+                <button
+                  class="rival-row ${active.id === rival.id ? "is-selected" : ""}"
+                  type="button"
+                  data-action="select-rival"
+                  data-rival-id="${rival.id}"
+                >
+                  <img src="${rival.portrait}" alt="" />
+                  <span><small>${rival.relation}</small><strong>${rival.name}</strong><em>${rival.realm}</em></span>
+                  ${statusBadge(rival.statusLabel, rivalStatusTone(rival.status))}
+                </button>
+              `
+            ).join("")}
           </div>
         </section>
 
-        <section class="fang-intent section-block">
-          <div class="section-title">
-            <span>${icon("crosshair")} 已知行动意图</span>
-            ${statusBadge("有限认知", "warning")}
+        <section class="rival-focus section-block">
+          <div class="rival-focus-stage">
+            <span class="rival-mark">${active.name.slice(-1)}</span>
+            <img src="${active.portrait}" alt="${active.name}" />
           </div>
-          <div class="intent-block">
-            <span>当前目标</span>
-            <strong>${fang.currentGoal}</strong>
+          <div class="rival-focus-name">
+            <span>${active.relation}</span>
+            <h2>${active.name}</h2>
+            ${statusBadge(active.statusLabel, rivalStatusTone(active.status))}
           </div>
-          <div class="fang-facts">
-            ${dataRow("对你的认知", fang.cognition)}
-            ${dataRow("交易信用", fang.tradeCredit)}
-            ${dataRow("当前关系", "竞争 · 可交易")}
-          </div>
-          <div class="intent-warning">
-            ${icon("shield-question")}
-            <p>观察卡不会显示“隐藏敌意”或未被验证的备用计划。方源可能已经改变行动，但系统只记录可证实结果。</p>
+          <div class="rival-facts">
+            ${dataRow("境界", active.realm)}
+            ${dataRow("已知蛊虫", active.gu)}
+            ${dataRow("生死状态", active.statusLabel)}
           </div>
         </section>
 
-        <section class="verified-ledger section-block">
+        <section class="rival-actions-sheet section-block">
           <div class="section-title">
-            <span>${icon("badge-check")} 已验证事实</span>
-            <small>${fang.verifiedFacts.length} 条</small>
+            <span>${icon("scroll-text")} 公开记录</span>
+            <small>当前世界</small>
           </div>
-          <ol class="verified-facts">
-            ${fang.verifiedFacts
-              .map(
-                (fact, index) => `
-                  <li>
-                    <span>${String(index + 1).padStart(2, "0")}</span>
-                    <p>${fact}</p>
-                    ${icon("check")}
-                  </li>
-                `
-              )
-              .join("")}
-          </ol>
-          <div class="unknown-facts">
-            ${Array.from({ length: fang.unknown }, (_, index) => `
-              <div>
-                ${icon("lock-keyhole")}
-                <span>未知事实 ${index + 1}</span>
-                <strong>需要观察、交易或盗念验证</strong>
-              </div>
-            `).join("")}
+          <p class="rival-record">${active.record}</p>
+          <div class="rival-action-list">
+            <button type="button" data-action="start-dialogue">${icon("messages-square")}<span><strong>交谈</strong><small>进入普通剧情对话</small></span></button>
+            <button type="button" data-action="open-theft" data-theft-target-id="${active.id}">${icon("hand")}<span><strong>偷盗</strong><small>查看可偷取物品并做一次判定</small></span></button>
+            <button type="button" data-action="start-combat">${icon("swords")}<span><strong>挑战</strong><small>进入棋盘战斗，可产生致死结果</small></span></button>
           </div>
-          <button class="secondary-command full-command" type="button" data-action="plan-observation">
-            ${icon("telescope")} 安排下一次观察
-          </button>
+          <div class="free-world-note">
+            ${icon("skull")}
+            <p>角色死亡后会从后续事件中移除，不会被剧情自动复活。</p>
+          </div>
         </section>
       </div>
     </article>
@@ -993,7 +789,7 @@ export function renderWorldPanel(panelId, state) {
     case "UI05":
       return renderInventory(state);
     case "UI06":
-      return renderMap(state);
+      return renderTravel(state);
     case "UI07":
       return renderQuestLog(state);
     case "UI08":
@@ -1001,7 +797,7 @@ export function renderWorldPanel(panelId, state) {
     case "UI09":
       return renderRelationships(state);
     case "UI10":
-      return renderFangYuan(state);
+      return renderRivals(state);
     default:
       return "";
   }
