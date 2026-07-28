@@ -22,7 +22,7 @@ test("physical, Gu, fixed, floor, and minimum damage use one formula", () => {
   );
   assert.equal(
     calculateDamage(actor, target, getAction("battle_action_moonblade")),
-    8
+    14
   );
   assert.equal(
     calculateDamage(actor, target, getAction("battle_action_boss_pounce")),
@@ -55,7 +55,7 @@ test("legal attacks always hit without consulting a random source", () => {
 
   try {
     const result = simulateTurnPlan(state, attack);
-    assert.equal(result.snapshot.enemies[0].hp, 33);
+    assert.equal(result.snapshot.enemies[0].hp, 35);
   } finally {
     Math.random = originalRandom;
   }
@@ -78,12 +78,12 @@ test("defend halves one positive incoming hit and is then consumed", () => {
   const attack = planFor(
     state,
     "B-D10-01.enemy.1",
-    "battle_action_basic_melee",
+    "battle_action_enemy_melee_light",
     "player"
   );
   state = simulateTurnPlan(state, attack).snapshot;
 
-  assert.equal(state.player.hp, 37);
+  assert.equal(state.player.hp, 35);
   assert.equal(
     state.player.statuses.some(
       (status) => status.statusId === "battle_status_defending"

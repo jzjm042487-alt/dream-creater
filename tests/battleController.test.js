@@ -186,7 +186,7 @@ test("pathfinder failure permits only origin actions and never teleports", () =>
   assert.deepEqual(result.plan.destination, { x: 2, y: 2 });
   assert.equal(
     result.plan.action.actionId,
-    "battle_action_basic_melee"
+    "battle_action_enemy_melee_light"
   );
   assert.ok(
     result.summary.hpChanges.some(
