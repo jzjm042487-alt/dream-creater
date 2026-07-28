@@ -1,0 +1,658 @@
+{
+  "version": 1,
+  "encounters": [
+    {
+      "battleId": "B-D07-01",
+      "tierId": "battle_tier_tutorial",
+      "board": {
+        "width": 8,
+        "height": 6,
+        "blockedCells": [
+          { "x": 3, "y": 2, "kind": "training_post" },
+          { "x": 3, "y": 4, "kind": "training_post" }
+        ]
+      },
+      "entryVariants": [
+        {
+          "variantId": "default",
+          "mode": "battle",
+          "playerSpawn": { "x": 1, "y": 3 },
+          "startingPhase": "player"
+        }
+      ],
+      "enemies": [
+        {
+          "unitId": "B-D07-01.enemy.1",
+          "profileId": "ai_profile_duelist",
+          "spawn": { "x": 6, "y": 3 },
+          "maxHealth": 32,
+          "maxEssence": 6,
+          "move": 3,
+          "attributes": { "strength": 20, "perception": 30 },
+          "defenses": { "physical": 1, "gu": 1 },
+          "actionIds": [
+            "battle_action_basic_melee",
+            "battle_action_moonblade",
+            "battle_action_defend"
+          ]
+        }
+      ],
+      "enemyUnitOrder": ["B-D07-01.enemy.1"],
+      "resultPolicy": {
+        "simultaneousZero": "playerVictory",
+        "allowRetreat": true,
+        "returnMode": "entryScene",
+        "maxBalanceRounds": 20
+      }
+    },
+    {
+      "battleId": "B-D10-01",
+      "tierId": "battle_tier_normal",
+      "board": {
+        "width": 8,
+        "height": 6,
+        "blockedCells": [
+          { "x": 4, "y": 1, "kind": "training_post" },
+          { "x": 4, "y": 4, "kind": "training_post" }
+        ]
+      },
+      "entryVariants": [
+        {
+          "variantId": "default",
+          "mode": "battle",
+          "playerSpawn": { "x": 1, "y": 3 },
+          "startingPhase": "player"
+        }
+      ],
+      "enemies": [
+        {
+          "unitId": "B-D10-01.enemy.1",
+          "profileId": "ai_profile_melee_pursuer",
+          "spawn": { "x": 6, "y": 3 },
+          "maxHealth": 38,
+          "maxEssence": 0,
+          "move": 2,
+          "attributes": { "strength": 40, "perception": 10 },
+          "defenses": { "physical": 2, "gu": 1 },
+          "actionIds": ["battle_action_basic_melee"]
+        }
+      ],
+      "enemyUnitOrder": ["B-D10-01.enemy.1"],
+      "resultPolicy": {
+        "simultaneousZero": "playerVictory",
+        "allowRetreat": true,
+        "returnMode": "entryScene",
+        "maxBalanceRounds": 20
+      }
+    },
+    {
+      "battleId": "B-D17-01",
+      "tierId": "battle_tier_normal",
+      "board": {
+        "width": 8,
+        "height": 6,
+        "blockedCells": [
+          { "x": 3, "y": 1, "kind": "stone" },
+          { "x": 4, "y": 4, "kind": "stone" }
+        ]
+      },
+      "entryVariants": [
+        {
+          "variantId": "default",
+          "mode": "battle",
+          "playerSpawn": { "x": 1, "y": 3 },
+          "startingPhase": "player"
+        }
+      ],
+      "enemies": [
+        {
+          "unitId": "B-D17-01.enemy.1",
+          "profileId": "ai_profile_guardian",
+          "spawn": { "x": 6, "y": 3 },
+          "maxHealth": 40,
+          "maxEssence": 6,
+          "move": 2,
+          "attributes": { "strength": 40, "perception": 10 },
+          "defenses": { "physical": 4, "gu": 2 },
+          "actionIds": [
+            "battle_action_basic_melee",
+            "battle_action_enemy_shell_guard"
+          ]
+        }
+      ],
+      "enemyUnitOrder": ["B-D17-01.enemy.1"],
+      "resultPolicy": {
+        "simultaneousZero": "playerVictory",
+        "allowRetreat": true,
+        "returnMode": "entryScene",
+        "maxBalanceRounds": 20
+      }
+    },
+    {
+      "battleId": "B-D19-01",
+      "tierId": "battle_tier_elite",
+      "board": {
+        "width": 8,
+        "height": 6,
+        "blockedCells": [
+          { "x": 3, "y": 2, "kind": "arena_post" },
+          { "x": 4, "y": 3, "kind": "arena_post" }
+        ]
+      },
+      "entryVariants": [
+        {
+          "variantId": "default",
+          "mode": "battle",
+          "playerSpawn": { "x": 1, "y": 3 },
+          "startingPhase": "player"
+        }
+      ],
+      "enemies": [
+        {
+          "unitId": "B-D19-01.enemy.1",
+          "profileId": "ai_profile_duelist",
+          "spawn": { "x": 6, "y": 3 },
+          "maxHealth": 50,
+          "maxEssence": 15,
+          "move": 3,
+          "attributes": { "strength": 40, "perception": 55 },
+          "defenses": { "physical": 3, "gu": 3 },
+          "actionIds": [
+            "battle_action_basic_melee",
+            "battle_action_moonblade",
+            "battle_action_defend"
+          ]
+        }
+      ],
+      "enemyUnitOrder": ["B-D19-01.enemy.1"],
+      "resultPolicy": {
+        "simultaneousZero": "playerVictory",
+        "allowRetreat": true,
+        "returnMode": "entryScene",
+        "maxBalanceRounds": 20
+      }
+    },
+    {
+      "battleId": "B-D21-01",
+      "tierId": "battle_tier_normal",
+      "board": {
+        "width": 8,
+        "height": 6,
+        "blockedCells": [
+          { "x": 3, "y": 2, "kind": "rock" },
+          { "x": 4, "y": 4, "kind": "rock" }
+        ]
+      },
+      "entryVariants": [
+        {
+          "variantId": "default",
+          "mode": "battle",
+          "playerSpawn": { "x": 1, "y": 3 },
+          "startingPhase": "player"
+        }
+      ],
+      "enemies": [
+        {
+          "unitId": "B-D21-01.enemy.1",
+          "profileId": "ai_profile_charger",
+          "spawn": { "x": 6, "y": 3 },
+          "maxHealth": 38,
+          "maxEssence": 8,
+          "move": 3,
+          "attributes": { "strength": 50, "perception": 20 },
+          "defenses": { "physical": 2, "gu": 1 },
+          "actionIds": [
+            "battle_action_basic_melee",
+            "battle_action_enemy_charge"
+          ]
+        }
+      ],
+      "enemyUnitOrder": ["B-D21-01.enemy.1"],
+      "resultPolicy": {
+        "simultaneousZero": "playerVictory",
+        "allowRetreat": true,
+        "returnMode": "entryScene",
+        "maxBalanceRounds": 20
+      }
+    },
+    {
+      "battleId": "B-D24-01",
+      "tierId": "battle_tier_normal",
+      "board": {
+        "width": 8,
+        "height": 6,
+        "blockedCells": [
+          { "x": 3, "y": 1, "kind": "white_stone" },
+          { "x": 4, "y": 4, "kind": "white_stone" }
+        ]
+      },
+      "entryVariants": [
+        {
+          "variantId": "default",
+          "mode": "battle",
+          "playerSpawn": { "x": 1, "y": 3 },
+          "startingPhase": "player"
+        },
+        {
+          "variantId": "retreat_ready",
+          "mode": "battle",
+          "playerSpawn": { "x": 0, "y": 3 },
+          "startingPhase": "player"
+        }
+      ],
+      "enemies": [
+        {
+          "unitId": "B-D24-01.enemy.1",
+          "profileId": "ai_profile_ranged_skirmisher",
+          "spawn": { "x": 6, "y": 3 },
+          "maxHealth": 38,
+          "maxEssence": 12,
+          "move": 3,
+          "attributes": { "strength": 20, "perception": 50 },
+          "defenses": { "physical": 1, "gu": 2 },
+          "actionIds": [
+            "battle_action_basic_melee",
+            "battle_action_enemy_ranged_strike",
+            "battle_action_defend"
+          ]
+        }
+      ],
+      "enemyUnitOrder": ["B-D24-01.enemy.1"],
+      "resultPolicy": {
+        "simultaneousZero": "playerVictory",
+        "allowRetreat": true,
+        "returnMode": "entryScene",
+        "maxBalanceRounds": 20
+      }
+    },
+    {
+      "battleId": "B-D26-01",
+      "tierId": "battle_tier_elite",
+      "board": {
+        "width": 8,
+        "height": 6,
+        "blockedCells": [
+          { "x": 3, "y": 2, "kind": "gate_stone" },
+          { "x": 3, "y": 4, "kind": "gate_stone" }
+        ]
+      },
+      "entryVariants": [
+        {
+          "variantId": "default",
+          "mode": "battle",
+          "playerSpawn": { "x": 1, "y": 3 },
+          "startingPhase": "player"
+        },
+        {
+          "variantId": "retreat_ready",
+          "mode": "battle",
+          "playerSpawn": { "x": 0, "y": 3 },
+          "startingPhase": "player"
+        }
+      ],
+      "enemies": [
+        {
+          "unitId": "B-D26-01.enemy.1",
+          "profileId": "ai_profile_pack_hunter",
+          "spawn": { "x": 6, "y": 3 },
+          "maxHealth": 24,
+          "maxEssence": 4,
+          "move": 3,
+          "attributes": { "strength": 20, "perception": 20 },
+          "defenses": { "physical": 1, "gu": 1 },
+          "actionIds": [
+            "battle_action_basic_melee",
+            "battle_action_enemy_charge"
+          ]
+        },
+        {
+          "unitId": "B-D26-01.enemy.2",
+          "profileId": "ai_profile_pack_hunter",
+          "spawn": { "x": 6, "y": 1 },
+          "maxHealth": 24,
+          "maxEssence": 4,
+          "move": 3,
+          "attributes": { "strength": 20, "perception": 20 },
+          "defenses": { "physical": 1, "gu": 1 },
+          "actionIds": [
+            "battle_action_basic_melee",
+            "battle_action_enemy_charge"
+          ]
+        }
+      ],
+      "enemyUnitOrder": ["B-D26-01.enemy.1", "B-D26-01.enemy.2"],
+      "resultPolicy": {
+        "simultaneousZero": "playerVictory",
+        "allowRetreat": true,
+        "returnMode": "entryScene",
+        "maxBalanceRounds": 20
+      }
+    },
+    {
+      "battleId": "B-D27-01",
+      "tierId": "battle_tier_normal",
+      "board": {
+        "width": 8,
+        "height": 6,
+        "blockedCells": [
+          { "x": 3, "y": 2, "kind": "road_stone" },
+          { "x": 4, "y": 2, "kind": "road_stone" }
+        ]
+      },
+      "entryVariants": [
+        {
+          "variantId": "default",
+          "mode": "battle",
+          "playerSpawn": { "x": 1, "y": 3 },
+          "startingPhase": "player"
+        }
+      ],
+      "enemies": [
+        {
+          "unitId": "B-D27-01.enemy.1",
+          "profileId": "ai_profile_charger",
+          "spawn": { "x": 6, "y": 3 },
+          "maxHealth": 42,
+          "maxEssence": 8,
+          "move": 3,
+          "attributes": { "strength": 60, "perception": 20 },
+          "defenses": { "physical": 2, "gu": 1 },
+          "actionIds": [
+            "battle_action_basic_melee",
+            "battle_action_enemy_charge"
+          ]
+        }
+      ],
+      "enemyUnitOrder": ["B-D27-01.enemy.1"],
+      "resultPolicy": {
+        "simultaneousZero": "playerVictory",
+        "allowRetreat": true,
+        "returnMode": "entryScene",
+        "maxBalanceRounds": 20
+      }
+    },
+    {
+      "battleId": "B-D29-01",
+      "tierId": "battle_tier_boss",
+      "board": {
+        "width": 8,
+        "height": 6,
+        "blockedCells": [
+          { "x": 3, "y": 1, "kind": "large_rock" },
+          { "x": 3, "y": 4, "kind": "large_rock" },
+          { "x": 5, "y": 2, "kind": "large_rock" }
+        ]
+      },
+      "entryVariants": [
+        {
+          "variantId": "default",
+          "mode": "battle",
+          "playerSpawn": { "x": 1, "y": 3 },
+          "startingPhase": "player"
+        },
+        {
+          "variantId": "rock_cover",
+          "mode": "battle",
+          "playerSpawn": { "x": 2, "y": 1 },
+          "startingPhase": "player"
+        },
+        {
+          "variantId": "retreat_ready",
+          "mode": "battle",
+          "playerSpawn": { "x": 0, "y": 3 },
+          "startingPhase": "player"
+        }
+      ],
+      "enemies": [
+        {
+          "unitId": "B-D29-01.enemy.1",
+          "profileId": "ai_profile_boss_hunter",
+          "spawn": { "x": 6, "y": 3 },
+          "maxHealth": 68,
+          "maxEssence": 24,
+          "move": 3,
+          "attributes": { "strength": 70, "perception": 50 },
+          "defenses": { "physical": 4, "gu": 4 },
+          "actionIds": [
+            "battle_action_basic_melee",
+            "battle_action_boss_gather_force",
+            "battle_action_boss_pounce",
+            "battle_action_defend"
+          ]
+        }
+      ],
+      "enemyUnitOrder": ["B-D29-01.enemy.1"],
+      "resultPolicy": {
+        "simultaneousZero": "playerVictory",
+        "allowRetreat": true,
+        "returnMode": "entryScene",
+        "maxBalanceRounds": 20
+      }
+    },
+    {
+      "battleId": "B-Q02-01",
+      "tierId": "battle_tier_elite",
+      "board": {
+        "width": 8,
+        "height": 6,
+        "blockedCells": [
+          { "x": 3, "y": 2, "kind": "stone_pillar" },
+          { "x": 4, "y": 4, "kind": "stone_pillar" }
+        ]
+      },
+      "entryVariants": [
+        {
+          "variantId": "default",
+          "mode": "battle",
+          "playerSpawn": { "x": 1, "y": 3 },
+          "startingPhase": "player"
+        },
+        {
+          "variantId": "enemy_first",
+          "mode": "battle",
+          "playerSpawn": { "x": 1, "y": 3 },
+          "startingPhase": "enemy"
+        },
+        {
+          "variantId": "direct_retreat",
+          "mode": "directResult",
+          "result": "retreat"
+        }
+      ],
+      "enemies": [
+        {
+          "unitId": "B-Q02-01.enemy.1",
+          "profileId": "ai_profile_guardian",
+          "spawn": { "x": 6, "y": 3 },
+          "maxHealth": 50,
+          "maxEssence": 8,
+          "move": 2,
+          "attributes": { "strength": 50, "perception": 10 },
+          "defenses": { "physical": 5, "gu": 3 },
+          "actionIds": [
+            "battle_action_basic_melee",
+            "battle_action_enemy_shell_guard"
+          ]
+        }
+      ],
+      "enemyUnitOrder": ["B-Q02-01.enemy.1"],
+      "resultPolicy": {
+        "simultaneousZero": "playerVictory",
+        "allowRetreat": true,
+        "returnMode": "entryScene",
+        "maxBalanceRounds": 20
+      }
+    },
+    {
+      "battleId": "B-Q03-01",
+      "tierId": "battle_tier_normal",
+      "board": {
+        "width": 8,
+        "height": 6,
+        "blockedCells": [
+          { "x": 1, "y": 4, "kind": "cargo_box" },
+          { "x": 3, "y": 2, "kind": "road_stone" },
+          { "x": 4, "y": 4, "kind": "road_stone" }
+        ]
+      },
+      "entryVariants": [
+        {
+          "variantId": "default",
+          "mode": "battle",
+          "playerSpawn": { "x": 1, "y": 3 },
+          "startingPhase": "player"
+        },
+        {
+          "variantId": "flank",
+          "mode": "battle",
+          "playerSpawn": { "x": 1, "y": 1 },
+          "startingPhase": "player"
+        },
+        {
+          "variantId": "direct_retreat",
+          "mode": "directResult",
+          "result": "retreat"
+        }
+      ],
+      "enemies": [
+        {
+          "unitId": "B-Q03-01.enemy.1",
+          "profileId": "ai_profile_duelist",
+          "spawn": { "x": 6, "y": 3 },
+          "maxHealth": 40,
+          "maxEssence": 12,
+          "move": 3,
+          "attributes": { "strength": 40, "perception": 40 },
+          "defenses": { "physical": 2, "gu": 2 },
+          "actionIds": [
+            "battle_action_basic_melee",
+            "battle_action_enemy_ranged_strike",
+            "battle_action_defend"
+          ]
+        }
+      ],
+      "enemyUnitOrder": ["B-Q03-01.enemy.1"],
+      "resultPolicy": {
+        "simultaneousZero": "playerVictory",
+        "allowRetreat": true,
+        "returnMode": "entryScene",
+        "maxBalanceRounds": 20
+      }
+    },
+    {
+      "battleId": "B-Q04-01",
+      "tierId": "battle_tier_normal",
+      "board": {
+        "width": 8,
+        "height": 6,
+        "blockedCells": [
+          { "x": 4, "y": 3, "kind": "central_seedling" },
+          { "x": 3, "y": 1, "kind": "stone_trough" },
+          { "x": 3, "y": 5, "kind": "stone_trough" }
+        ]
+      },
+      "entryVariants": [
+        {
+          "variantId": "default",
+          "mode": "battle",
+          "playerSpawn": { "x": 1, "y": 3 },
+          "startingPhase": "player"
+        },
+        {
+          "variantId": "flank",
+          "mode": "battle",
+          "playerSpawn": { "x": 1, "y": 1 },
+          "startingPhase": "player"
+        }
+      ],
+      "enemies": [
+        {
+          "unitId": "B-Q04-01.enemy.1",
+          "profileId": "ai_profile_ranged_skirmisher",
+          "spawn": { "x": 6, "y": 3 },
+          "maxHealth": 36,
+          "maxEssence": 12,
+          "move": 3,
+          "attributes": { "strength": 10, "perception": 50 },
+          "defenses": { "physical": 1, "gu": 1 },
+          "actionIds": [
+            "battle_action_enemy_ranged_strike",
+            "battle_action_defend"
+          ]
+        }
+      ],
+      "enemyUnitOrder": ["B-Q04-01.enemy.1"],
+      "resultPolicy": {
+        "simultaneousZero": "playerVictory",
+        "allowRetreat": true,
+        "returnMode": "entryScene",
+        "maxBalanceRounds": 20
+      }
+    },
+    {
+      "battleId": "B-Q05-01",
+      "tierId": "battle_tier_elite",
+      "board": {
+        "width": 8,
+        "height": 6,
+        "blockedCells": []
+      },
+      "entryVariants": [
+        {
+          "variantId": "default",
+          "mode": "battle",
+          "playerSpawn": { "x": 1, "y": 3 },
+          "startingPhase": "player"
+        },
+        {
+          "variantId": "flank",
+          "mode": "battle",
+          "playerSpawn": { "x": 1, "y": 1 },
+          "startingPhase": "player"
+        },
+        {
+          "variantId": "direct_retreat",
+          "mode": "directResult",
+          "result": "retreat"
+        }
+      ],
+      "enemies": [
+        {
+          "unitId": "B-Q05-01.enemy.1",
+          "profileId": "ai_profile_pack_hunter",
+          "spawn": { "x": 6, "y": 3 },
+          "maxHealth": 24,
+          "maxEssence": 4,
+          "move": 3,
+          "attributes": { "strength": 20, "perception": 20 },
+          "defenses": { "physical": 1, "gu": 1 },
+          "actionIds": [
+            "battle_action_basic_melee",
+            "battle_action_enemy_charge"
+          ]
+        },
+        {
+          "unitId": "B-Q05-01.enemy.2",
+          "profileId": "ai_profile_pack_hunter",
+          "spawn": { "x": 6, "y": 1 },
+          "maxHealth": 24,
+          "maxEssence": 4,
+          "move": 3,
+          "attributes": { "strength": 20, "perception": 20 },
+          "defenses": { "physical": 1, "gu": 1 },
+          "actionIds": [
+            "battle_action_basic_melee",
+            "battle_action_enemy_charge"
+          ]
+        }
+      ],
+      "enemyUnitOrder": ["B-Q05-01.enemy.1", "B-Q05-01.enemy.2"],
+      "resultPolicy": {
+        "simultaneousZero": "playerVictory",
+        "allowRetreat": true,
+        "returnMode": "entryScene",
+        "maxBalanceRounds": 20
+      }
+    }
+  ]
+}

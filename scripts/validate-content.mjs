@@ -5,6 +5,7 @@ import {
   loadRegistry,
   readJson,
   schemaPathForContent,
+  validateBattleCatalogSet,
   validateContentValue,
   validateWildernessGraph
 } from "./contract-validator-core.mjs";
@@ -70,6 +71,28 @@ if (selfTestInvalid) {
       errors.push(`${relative(file)} ${error.message}`);
     }
   }
+
+  const battleCatalogPaths = {
+    actions: path.join(ROOT, "systems", "battle", "actions.json"),
+    profiles: path.join(ROOT, "systems", "battle", "ai-profiles.json"),
+    encounters: path.join(ROOT, "systems", "battle", "encounters.json"),
+    balance: path.join(ROOT, "systems", "balance", "battle-ai-matrix.json")
+  };
+  if (
+    Object.values(battleCatalogPaths).every(
+      (catalogPath) => files.includes(catalogPath) && fs.existsSync(catalogPath)
+    )
+  ) {
+    errors.push(
+      ...validateBattleCatalogSet(
+        readJson(battleCatalogPaths.actions),
+        readJson(battleCatalogPaths.profiles),
+        readJson(battleCatalogPaths.encounters),
+        readJson(battleCatalogPaths.balance),
+        registry
+      ).map((error) => `battle catalog set ${error}`)
+    );
+  }
 }
 
 if (errors.length) {
@@ -84,6 +107,7 @@ function defaultContentFiles() {
   const files = [];
   for (const dir of [
     path.join(CONTRACTS, "examples"),
+    path.join(ROOT, "systems", "battle"),
     path.join(ROOT, "systems", "balance"),
     path.join(ROOT, "content")
   ]) {

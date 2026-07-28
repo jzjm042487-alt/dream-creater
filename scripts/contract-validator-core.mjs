@@ -186,6 +186,112 @@ export function validateWildernessGraph(map) {
   return errors;
 }
 
+export function validateBattleCatalogSet(
+  actionsCatalog,
+  profilesCatalog,
+  encountersCatalog,
+  balanceMatrix,
+  registry
+) {
+  const errors = [];
+  if (
+    !Array.isArray(actionsCatalog?.actions) ||
+    !Array.isArray(profilesCatalog?.profiles) ||
+    !Array.isArray(encountersCatalog?.encounters) ||
+    !Array.isArray(balanceMatrix?.encounters)
+  ) {
+    return ["battle catalog set is incomplete"];
+  }
+
+  const actionIds = new Set(actionsCatalog.actions.map((action) => action.id));
+  const profileIds = new Set(profilesCatalog.profiles.map((profile) => profile.id));
+  const encounterById = new Map(
+    encountersCatalog.encounters.map((encounter) => [encounter.battleId, encounter])
+  );
+  const matrixById = new Map(
+    balanceMatrix.encounters.map((entry) => [entry.battleId, entry])
+  );
+
+  compareRegisteredCatalog(
+    actionsCatalog.actions.map((action) => action.id),
+    registry.battleActions,
+    "$.actions",
+    errors
+  );
+  compareRegisteredCatalog(
+    profilesCatalog.profiles.map((profile) => profile.id),
+    registry.battleAiProfiles,
+    "$.profiles",
+    errors
+  );
+  compareRegisteredCatalog(
+    encountersCatalog.encounters.map((encounter) => encounter.battleId),
+    registry.battles,
+    "$.encounters",
+    errors
+  );
+  compareRegisteredCatalog(
+    balanceMatrix.encounters.map((entry) => entry.battleId),
+    registry.battles,
+    "$.balance",
+    errors
+  );
+
+  encountersCatalog.encounters.forEach((encounter, encounterIndex) => {
+    encounter.enemies?.forEach((enemy, enemyIndex) => {
+      if (!profileIds.has(enemy.profileId)) {
+        errors.push(
+          `$.encounters[${encounterIndex}].enemies[${enemyIndex}].profileId missing from profile catalog: ${enemy.profileId}`
+        );
+      }
+      enemy.actionIds?.forEach((actionId, actionIndex) => {
+        if (!actionIds.has(actionId)) {
+          errors.push(
+            `$.encounters[${encounterIndex}].enemies[${enemyIndex}].actionIds[${actionIndex}] missing from action catalog: ${actionId}`
+          );
+        }
+      });
+    });
+  });
+
+  balanceMatrix.encounters.forEach((entry, entryIndex) => {
+    const encounter = encounterById.get(entry.battleId);
+    if (!encounter) return;
+    const variantIds = new Set(encounter.entryVariants.map((variant) => variant.variantId));
+    if (!variantIds.has(entry.recommendedEntryVariantId)) {
+      errors.push(
+        `$.balance[${entryIndex}].recommendedEntryVariantId unknown variant for ${entry.battleId}: ${entry.recommendedEntryVariantId}`
+      );
+    }
+    entry.builds?.forEach((build, buildIndex) => {
+      build.actionIds?.forEach((actionId, actionIndex) => {
+        if (!actionIds.has(actionId)) {
+          errors.push(
+            `$.balance[${entryIndex}].builds[${buildIndex}].actionIds[${actionIndex}] missing from action catalog: ${actionId}`
+          );
+        }
+      });
+    });
+  });
+
+  for (const battleId of registry.battles) {
+    if (!encounterById.has(battleId)) {
+      errors.push(`$.encounters missing registered battle ${battleId}`);
+    }
+    if (!matrixById.has(battleId)) {
+      errors.push(`$.balance missing registered battle ${battleId}`);
+    }
+  }
+
+  return errors;
+}
+
+function compareRegisteredCatalog(actual, expected, fieldPath, errors) {
+  if (JSON.stringify(actual) !== JSON.stringify(expected)) {
+    errors.push(`${fieldPath} must match the registered ID order exactly`);
+  }
+}
+
 function simulateRoute(map, nodeById, sequence) {
   const origin = Object.keys(map.entryNodeByOrigin)[0];
   let node = nodeById.get(map.entryNodeByOrigin[origin]);
@@ -244,7 +350,10 @@ export function schemaPathForContent(filePath) {
   ) {
     return path.join(CONTRACTS, "battle-encounter-catalog.schema.json");
   }
-  if (base.includes("battle-balance-matrix")) {
+  if (
+    base.includes("battle-balance-matrix") ||
+    normalized.endsWith("/systems/balance/battle-ai-matrix.json")
+  ) {
     return path.join(CONTRACTS, "battle-balance-matrix.schema.json");
   }
   if (base.includes("player-state")) return path.join(CONTRACTS, "player-state.schema.json");

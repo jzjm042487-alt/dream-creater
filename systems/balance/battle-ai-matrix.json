@@ -1,0 +1,161 @@
+{
+  "version": 1,
+  "encounters": [
+    {
+      "battleId": "B-D07-01",
+      "recommendedRankId": "rank_one",
+      "recommendedEntryVariantId": "default",
+      "builds": [
+        { "buildId": "reference_minimum", "rankId": "rank_one", "maxHealth": 36, "maxEssence": 16, "move": 3, "attributes": { "strength": 15, "perception": 20 }, "defenses": { "physical": 0, "gu": 0 }, "actionIds": ["battle_action_basic_melee", "battle_action_moonblade", "battle_action_defend", "battle_action_retreat", "battle_action_pass"], "publicItemUses": [] },
+        { "buildId": "reference_balanced", "rankId": "rank_one", "maxHealth": 40, "maxEssence": 20, "move": 3, "attributes": { "strength": 20, "perception": 30 }, "defenses": { "physical": 1, "gu": 1 }, "actionIds": ["battle_action_basic_melee", "battle_action_moonblade", "battle_action_defend", "battle_action_retreat", "battle_action_pass"], "publicItemUses": [] },
+        { "buildId": "reference_specialist", "rankId": "rank_one", "maxHealth": 38, "maxEssence": 24, "move": 3, "attributes": { "strength": 10, "perception": 45 }, "defenses": { "physical": 0, "gu": 2 }, "actionIds": ["battle_action_basic_melee", "battle_action_moonblade", "battle_action_defend", "battle_action_retreat", "battle_action_pass"], "publicItemUses": [] }
+      ],
+      "policies": ["player_policy_aggressive", "player_policy_kiting", "player_policy_defensive", "player_policy_conserving", "player_policy_retreat_aware"],
+      "targets": { "minimumVictories": 12, "maximumVictories": 14, "maximumVictoryRound": 5, "maximumStallRate": 0.1 }
+    },
+    {
+      "battleId": "B-D10-01",
+      "recommendedRankId": "rank_one",
+      "recommendedEntryVariantId": "default",
+      "builds": [
+        { "buildId": "reference_minimum", "rankId": "rank_one", "maxHealth": 36, "maxEssence": 16, "move": 3, "attributes": { "strength": 15, "perception": 20 }, "defenses": { "physical": 0, "gu": 0 }, "actionIds": ["battle_action_basic_melee", "battle_action_moonblade", "battle_action_defend", "battle_action_retreat", "battle_action_pass"], "publicItemUses": [] },
+        { "buildId": "reference_balanced", "rankId": "rank_one", "maxHealth": 40, "maxEssence": 20, "move": 3, "attributes": { "strength": 20, "perception": 30 }, "defenses": { "physical": 1, "gu": 1 }, "actionIds": ["battle_action_basic_melee", "battle_action_moonblade", "battle_action_defend", "battle_action_retreat", "battle_action_pass"], "publicItemUses": [] },
+        { "buildId": "reference_specialist", "rankId": "rank_one", "maxHealth": 38, "maxEssence": 24, "move": 3, "attributes": { "strength": 10, "perception": 45 }, "defenses": { "physical": 0, "gu": 2 }, "actionIds": ["battle_action_basic_melee", "battle_action_moonblade", "battle_action_defend", "battle_action_retreat", "battle_action_pass"], "publicItemUses": [] }
+      ],
+      "policies": ["player_policy_aggressive", "player_policy_kiting", "player_policy_defensive", "player_policy_conserving", "player_policy_retreat_aware"],
+      "targets": { "minimumVictories": 10, "maximumVictories": 12, "maximumVictoryRound": 6, "maximumStallRate": 0.1 }
+    },
+    {
+      "battleId": "B-D17-01",
+      "recommendedRankId": "rank_one",
+      "recommendedEntryVariantId": "default",
+      "builds": [
+        { "buildId": "reference_minimum", "rankId": "rank_one", "maxHealth": 40, "maxEssence": 20, "move": 3, "attributes": { "strength": 25, "perception": 30 }, "defenses": { "physical": 1, "gu": 1 }, "actionIds": ["battle_action_basic_melee", "battle_action_moonblade", "battle_action_defend", "battle_action_retreat", "battle_action_pass"], "publicItemUses": [] },
+        { "buildId": "reference_balanced", "rankId": "rank_one", "maxHealth": 44, "maxEssence": 24, "move": 3, "attributes": { "strength": 30, "perception": 40 }, "defenses": { "physical": 2, "gu": 2 }, "actionIds": ["battle_action_basic_melee", "battle_action_moonblade", "battle_action_defend", "battle_action_retreat", "battle_action_pass"], "publicItemUses": [] },
+        { "buildId": "reference_specialist", "rankId": "rank_one", "maxHealth": 42, "maxEssence": 28, "move": 3, "attributes": { "strength": 20, "perception": 55 }, "defenses": { "physical": 1, "gu": 3 }, "actionIds": ["battle_action_basic_melee", "battle_action_moonblade", "battle_action_defend", "battle_action_retreat", "battle_action_pass"], "publicItemUses": [] }
+      ],
+      "policies": ["player_policy_aggressive", "player_policy_kiting", "player_policy_defensive", "player_policy_conserving", "player_policy_retreat_aware"],
+      "targets": { "minimumVictories": 10, "maximumVictories": 12, "maximumVictoryRound": 6, "maximumStallRate": 0.1 }
+    },
+    {
+      "battleId": "B-D19-01",
+      "recommendedRankId": "rank_one",
+      "recommendedEntryVariantId": "default",
+      "builds": [
+        { "buildId": "reference_minimum", "rankId": "rank_one", "maxHealth": 42, "maxEssence": 22, "move": 3, "attributes": { "strength": 30, "perception": 35 }, "defenses": { "physical": 2, "gu": 2 }, "actionIds": ["battle_action_basic_melee", "battle_action_moonblade", "battle_action_defend", "battle_action_retreat", "battle_action_pass"], "publicItemUses": [] },
+        { "buildId": "reference_balanced", "rankId": "rank_one", "maxHealth": 46, "maxEssence": 26, "move": 3, "attributes": { "strength": 35, "perception": 45 }, "defenses": { "physical": 3, "gu": 3 }, "actionIds": ["battle_action_basic_melee", "battle_action_moonblade", "battle_action_defend", "battle_action_retreat", "battle_action_pass"], "publicItemUses": [] },
+        { "buildId": "reference_specialist", "rankId": "rank_one", "maxHealth": 44, "maxEssence": 30, "move": 3, "attributes": { "strength": 25, "perception": 60 }, "defenses": { "physical": 2, "gu": 4 }, "actionIds": ["battle_action_basic_melee", "battle_action_moonblade", "battle_action_defend", "battle_action_retreat", "battle_action_pass"], "publicItemUses": [] }
+      ],
+      "policies": ["player_policy_aggressive", "player_policy_kiting", "player_policy_defensive", "player_policy_conserving", "player_policy_retreat_aware"],
+      "targets": { "minimumVictories": 8, "maximumVictories": 10, "maximumVictoryRound": 8, "maximumStallRate": 0.1 }
+    },
+    {
+      "battleId": "B-D21-01",
+      "recommendedRankId": "rank_one",
+      "recommendedEntryVariantId": "default",
+      "builds": [
+        { "buildId": "reference_minimum", "rankId": "rank_one", "maxHealth": 44, "maxEssence": 24, "move": 3, "attributes": { "strength": 35, "perception": 40 }, "defenses": { "physical": 2, "gu": 2 }, "actionIds": ["battle_action_basic_melee", "battle_action_moonblade", "battle_action_defend", "battle_action_retreat", "battle_action_pass"], "publicItemUses": [] },
+        { "buildId": "reference_balanced", "rankId": "rank_one", "maxHealth": 48, "maxEssence": 28, "move": 3, "attributes": { "strength": 40, "perception": 50 }, "defenses": { "physical": 3, "gu": 3 }, "actionIds": ["battle_action_basic_melee", "battle_action_moonblade", "battle_action_defend", "battle_action_retreat", "battle_action_pass"], "publicItemUses": [] },
+        { "buildId": "reference_specialist", "rankId": "rank_one", "maxHealth": 46, "maxEssence": 32, "move": 3, "attributes": { "strength": 30, "perception": 65 }, "defenses": { "physical": 2, "gu": 4 }, "actionIds": ["battle_action_basic_melee", "battle_action_moonblade", "battle_action_defend", "battle_action_retreat", "battle_action_pass"], "publicItemUses": [] }
+      ],
+      "policies": ["player_policy_aggressive", "player_policy_kiting", "player_policy_defensive", "player_policy_conserving", "player_policy_retreat_aware"],
+      "targets": { "minimumVictories": 10, "maximumVictories": 12, "maximumVictoryRound": 6, "maximumStallRate": 0.1 }
+    },
+    {
+      "battleId": "B-D24-01",
+      "recommendedRankId": "rank_one",
+      "recommendedEntryVariantId": "default",
+      "builds": [
+        { "buildId": "reference_minimum", "rankId": "rank_one", "maxHealth": 44, "maxEssence": 24, "move": 3, "attributes": { "strength": 35, "perception": 40 }, "defenses": { "physical": 2, "gu": 2 }, "actionIds": ["battle_action_basic_melee", "battle_action_moonblade", "battle_action_defend", "battle_action_retreat", "battle_action_pass"], "publicItemUses": [] },
+        { "buildId": "reference_balanced", "rankId": "rank_one", "maxHealth": 48, "maxEssence": 28, "move": 3, "attributes": { "strength": 40, "perception": 50 }, "defenses": { "physical": 3, "gu": 3 }, "actionIds": ["battle_action_basic_melee", "battle_action_moonblade", "battle_action_defend", "battle_action_retreat", "battle_action_pass"], "publicItemUses": [] },
+        { "buildId": "reference_specialist", "rankId": "rank_one", "maxHealth": 46, "maxEssence": 32, "move": 3, "attributes": { "strength": 30, "perception": 65 }, "defenses": { "physical": 2, "gu": 4 }, "actionIds": ["battle_action_basic_melee", "battle_action_moonblade", "battle_action_defend", "battle_action_retreat", "battle_action_pass"], "publicItemUses": [] }
+      ],
+      "policies": ["player_policy_aggressive", "player_policy_kiting", "player_policy_defensive", "player_policy_conserving", "player_policy_retreat_aware"],
+      "targets": { "minimumVictories": 10, "maximumVictories": 12, "maximumVictoryRound": 6, "maximumStallRate": 0.1 }
+    },
+    {
+      "battleId": "B-D26-01",
+      "recommendedRankId": "rank_one",
+      "recommendedEntryVariantId": "default",
+      "builds": [
+        { "buildId": "reference_minimum", "rankId": "rank_one", "maxHealth": 46, "maxEssence": 26, "move": 3, "attributes": { "strength": 40, "perception": 45 }, "defenses": { "physical": 3, "gu": 3 }, "actionIds": ["battle_action_basic_melee", "battle_action_moonblade", "battle_action_defend", "battle_action_retreat", "battle_action_pass"], "publicItemUses": [] },
+        { "buildId": "reference_balanced", "rankId": "rank_one", "maxHealth": 50, "maxEssence": 30, "move": 3, "attributes": { "strength": 45, "perception": 55 }, "defenses": { "physical": 4, "gu": 4 }, "actionIds": ["battle_action_basic_melee", "battle_action_moonblade", "battle_action_defend", "battle_action_retreat", "battle_action_pass"], "publicItemUses": [] },
+        { "buildId": "reference_specialist", "rankId": "rank_one", "maxHealth": 48, "maxEssence": 34, "move": 3, "attributes": { "strength": 35, "perception": 70 }, "defenses": { "physical": 3, "gu": 5 }, "actionIds": ["battle_action_basic_melee", "battle_action_moonblade", "battle_action_defend", "battle_action_retreat", "battle_action_pass"], "publicItemUses": [] }
+      ],
+      "policies": ["player_policy_aggressive", "player_policy_kiting", "player_policy_defensive", "player_policy_conserving", "player_policy_retreat_aware"],
+      "targets": { "minimumVictories": 8, "maximumVictories": 10, "maximumVictoryRound": 8, "maximumStallRate": 0.1 }
+    },
+    {
+      "battleId": "B-D27-01",
+      "recommendedRankId": "rank_one",
+      "recommendedEntryVariantId": "default",
+      "builds": [
+        { "buildId": "reference_minimum", "rankId": "rank_one", "maxHealth": 46, "maxEssence": 26, "move": 3, "attributes": { "strength": 40, "perception": 45 }, "defenses": { "physical": 3, "gu": 3 }, "actionIds": ["battle_action_basic_melee", "battle_action_moonblade", "battle_action_defend", "battle_action_retreat", "battle_action_pass"], "publicItemUses": [] },
+        { "buildId": "reference_balanced", "rankId": "rank_one", "maxHealth": 50, "maxEssence": 30, "move": 3, "attributes": { "strength": 45, "perception": 55 }, "defenses": { "physical": 4, "gu": 4 }, "actionIds": ["battle_action_basic_melee", "battle_action_moonblade", "battle_action_defend", "battle_action_retreat", "battle_action_pass"], "publicItemUses": [] },
+        { "buildId": "reference_specialist", "rankId": "rank_one", "maxHealth": 48, "maxEssence": 34, "move": 3, "attributes": { "strength": 35, "perception": 70 }, "defenses": { "physical": 3, "gu": 5 }, "actionIds": ["battle_action_basic_melee", "battle_action_moonblade", "battle_action_defend", "battle_action_retreat", "battle_action_pass"], "publicItemUses": [] }
+      ],
+      "policies": ["player_policy_aggressive", "player_policy_kiting", "player_policy_defensive", "player_policy_conserving", "player_policy_retreat_aware"],
+      "targets": { "minimumVictories": 10, "maximumVictories": 12, "maximumVictoryRound": 6, "maximumStallRate": 0.1 }
+    },
+    {
+      "battleId": "B-D29-01",
+      "recommendedRankId": "rank_one",
+      "recommendedEntryVariantId": "default",
+      "builds": [
+        { "buildId": "reference_minimum", "rankId": "rank_one", "maxHealth": 48, "maxEssence": 28, "move": 3, "attributes": { "strength": 45, "perception": 50 }, "defenses": { "physical": 4, "gu": 4 }, "actionIds": ["battle_action_basic_melee", "battle_action_moonblade", "battle_action_defend", "battle_action_retreat", "battle_action_pass"], "publicItemUses": [] },
+        { "buildId": "reference_balanced", "rankId": "rank_one", "maxHealth": 52, "maxEssence": 32, "move": 3, "attributes": { "strength": 50, "perception": 60 }, "defenses": { "physical": 5, "gu": 5 }, "actionIds": ["battle_action_basic_melee", "battle_action_moonblade", "battle_action_defend", "battle_action_retreat", "battle_action_pass"], "publicItemUses": [] },
+        { "buildId": "reference_specialist", "rankId": "rank_one", "maxHealth": 50, "maxEssence": 36, "move": 3, "attributes": { "strength": 40, "perception": 75 }, "defenses": { "physical": 4, "gu": 6 }, "actionIds": ["battle_action_basic_melee", "battle_action_moonblade", "battle_action_defend", "battle_action_retreat", "battle_action_pass"], "publicItemUses": [] }
+      ],
+      "policies": ["player_policy_aggressive", "player_policy_kiting", "player_policy_defensive", "player_policy_conserving", "player_policy_retreat_aware"],
+      "targets": { "minimumVictories": 7, "maximumVictories": 9, "maximumVictoryRound": 10, "maximumStallRate": 0.1 }
+    },
+    {
+      "battleId": "B-Q02-01",
+      "recommendedRankId": "rank_one",
+      "recommendedEntryVariantId": "default",
+      "builds": [
+        { "buildId": "reference_minimum", "rankId": "rank_one", "maxHealth": 40, "maxEssence": 20, "move": 3, "attributes": { "strength": 25, "perception": 30 }, "defenses": { "physical": 1, "gu": 1 }, "actionIds": ["battle_action_basic_melee", "battle_action_moonblade", "battle_action_defend", "battle_action_retreat", "battle_action_pass"], "publicItemUses": [] },
+        { "buildId": "reference_balanced", "rankId": "rank_one", "maxHealth": 44, "maxEssence": 24, "move": 3, "attributes": { "strength": 30, "perception": 40 }, "defenses": { "physical": 2, "gu": 2 }, "actionIds": ["battle_action_basic_melee", "battle_action_moonblade", "battle_action_defend", "battle_action_retreat", "battle_action_pass"], "publicItemUses": [] },
+        { "buildId": "reference_specialist", "rankId": "rank_one", "maxHealth": 42, "maxEssence": 28, "move": 3, "attributes": { "strength": 20, "perception": 55 }, "defenses": { "physical": 1, "gu": 3 }, "actionIds": ["battle_action_basic_melee", "battle_action_moonblade", "battle_action_defend", "battle_action_retreat", "battle_action_pass"], "publicItemUses": [] }
+      ],
+      "policies": ["player_policy_aggressive", "player_policy_kiting", "player_policy_defensive", "player_policy_conserving", "player_policy_retreat_aware"],
+      "targets": { "minimumVictories": 8, "maximumVictories": 10, "maximumVictoryRound": 8, "maximumStallRate": 0.1 }
+    },
+    {
+      "battleId": "B-Q03-01",
+      "recommendedRankId": "rank_one",
+      "recommendedEntryVariantId": "default",
+      "builds": [
+        { "buildId": "reference_minimum", "rankId": "rank_one", "maxHealth": 42, "maxEssence": 22, "move": 3, "attributes": { "strength": 30, "perception": 35 }, "defenses": { "physical": 2, "gu": 2 }, "actionIds": ["battle_action_basic_melee", "battle_action_moonblade", "battle_action_defend", "battle_action_retreat", "battle_action_pass"], "publicItemUses": [] },
+        { "buildId": "reference_balanced", "rankId": "rank_one", "maxHealth": 46, "maxEssence": 26, "move": 3, "attributes": { "strength": 35, "perception": 45 }, "defenses": { "physical": 3, "gu": 3 }, "actionIds": ["battle_action_basic_melee", "battle_action_moonblade", "battle_action_defend", "battle_action_retreat", "battle_action_pass"], "publicItemUses": [] },
+        { "buildId": "reference_specialist", "rankId": "rank_one", "maxHealth": 44, "maxEssence": 30, "move": 3, "attributes": { "strength": 25, "perception": 60 }, "defenses": { "physical": 2, "gu": 4 }, "actionIds": ["battle_action_basic_melee", "battle_action_moonblade", "battle_action_defend", "battle_action_retreat", "battle_action_pass"], "publicItemUses": [] }
+      ],
+      "policies": ["player_policy_aggressive", "player_policy_kiting", "player_policy_defensive", "player_policy_conserving", "player_policy_retreat_aware"],
+      "targets": { "minimumVictories": 10, "maximumVictories": 12, "maximumVictoryRound": 6, "maximumStallRate": 0.1 }
+    },
+    {
+      "battleId": "B-Q04-01",
+      "recommendedRankId": "rank_one",
+      "recommendedEntryVariantId": "default",
+      "builds": [
+        { "buildId": "reference_minimum", "rankId": "rank_one", "maxHealth": 44, "maxEssence": 24, "move": 3, "attributes": { "strength": 35, "perception": 40 }, "defenses": { "physical": 2, "gu": 2 }, "actionIds": ["battle_action_basic_melee", "battle_action_moonblade", "battle_action_defend", "battle_action_retreat", "battle_action_pass"], "publicItemUses": [] },
+        { "buildId": "reference_balanced", "rankId": "rank_one", "maxHealth": 48, "maxEssence": 28, "move": 3, "attributes": { "strength": 40, "perception": 50 }, "defenses": { "physical": 3, "gu": 3 }, "actionIds": ["battle_action_basic_melee", "battle_action_moonblade", "battle_action_defend", "battle_action_retreat", "battle_action_pass"], "publicItemUses": [] },
+        { "buildId": "reference_specialist", "rankId": "rank_one", "maxHealth": 46, "maxEssence": 32, "move": 3, "attributes": { "strength": 30, "perception": 65 }, "defenses": { "physical": 2, "gu": 4 }, "actionIds": ["battle_action_basic_melee", "battle_action_moonblade", "battle_action_defend", "battle_action_retreat", "battle_action_pass"], "publicItemUses": [] }
+      ],
+      "policies": ["player_policy_aggressive", "player_policy_kiting", "player_policy_defensive", "player_policy_conserving", "player_policy_retreat_aware"],
+      "targets": { "minimumVictories": 10, "maximumVictories": 12, "maximumVictoryRound": 6, "maximumStallRate": 0.1 }
+    },
+    {
+      "battleId": "B-Q05-01",
+      "recommendedRankId": "rank_one",
+      "recommendedEntryVariantId": "default",
+      "builds": [
+        { "buildId": "reference_minimum", "rankId": "rank_one", "maxHealth": 46, "maxEssence": 26, "move": 3, "attributes": { "strength": 40, "perception": 45 }, "defenses": { "physical": 3, "gu": 3 }, "actionIds": ["battle_action_basic_melee", "battle_action_moonblade", "battle_action_defend", "battle_action_retreat", "battle_action_pass"], "publicItemUses": [] },
+        { "buildId": "reference_balanced", "rankId": "rank_one", "maxHealth": 50, "maxEssence": 30, "move": 3, "attributes": { "strength": 45, "perception": 55 }, "defenses": { "physical": 4, "gu": 4 }, "actionIds": ["battle_action_basic_melee", "battle_action_moonblade", "battle_action_defend", "battle_action_retreat", "battle_action_pass"], "publicItemUses": [] },
+        { "buildId": "reference_specialist", "rankId": "rank_one", "maxHealth": 48, "maxEssence": 34, "move": 3, "attributes": { "strength": 35, "perception": 70 }, "defenses": { "physical": 3, "gu": 5 }, "actionIds": ["battle_action_basic_melee", "battle_action_moonblade", "battle_action_defend", "battle_action_retreat", "battle_action_pass"], "publicItemUses": [] }
+      ],
+      "policies": ["player_policy_aggressive", "player_policy_kiting", "player_policy_defensive", "player_policy_conserving", "player_policy_retreat_aware"],
+      "targets": { "minimumVictories": 8, "maximumVictories": 10, "maximumVictoryRound": 8, "maximumStallRate": 0.1 }
+    }
+  ]
+}

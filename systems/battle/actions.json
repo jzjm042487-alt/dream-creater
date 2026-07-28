@@ -1,0 +1,172 @@
+{
+  "version": 1,
+  "actions": [
+    {
+      "id": "battle_action_basic_melee",
+      "type": "basicAttack",
+      "category": "damage",
+      "targetSide": "opponent",
+      "range": { "kind": "melee", "minimum": 1, "maximum": 1, "blockedByUnits": false },
+      "essenceCost": 0,
+      "cooldownTurns": 0,
+      "damage": { "kind": "physical", "basePower": 6, "usesAttribute": true },
+      "aiUtilityAdjustment": 0
+    },
+    {
+      "id": "battle_action_defend",
+      "type": "defend",
+      "category": "defend",
+      "targetSide": "self",
+      "range": { "kind": "self", "minimum": 0, "maximum": 0, "blockedByUnits": false },
+      "essenceCost": 0,
+      "cooldownTurns": 0,
+      "statusEffect": {
+        "id": "battle_status_defending",
+        "durationTurns": 1,
+        "aiControlValue": 0
+      },
+      "incomingDamageDivisor": 2,
+      "minimumIncomingDamage": 1,
+      "aiUtilityAdjustment": 0
+    },
+    {
+      "id": "battle_action_retreat",
+      "type": "retreat",
+      "category": "reposition",
+      "targetSide": "self",
+      "range": { "kind": "self", "minimum": 0, "maximum": 0, "blockedByUnits": false },
+      "essenceCost": 0,
+      "cooldownTurns": 0,
+      "requiresEdge": true,
+      "aiUtilityAdjustment": 0
+    },
+    {
+      "id": "battle_action_pass",
+      "type": "pass",
+      "category": "pass",
+      "targetSide": "self",
+      "range": { "kind": "self", "minimum": 0, "maximum": 0, "blockedByUnits": false },
+      "essenceCost": 0,
+      "cooldownTurns": 0,
+      "aiUtilityAdjustment": 0
+    },
+    {
+      "id": "battle_action_moonblade",
+      "type": "skill",
+      "category": "damage",
+      "targetSide": "opponent",
+      "range": { "kind": "line3", "minimum": 1, "maximum": 3, "blockedByUnits": true },
+      "essenceCost": 3,
+      "cooldownTurns": 0,
+      "damage": { "kind": "gu", "basePower": 8, "usesAttribute": true },
+      "aiUtilityAdjustment": 0
+    },
+    {
+      "id": "battle_action_jade_skin",
+      "type": "skill",
+      "category": "defend",
+      "targetSide": "self",
+      "range": { "kind": "self", "minimum": 0, "maximum": 0, "blockedByUnits": false },
+      "essenceCost": 4,
+      "cooldownTurns": 2,
+      "statusEffect": {
+        "id": "battle_status_jade_skin",
+        "durationTurns": 2,
+        "aiControlValue": 0,
+        "physicalDefenseBonus": 3,
+        "guDefenseBonus": 2
+      },
+      "aiUtilityAdjustment": 0
+    },
+    {
+      "id": "battle_action_earth_listen",
+      "type": "skill",
+      "category": "pass",
+      "targetSide": "self",
+      "range": { "kind": "self", "minimum": 0, "maximum": 0, "blockedByUnits": false },
+      "essenceCost": 2,
+      "cooldownTurns": 1,
+      "revealAudibleHiddenUnits": true,
+      "aiUtilityAdjustment": 0
+    },
+    {
+      "id": "battle_action_vitality_leaf",
+      "type": "item",
+      "category": "pass",
+      "targetSide": "self",
+      "range": { "kind": "self", "minimum": 0, "maximum": 0, "blockedByUnits": false },
+      "essenceCost": 0,
+      "cooldownTurns": 0,
+      "fixedHealing": 10,
+      "consumePublicItemUse": true,
+      "aiUtilityAdjustment": 0
+    },
+    {
+      "id": "battle_action_enemy_charge",
+      "type": "skill",
+      "category": "damage",
+      "targetSide": "opponent",
+      "range": { "kind": "line3", "minimum": 1, "maximum": 3, "blockedByUnits": true },
+      "essenceCost": 4,
+      "cooldownTurns": 2,
+      "damage": { "kind": "physical", "basePower": 8, "usesAttribute": true },
+      "aiUtilityAdjustment": 0
+    },
+    {
+      "id": "battle_action_enemy_ranged_strike",
+      "type": "skill",
+      "category": "damage",
+      "targetSide": "opponent",
+      "range": { "kind": "range3", "minimum": 1, "maximum": 3, "blockedByUnits": false },
+      "essenceCost": 3,
+      "cooldownTurns": 1,
+      "damage": { "kind": "gu", "basePower": 7, "usesAttribute": true },
+      "aiUtilityAdjustment": 0
+    },
+    {
+      "id": "battle_action_enemy_shell_guard",
+      "type": "skill",
+      "category": "defend",
+      "targetSide": "self",
+      "range": { "kind": "self", "minimum": 0, "maximum": 0, "blockedByUnits": false },
+      "essenceCost": 3,
+      "cooldownTurns": 2,
+      "statusEffect": {
+        "id": "battle_status_shell_guard",
+        "durationTurns": 2,
+        "aiControlValue": 0,
+        "physicalDefenseBonus": 4,
+        "guDefenseBonus": 2
+      },
+      "aiUtilityAdjustment": 0
+    },
+    {
+      "id": "battle_action_boss_gather_force",
+      "type": "boss",
+      "category": "pass",
+      "targetSide": "self",
+      "range": { "kind": "self", "minimum": 0, "maximum": 0, "blockedByUnits": false },
+      "essenceCost": 0,
+      "cooldownTurns": 3,
+      "statusEffect": {
+        "id": "battle_status_gathering_force",
+        "durationTurns": 1,
+        "aiControlValue": 0
+      },
+      "aiUtilityAdjustment": 0
+    },
+    {
+      "id": "battle_action_boss_pounce",
+      "type": "boss",
+      "category": "damage",
+      "targetSide": "opponent",
+      "range": { "kind": "line3", "minimum": 1, "maximum": 3, "blockedByUnits": true },
+      "essenceCost": 5,
+      "cooldownTurns": 3,
+      "damage": { "kind": "physical", "fixedDamage": 13, "usesAttribute": false },
+      "requiresStatusId": "battle_status_gathering_force",
+      "consumesStatusId": "battle_status_gathering_force",
+      "aiUtilityAdjustment": 0
+    }
+  ]
+}

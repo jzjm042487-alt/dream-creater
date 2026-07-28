@@ -22,6 +22,7 @@ test("simplified contract examples validate", () => {
     "battle-encounters.valid.json",
     "battle-balance-matrix.valid.json"
   ].map((name) => path.join(ROOT, "contracts", "examples", name));
+  files.push(path.join(ROOT, "systems", "balance", "battle-ai-matrix.json"));
 
   const result = runValidator(files);
   assert.equal(result.status, 0, result.stderr || result.stdout);

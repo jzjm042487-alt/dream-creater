@@ -5,6 +5,7 @@ import {
   loadRegistry,
   readJson,
   schemaPathForContent,
+  validateBattleCatalogSet,
   validateContentValue,
   validateWildernessGraph
 } from "./contract-validator-core.mjs";
@@ -31,7 +32,11 @@ checkEnumFile("character-life-status.enum.json", registry.characterLifeStatuses)
 
 const contentFiles = [
   ...listJsonFiles(path.join(CONTRACTS, "examples")),
-  path.join(ROOT, "systems", "balance", "demo-v2.json")
+  path.join(ROOT, "systems", "balance", "demo-v2.json"),
+  path.join(ROOT, "systems", "battle", "actions.json"),
+  path.join(ROOT, "systems", "battle", "ai-profiles.json"),
+  path.join(ROOT, "systems", "battle", "encounters.json"),
+  path.join(ROOT, "systems", "balance", "battle-ai-matrix.json")
 ];
 let validatedContentCount = 0;
 
@@ -52,6 +57,16 @@ for (const file of contentFiles) {
     errors.push(...validateWildernessGraph(value).map((error) => `${relative(file)} ${error}`));
   }
 }
+
+errors.push(
+  ...validateBattleCatalogSet(
+    readJson(path.join(ROOT, "systems", "battle", "actions.json")),
+    readJson(path.join(ROOT, "systems", "battle", "ai-profiles.json")),
+    readJson(path.join(ROOT, "systems", "battle", "encounters.json")),
+    readJson(path.join(ROOT, "systems", "balance", "battle-ai-matrix.json")),
+    registry
+  ).map((error) => `battle catalog set ${error}`)
+);
 
 if (errors.length) {
   console.error("Contract validation failed:");

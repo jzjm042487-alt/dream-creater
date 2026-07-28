@@ -1,0 +1,335 @@
+{
+  "version": 1,
+  "profiles": [
+    {
+      "id": "ai_profile_melee_pursuer",
+      "preferredRange": { "minimum": 1, "maximum": 1 },
+      "lowHealthRatio": 0.3,
+      "lowEssenceRatio": 0.25,
+      "weights": {
+        "targetLoss": 400,
+        "teamSurvival": 100,
+        "immediateThreat": 220,
+        "exposure": 80,
+        "rangeFit": 180,
+        "control": 50,
+        "resourceReserve": 30,
+        "coordination": 40
+      },
+      "behaviorTree": {
+        "type": "root",
+        "child": {
+          "type": "selector",
+          "children": [
+            { "type": "sequence", "children": [
+              { "type": "condition", "call": "CanFinish" },
+              { "type": "action", "call": "SetIntent", "args": ["finish"] }
+            ] },
+            { "type": "sequence", "children": [
+              { "type": "condition", "call": "HasPhaseAction" },
+              { "type": "action", "call": "SetIntent", "args": ["phase_action"] }
+            ] },
+            { "type": "sequence", "children": [
+              { "type": "condition", "call": "ShouldDefend" },
+              { "type": "action", "call": "SetIntent", "args": ["defend"] }
+            ] },
+            { "type": "sequence", "children": [
+              { "type": "condition", "call": "ShouldConserve" },
+              { "type": "action", "call": "SetIntent", "args": ["conserve"] }
+            ] },
+            { "type": "sequence", "children": [
+              { "type": "condition", "call": "HasEffectiveAttack" },
+              { "type": "action", "call": "SetIntent", "args": ["attack"] }
+            ] },
+            { "type": "action", "call": "SetIntent", "args": ["reposition"] }
+          ]
+        }
+      }
+    },
+    {
+      "id": "ai_profile_charger",
+      "preferredRange": { "minimum": 1, "maximum": 1 },
+      "lowHealthRatio": 0.3,
+      "lowEssenceRatio": 0.25,
+      "weights": {
+        "targetLoss": 500,
+        "teamSurvival": 40,
+        "immediateThreat": 240,
+        "exposure": 40,
+        "rangeFit": 160,
+        "control": 20,
+        "resourceReserve": 0,
+        "coordination": 40
+      },
+      "behaviorTree": {
+        "type": "root",
+        "child": {
+          "type": "selector",
+          "children": [
+            { "type": "sequence", "children": [
+              { "type": "condition", "call": "CanFinish" },
+              { "type": "action", "call": "SetIntent", "args": ["finish"] }
+            ] },
+            { "type": "sequence", "children": [
+              { "type": "condition", "call": "HasPhaseAction" },
+              { "type": "action", "call": "SetIntent", "args": ["phase_action"] }
+            ] },
+            { "type": "sequence", "children": [
+              { "type": "condition", "call": "ShouldDefend" },
+              { "type": "action", "call": "SetIntent", "args": ["defend"] }
+            ] },
+            { "type": "sequence", "children": [
+              { "type": "condition", "call": "ShouldConserve" },
+              { "type": "action", "call": "SetIntent", "args": ["conserve"] }
+            ] },
+            { "type": "sequence", "children": [
+              { "type": "condition", "call": "HasEffectiveAttack" },
+              { "type": "action", "call": "SetIntent", "args": ["attack"] }
+            ] },
+            { "type": "action", "call": "SetIntent", "args": ["reposition"] }
+          ]
+        }
+      }
+    },
+    {
+      "id": "ai_profile_ranged_skirmisher",
+      "preferredRange": { "minimum": 2, "maximum": 3 },
+      "lowHealthRatio": 0.3,
+      "lowEssenceRatio": 0.25,
+      "weights": {
+        "targetLoss": 330,
+        "teamSurvival": 170,
+        "immediateThreat": 180,
+        "exposure": 220,
+        "rangeFit": 250,
+        "control": 60,
+        "resourceReserve": 50,
+        "coordination": 40
+      },
+      "behaviorTree": {
+        "type": "root",
+        "child": {
+          "type": "selector",
+          "children": [
+            { "type": "sequence", "children": [
+              { "type": "condition", "call": "CanFinish" },
+              { "type": "action", "call": "SetIntent", "args": ["finish"] }
+            ] },
+            { "type": "sequence", "children": [
+              { "type": "condition", "call": "HasPhaseAction" },
+              { "type": "action", "call": "SetIntent", "args": ["phase_action"] }
+            ] },
+            { "type": "sequence", "children": [
+              { "type": "condition", "call": "ShouldDefend" },
+              { "type": "action", "call": "SetIntent", "args": ["defend"] }
+            ] },
+            { "type": "sequence", "children": [
+              { "type": "condition", "call": "ShouldConserve" },
+              { "type": "action", "call": "SetIntent", "args": ["conserve"] }
+            ] },
+            { "type": "sequence", "children": [
+              { "type": "condition", "call": "HasEffectiveAttack" },
+              { "type": "action", "call": "SetIntent", "args": ["attack"] }
+            ] },
+            { "type": "action", "call": "SetIntent", "args": ["reposition"] }
+          ]
+        }
+      }
+    },
+    {
+      "id": "ai_profile_guardian",
+      "preferredRange": { "minimum": 1, "maximum": 1 },
+      "lowHealthRatio": 0.3,
+      "lowEssenceRatio": 0.25,
+      "weights": {
+        "targetLoss": 250,
+        "teamSurvival": 220,
+        "immediateThreat": 120,
+        "exposure": 140,
+        "rangeFit": 140,
+        "control": 80,
+        "resourceReserve": 50,
+        "coordination": 100
+      },
+      "behaviorTree": {
+        "type": "root",
+        "child": {
+          "type": "selector",
+          "children": [
+            { "type": "sequence", "children": [
+              { "type": "condition", "call": "CanFinish" },
+              { "type": "action", "call": "SetIntent", "args": ["finish"] }
+            ] },
+            { "type": "sequence", "children": [
+              { "type": "condition", "call": "HasPhaseAction" },
+              { "type": "action", "call": "SetIntent", "args": ["phase_action"] }
+            ] },
+            { "type": "sequence", "children": [
+              { "type": "condition", "call": "ShouldDefend" },
+              { "type": "action", "call": "SetIntent", "args": ["defend"] }
+            ] },
+            { "type": "sequence", "children": [
+              { "type": "condition", "call": "ShouldConserve" },
+              { "type": "action", "call": "SetIntent", "args": ["conserve"] }
+            ] },
+            { "type": "sequence", "children": [
+              { "type": "condition", "call": "HasEffectiveAttack" },
+              { "type": "action", "call": "SetIntent", "args": ["attack"] }
+            ] },
+            { "type": "action", "call": "SetIntent", "args": ["reposition"] }
+          ]
+        }
+      }
+    },
+    {
+      "id": "ai_profile_duelist",
+      "preferredRange": { "minimum": 1, "maximum": 2 },
+      "lowHealthRatio": 0.3,
+      "lowEssenceRatio": 0.25,
+      "weights": {
+        "targetLoss": 380,
+        "teamSurvival": 150,
+        "immediateThreat": 200,
+        "exposure": 130,
+        "rangeFit": 190,
+        "control": 60,
+        "resourceReserve": 50,
+        "coordination": 40
+      },
+      "behaviorTree": {
+        "type": "root",
+        "child": {
+          "type": "selector",
+          "children": [
+            { "type": "sequence", "children": [
+              { "type": "condition", "call": "CanFinish" },
+              { "type": "action", "call": "SetIntent", "args": ["finish"] }
+            ] },
+            { "type": "sequence", "children": [
+              { "type": "condition", "call": "HasPhaseAction" },
+              { "type": "action", "call": "SetIntent", "args": ["phase_action"] }
+            ] },
+            { "type": "sequence", "children": [
+              { "type": "condition", "call": "ShouldDefend" },
+              { "type": "action", "call": "SetIntent", "args": ["defend"] }
+            ] },
+            { "type": "sequence", "children": [
+              { "type": "condition", "call": "ShouldConserve" },
+              { "type": "action", "call": "SetIntent", "args": ["conserve"] }
+            ] },
+            { "type": "sequence", "children": [
+              { "type": "condition", "call": "HasEffectiveAttack" },
+              { "type": "action", "call": "SetIntent", "args": ["attack"] }
+            ] },
+            { "type": "action", "call": "SetIntent", "args": ["reposition"] }
+          ]
+        }
+      }
+    },
+    {
+      "id": "ai_profile_pack_hunter",
+      "preferredRange": { "minimum": 1, "maximum": 1 },
+      "lowHealthRatio": 0.3,
+      "lowEssenceRatio": 0.25,
+      "weights": {
+        "targetLoss": 360,
+        "teamSurvival": 120,
+        "immediateThreat": 200,
+        "exposure": 100,
+        "rangeFit": 160,
+        "control": 40,
+        "resourceReserve": 20,
+        "coordination": 180
+      },
+      "behaviorTree": {
+        "type": "root",
+        "child": {
+          "type": "selector",
+          "children": [
+            { "type": "sequence", "children": [
+              { "type": "condition", "call": "CanFinish" },
+              { "type": "action", "call": "SetIntent", "args": ["finish"] }
+            ] },
+            { "type": "sequence", "children": [
+              { "type": "condition", "call": "HasPhaseAction" },
+              { "type": "action", "call": "SetIntent", "args": ["phase_action"] }
+            ] },
+            { "type": "sequence", "children": [
+              { "type": "condition", "call": "ShouldDefend" },
+              { "type": "action", "call": "SetIntent", "args": ["defend"] }
+            ] },
+            { "type": "sequence", "children": [
+              { "type": "condition", "call": "ShouldConserve" },
+              { "type": "action", "call": "SetIntent", "args": ["conserve"] }
+            ] },
+            { "type": "sequence", "children": [
+              { "type": "condition", "call": "HasEffectiveAttack" },
+              { "type": "action", "call": "SetIntent", "args": ["attack"] }
+            ] },
+            { "type": "action", "call": "SetIntent", "args": ["reposition"] }
+          ]
+        }
+      }
+    },
+    {
+      "id": "ai_profile_boss_hunter",
+      "preferredRange": { "minimum": 1, "maximum": 3 },
+      "lowHealthRatio": 0.3,
+      "lowEssenceRatio": 0.25,
+      "weights": {
+        "targetLoss": 420,
+        "teamSurvival": 180,
+        "immediateThreat": 200,
+        "exposure": 140,
+        "rangeFit": 160,
+        "control": 80,
+        "resourceReserve": 20,
+        "coordination": 0
+      },
+      "behaviorTree": {
+        "type": "root",
+        "child": {
+          "type": "selector",
+          "children": [
+            { "type": "sequence", "children": [
+              { "type": "condition", "call": "CanFinish" },
+              { "type": "action", "call": "SetIntent", "args": ["finish"] }
+            ] },
+            { "type": "sequence", "children": [
+              { "type": "condition", "call": "HasPhaseAction" },
+              { "type": "action", "call": "SetIntent", "args": ["phase_action"] }
+            ] },
+            { "type": "sequence", "children": [
+              { "type": "condition", "call": "ShouldDefend" },
+              { "type": "action", "call": "SetIntent", "args": ["defend"] }
+            ] },
+            { "type": "sequence", "children": [
+              { "type": "condition", "call": "ShouldConserve" },
+              { "type": "action", "call": "SetIntent", "args": ["conserve"] }
+            ] },
+            { "type": "sequence", "children": [
+              { "type": "condition", "call": "HasEffectiveAttack" },
+              { "type": "action", "call": "SetIntent", "args": ["attack"] }
+            ] },
+            { "type": "action", "call": "SetIntent", "args": ["reposition"] }
+          ]
+        }
+      },
+      "phases": [
+        { "key": "healthy", "minimumHpRatio": 0.65, "maximumHpRatio": 1 },
+        {
+          "key": "wounded",
+          "minimumHpRatio": 0.3,
+          "maximumHpRatio": 0.65,
+          "phaseActionId": "battle_action_boss_gather_force"
+        },
+        {
+          "key": "desperate",
+          "minimumHpRatio": 0,
+          "maximumHpRatio": 0.3,
+          "phaseActionId": "battle_action_boss_gather_force"
+        }
+      ]
+    }
+  ]
+}
