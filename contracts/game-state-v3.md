@@ -147,6 +147,14 @@ Legacy branches are inert. Active MVP code reads only `state.mvp`,
         theftRandomCursor: 0,
         attemptedTargetIdsBySceneVisit: {}
       },
+      battleAi: {
+        contractVersion: 1,
+        battleSeedRoot: "persisted hex8",
+        nextBattleInstanceSerial: 0
+      },
+      settings: {
+        battleDifficultyId: "ai_difficulty_standard"
+      },
       battle: null,
       completedRewardIds: []
     },
@@ -246,10 +254,35 @@ settled.
 
 ### 4.6 Battle
 
-`battle` is `null` outside combat. During combat it stores the board, turn,
-unit positions, health, essence, active effects, deterministic AI order,
-random cursor if used, and the return scene. Saving cannot create a reaction or
-interrupt queue because that subsystem does not exist.
+`battle` is `null` outside combat. `state.mvp.battleAi` always exists and has
+`contractVersion: 1`, an eight-character persisted `battleSeedRoot`, and a
+non-negative `nextBattleInstanceSerial`.
+
+Reserving a battle copies `state.mvp.settings.battleDifficultyId` into the
+active battle, consumes the current serial exactly once, derives `aiSeed`, and
+increments the next serial in the same envelope. The complete envelope must be
+persisted before the battle scene starts. Changing the global setting later
+does not mutate an active battle.
+
+An active battle persists at least:
+
+- `battleId`, entry variant, serial, round, phase, result, board, and return
+  scene;
+- player and enemy positions, health, essence, statuses, cooldowns, and public
+  battle actions/items;
+- `difficultyId`, `aiSeed`, `aiCursor`, and `decisionIndex`;
+- authored `enemyUnitOrder`, `activeEnemyUnitId`, and profile IDs;
+- the last two committed categories for every enemy.
+
+Action/profile catalog bodies are reconstructed from registered IDs on load and
+are not duplicated into the save. A formal enemy commit first revalidates its
+plan against the current state, applies movement and action settlement,
+appends one category, advances `aiCursor` only when beginner randomness was
+actually committed, advances `decisionIndex` once, and then saves. Animation
+cannot advance either cursor.
+
+Saving cannot create a reaction or interrupt queue because that subsystem does
+not exist.
 
 ## 5. Exact V2 Mapping
 
@@ -328,9 +361,17 @@ If v2 `state.wineWorm.owner === "player"`, create exactly one
 legacy owner is Fang Yuan, mark the opportunity resolved by `char_fang_yuan`
 without granting the player a Gu. Re-loading v3 cannot repeat either mapping.
 
-For a v3 envelope with `mvp.rulesVersion === 1`, loading is identity-preserving:
-no migration default, seed, item, reward, or Gu instance is generated again.
-Unknown state or MVP versions fail closed before a scene starts.
+For a v3 envelope with `mvp.rulesVersion === 1`, migration is additive. Missing
+`battleAi` and `settings` receive the defaults above without changing
+`state.version` or `mvp.rulesVersion`. An old active battle without deterministic
+AI fields consumes the current battle serial once and receives its seed,
+difficulty, cursors, authored enemy order, profile map, public player actions,
+public items, and empty category histories. Once `aiSeed` and `serial` exist,
+repeating migration is byte-identical and cannot consume another serial.
+
+No item, reward, Gu instance, theft seed, or expedition seed is regenerated.
+Unknown state, MVP, or battle-contract versions fail closed before a scene
+starts.
 
 ## 8. Deterministic Save Requirements
 
@@ -347,6 +388,14 @@ Persist:
 Loading cannot reroll an event or theft, repeat a reward, restore a dead
 character, reset an opportunity, duplicate a Gu, or repeat capture, care,
 refinement, advancement, battle, cultivation, or breakthrough settlement.
+
+Battle defeat restores active player health to
+`max(1, floor(maximum * 30 / 100))`, adds one non-duplicated
+`debuff_wounded` with `duration: "untilRest"`, and returns to the battle's
+persisted entry scene. It does not remove items, Gu instances, primeval stones,
+cultivation progress or overflow, equipment, or recipes. Victory and retreat
+persist final health and essence and return to the same entry scene without a
+generic punishment.
 
 ## 9. Verification
 

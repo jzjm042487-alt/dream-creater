@@ -60,6 +60,14 @@ test("v2 save envelope migrates losslessly into active v3 branches", async () =>
   assert.equal(migrated.state.mvp.inventory.itemQuantitiesById.item_moon_orchid_petal, 1);
   assert.equal(migrated.state.wilderness.expeditionSeed, "expedition-seed");
   assert.equal(migrated.state.mvp.theft.theftSeed, "theft-seed");
+  assert.deepEqual(migrated.state.mvp.battleAi, {
+    contractVersion: 1,
+    battleSeedRoot: "fe5f99fb",
+    nextBattleInstanceSerial: 0
+  });
+  assert.deepEqual(migrated.state.mvp.settings, {
+    battleDifficultyId: "ai_difficulty_standard"
+  });
   assert.equal(migrated.state.mvp.opportunitiesById.opportunity_wine_worm.status, "inactive");
   assert.equal(migrated.state.mvp.charactersById.char_fang_yuan.lifeStatus, "alive");
 });
