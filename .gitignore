@@ -22,6 +22,7 @@ credentials.json
 
 # Generated review captures
 demo-*.png
+.tmp/
 
 # Operating system and editor files
 .DS_Store
