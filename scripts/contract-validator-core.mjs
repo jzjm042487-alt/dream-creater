@@ -601,6 +601,21 @@ function validateBattleActionSemantics(value) {
         errors.push(`${actionPath}.damage.usesAttribute must be false for fixedDamage`);
       }
     }
+
+    if (isPlainObject(action.statusEffect)) {
+      if (
+        action.statusEffect.duration === "turns" &&
+        !Number.isInteger(action.statusEffect.durationTurns)
+      ) {
+        errors.push(`${actionPath}.statusEffect.durationTurns is required when duration is turns`);
+      }
+      if (
+        action.statusEffect.duration === "scene" &&
+        "durationTurns" in action.statusEffect
+      ) {
+        errors.push(`${actionPath}.statusEffect.durationTurns is not allowed when duration is scene`);
+      }
+    }
   });
 
   return errors;

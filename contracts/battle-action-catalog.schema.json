@@ -66,11 +66,13 @@
           "statusEffect": {
             "type": "object",
             "additionalProperties": false,
-            "required": ["id", "durationTurns", "aiControlValue"],
+            "required": ["id", "duration", "aiControlValue"],
             "properties": {
               "id": { "type": "string", "x-idRegistry": "battleStatuses" },
+              "duration": { "type": "string", "enum": ["turns", "scene"] },
               "durationTurns": { "type": "integer", "minimum": 1, "maximum": 20 },
               "aiControlValue": { "type": "integer", "minimum": 0, "maximum": 100 },
+              "consumeOn": { "type": "string", "enum": ["nextIncomingDamage"] },
               "physicalDefenseBonus": { "type": "integer", "minimum": 0, "maximum": 100 },
               "guDefenseBonus": { "type": "integer", "minimum": 0, "maximum": 100 }
             }

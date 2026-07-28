@@ -22,8 +22,9 @@
       "cooldownTurns": 0,
       "statusEffect": {
         "id": "battle_status_defending",
-        "durationTurns": 1,
-        "aiControlValue": 0
+        "duration": "scene",
+        "aiControlValue": 0,
+        "consumeOn": "nextIncomingDamage"
       },
       "incomingDamageDivisor": 2,
       "minimumIncomingDamage": 1,
@@ -71,6 +72,7 @@
       "cooldownTurns": 2,
       "statusEffect": {
         "id": "battle_status_jade_skin",
+        "duration": "turns",
         "durationTurns": 2,
         "aiControlValue": 0,
         "physicalDefenseBonus": 3,
@@ -133,6 +135,7 @@
       "cooldownTurns": 2,
       "statusEffect": {
         "id": "battle_status_shell_guard",
+        "duration": "turns",
         "durationTurns": 2,
         "aiControlValue": 0,
         "physicalDefenseBonus": 4,
@@ -150,6 +153,7 @@
       "cooldownTurns": 3,
       "statusEffect": {
         "id": "battle_status_gathering_force",
+        "duration": "turns",
         "durationTurns": 1,
         "aiControlValue": 0
       },
