@@ -153,6 +153,7 @@
         "durationTurns": 1,
         "aiControlValue": 0
       },
+      "forbiddenStatusId": "battle_status_gathering_force",
       "aiUtilityAdjustment": 0
     },
     {

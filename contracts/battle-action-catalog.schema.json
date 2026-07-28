@@ -79,6 +79,10 @@
             "type": "string",
             "x-idRegistry": "battleStatuses"
           },
+          "forbiddenStatusId": {
+            "type": "string",
+            "x-idRegistry": "battleStatuses"
+          },
           "consumesStatusId": {
             "type": "string",
             "x-idRegistry": "battleStatuses"
