@@ -1,11 +1,11 @@
+import { getReachableCells } from "../../game/rules/battleRules.js";
 import {
   CHIBI_BASE,
   DIALOGUE_CHOICES,
-  EVIDENCE,
-  PORTRAIT_BASE,
+  TOWN_INTERACTABLES,
+  findNearbyTownTarget,
 } from "../mockState.js";
 import {
-  dataRow,
   icon,
   iconButton,
   meter,
@@ -13,602 +13,502 @@ import {
   statusBadge,
 } from "../components.js";
 
-function renderDialogue(state) {
-  const selectedChoice = DIALOGUE_CHOICES.find(
-    ({ id }) => id === state.ui.activeDialogueChoice
-  );
+const TOWN_ACTION_STATES = {
+  idle: { label: "待机", icon: "circle-dot", tone: "neutral" },
+  run: { label: "奔跑", icon: "footprints", tone: "good" },
+  blocked: { label: "受阻", icon: "triangle-alert", tone: "danger" },
+  interact: { label: "互动", icon: "hand", tone: "warning" },
+  steal: { label: "偷盗", icon: "hand", tone: "warning" },
+  inspect: { label: "调查", icon: "search", tone: "good" },
+};
+
+const TOWN_EMOTION_STATES = {
+  calm: { label: "平静", icon: "sparkles", tone: "good" },
+  focused: { label: "专注", icon: "scan", tone: "warning" },
+  alert: { label: "警觉", icon: "eye", tone: "warning" },
+  cautious: { label: "戒备", icon: "shield", tone: "danger" },
+  confident: { label: "振奋", icon: "circle-check", tone: "good" },
+  tense: { label: "紧张", icon: "triangle-alert", tone: "danger" },
+};
+
+function renderTownMarker(target, nearbyTargetId) {
+  const position = `--town-x: ${target.x}%; --town-y: ${target.y}%;`;
+  const isNearby = nearbyTargetId === target.id;
+
+  if (target.kind === "npc") {
+    return `
+      <div
+        class="town-npc-marker ${isNearby ? "is-nearby" : ""}"
+        style="${position}"
+        aria-label="${target.name}"
+      >
+        <img src="${target.portrait}" alt="" />
+        <span>${target.name}</span>
+      </div>
+    `;
+  }
 
   return `
-    <article class="panel-page dialogue-page" data-testid="panel-UI11">
+    <div
+      class="town-place-marker kind-${target.kind} ${isNearby ? "is-nearby" : ""}"
+      style="${position}"
+      aria-label="${target.name}"
+    >
+      ${icon(target.icon)}
+      <span>${target.name}</span>
+    </div>
+  `;
+}
+
+function renderTownNearbyActions(target) {
+  if (!target) {
+    return `
+      <div class="town-nearby-actions is-empty" aria-label="附近互动">
+        ${icon("scan")}
+        <span><small>中央街区</small><strong>石街上暂时没有可互动目标</strong></span>
+      </div>
+    `;
+  }
+
+  const actions =
+    target.kind === "npc"
+      ? `
+          <button type="button" data-action="start-dialogue" title="交谈">
+            ${icon("message-square")}<span>交谈</span>
+          </button>
+          <button
+            class="is-theft"
+            type="button"
+            data-action="open-theft"
+            data-theft-target-id="${target.id}"
+            title="偷盗"
+          >
+            ${icon("hand")}<span>偷盗</span>
+          </button>
+          <button type="button" data-action="start-combat" title="挑战">
+            ${icon("swords")}<span>挑战</span>
+          </button>
+        `
+      : target.kind === "place"
+        ? `
+            <button
+              class="is-primary"
+              type="button"
+              data-action="town-enter"
+              data-town-target-id="${target.id}"
+              title="进入${target.name}"
+            >
+              ${icon("door-open")}<span>进入</span>
+            </button>
+          `
+        : `
+            <button
+              class="is-primary"
+              type="button"
+              data-action="town-examine"
+              data-town-target-id="${target.id}"
+              title="调查${target.name}"
+            >
+              ${icon("search")}<span>调查</span>
+            </button>
+          `;
+
+  return `
+    <div class="town-nearby-actions" aria-label="附近互动">
+      <div class="town-nearby-copy">
+        <small>${icon(target.kind === "npc" ? "user-round" : target.icon)} ${
+          target.kind === "npc" ? "附近人物" : target.kind === "place" ? "建筑入口" : "附近物件"
+        }</small>
+        <strong>${target.name}</strong>
+      </div>
+      ${actions}
+    </div>
+  `;
+}
+
+function renderTownMovement(state) {
+  const position = state.ui.townPosition ?? { x: 44, y: 56 };
+  const nearbyTarget = findNearbyTownTarget(position);
+  const actionState =
+    TOWN_ACTION_STATES[state.ui.townAction] ?? TOWN_ACTION_STATES.idle;
+  const emotionState =
+    TOWN_EMOTION_STATES[state.ui.townEmotion] ??
+    (nearbyTarget?.kind === "npc"
+      ? TOWN_EMOTION_STATES.alert
+      : TOWN_EMOTION_STATES.calm);
+
+  return `
+    <article class="panel-page town-movement-page" data-testid="panel-UI12">
+      ${panelHeader({
+        id: "UI12",
+        eyebrow: "局部场景 / 古月山寨",
+        title: "山寨街区",
+        summary: "酉时将近，学堂、酒楼与弟子住处之间仍有人来往，方源正穿过中央石街。",
+        tools: `
+          ${iconButton("locate-fixed", "回到中央街区", "reset-town-position")}
+          ${iconButton("door-open", "前往山寨外道", "leave-town")}
+        `,
+      })}
+      <section
+        class="town-free-move-scene panel-scroll"
+        data-town-x="${position.x}"
+        data-town-y="${position.y}"
+      >
+        <img
+          class="town-scene-background"
+          src="/assets/game/environments/village.png"
+          alt="古月山寨街区"
+        />
+        <div class="town-scene-shade"></div>
+        <div class="town-scene-copy">
+          <span>${icon("map-pin")} 古月山寨</span>
+          <strong>中央街区</strong>
+          <small>第 ${state.world.day} 日 · ${state.world.time}</small>
+          <div class="town-player-state-hud">
+            <span class="tone-${actionState.tone}" data-town-action>
+              ${icon(actionState.icon)}
+              <i>动作</i>
+              <b>${actionState.label}</b>
+            </span>
+            <span class="tone-${emotionState.tone}" data-town-emotion>
+              ${icon(emotionState.icon)}
+              <i>心境</i>
+              <b>${emotionState.label}</b>
+            </span>
+          </div>
+        </div>
+
+        ${TOWN_INTERACTABLES.map((target) =>
+          renderTownMarker(target, nearbyTarget?.id)
+        ).join("")}
+
+        <div
+          class="town-player-marker ${state.ui.townMoving ? "is-moving" : ""} ${
+            state.ui.townBlocked ? "is-blocked" : ""
+          } is-facing-${state.ui.townFacing ?? "up"}"
+          style="
+            --town-x: ${position.x}%;
+            --town-y: ${position.y}%;
+          "
+        >
+          <div class="town-player-sprite">
+            <img class="town-player-idle-frame" src="${state.player.portrait}" alt="${state.player.name}" />
+            <div class="town-player-run-sheet" aria-hidden="true"></div>
+          </div>
+          <span>${state.player.name}</span>
+        </div>
+
+        ${renderTownNearbyActions(nearbyTarget)}
+
+        <div class="town-control-cluster">
+          <div class="town-move-pad" role="group" aria-label="移动角色">
+            <button
+              class="move-up"
+              type="button"
+              data-action="town-move"
+              data-direction-id="up"
+              aria-label="向上移动"
+              title="向上移动"
+            >${icon("chevron-up")}</button>
+            <button
+              class="move-left"
+              type="button"
+              data-action="town-move"
+              data-direction-id="left"
+              aria-label="向左移动"
+              title="向左移动"
+            >${icon("chevron-left")}</button>
+            <button
+              class="move-interact"
+              type="button"
+              data-action="town-interact"
+              aria-label="与附近目标互动"
+              title="互动"
+              ${nearbyTarget ? "" : "disabled"}
+            >${icon("hand")}</button>
+            <button
+              class="move-right"
+              type="button"
+              data-action="town-move"
+              data-direction-id="right"
+              aria-label="向右移动"
+              title="向右移动"
+            >${icon("chevron-right")}</button>
+            <button
+              class="move-down"
+              type="button"
+              data-action="town-move"
+              data-direction-id="down"
+              aria-label="向下移动"
+              title="向下移动"
+            >${icon("chevron-down")}</button>
+          </div>
+        </div>
+      </section>
+    </article>
+  `;
+}
+
+function renderDialogue(state) {
+  return `
+    <article class="panel-page classic-dialogue-page" data-testid="panel-UI11">
       ${panelHeader({
         id: "UI11",
-        eyebrow: "世界内行动 / 条件 / 风险",
-        title: "花酒行者洞口 · 同时看见",
-        summary: "选项先描述角色在世界中的行动，再明确行动点、前置条件、判定构成和可能留下的长期后果。",
+        eyebrow: "角色立绘 / 对话 / 选项",
+        title: "花酒行者洞口",
+        summary: "对话只展示场景、说话角色和当前可做的选择，选择后立即推进。",
         tools: `
           ${iconButton("history", "查看对话记录", "show-dialogue-history")}
           ${iconButton("volume-2", "切换语音", "toggle-voice")}
         `,
       })}
-      <div class="dialogue-layout panel-scroll">
-        <section class="dialogue-scene section-block">
-          <img
-            class="dialogue-background"
-            src="/assets/game/environments/forest-battle.png"
-            alt=""
-          />
-          <div class="dialogue-scene-shade"></div>
-          <img
-            class="dialogue-speaker"
-            src="${CHIBI_BASE}/chibi_fang_yuan.png"
-            alt="古月方源"
-          />
-          <div class="speaker-plate">
+      <div class="classic-dialogue-scene panel-scroll">
+        <img
+          class="classic-dialogue-background"
+          src="/assets/game/environments/forest-battle.png"
+          alt=""
+        />
+        <div class="classic-scene-shade"></div>
+        <div class="classic-speaker">
+          <img src="${CHIBI_BASE}/chibi_fang_yuan.png" alt="古月方源" />
+        </div>
+        <div class="classic-dialogue-box">
+          <div class="classic-speaker-name">
             <span>古月旁支</span>
             <strong>古月方源</strong>
-            <small>${statusBadge("警觉 38", "warning")}</small>
           </div>
-          <div class="dialogue-line">
-            <span class="quote-mark">“</span>
-            <p>酒香不是从洞里出来的。是有人想让它进去。</p>
-            <span class="dialogue-beat">他的目光从酒坛移到你的袖口，没有停留太久。</span>
-          </div>
-        </section>
-
-        <section class="choice-sheet section-block">
-          <div class="section-title">
-            <span>${icon("messages-square")} 你的行动</span>
-            <small>剩余 ${state.player.ap.current} AP</small>
-          </div>
-          <div class="dialogue-choice-list">
-            ${DIALOGUE_CHOICES.map(
-              (choice, index) => `
-                <button
-                  class="dialogue-choice ${
-                    selectedChoice?.id === choice.id ? "is-selected" : ""
-                  }"
-                  type="button"
-                  data-action="select-dialogue-choice"
-                  data-choice-id="${choice.id}"
-                  ${choice.available ? "" : "disabled"}
-                >
-                  <span class="choice-index">${index + 1}</span>
-                  <span class="choice-body">
-                    <span>
-                      <strong>${choice.label}</strong>
-                      ${statusBadge(
-                        `${choice.ap} AP`,
-                        choice.ap > state.player.ap.current
-                          ? "danger"
-                          : "neutral"
-                      )}
-                      ${statusBadge(
-                        `风险 ${choice.risk}`,
-                        choice.risk === "中"
-                          ? "warning"
-                          : choice.risk === "永久" || choice.risk === "极高"
-                            ? "danger"
-                            : "neutral"
-                      )}
-                    </span>
-                    <p>${choice.detail}</p>
-                    <small>${icon("scale")} ${choice.check}</small>
-                  </span>
-                  ${icon(choice.available ? "chevron-right" : "lock-keyhole")}
-                </button>
-              `
-            ).join("")}
-          </div>
-          <footer class="choice-confirmation">
-            <div>
-              ${
-                selectedChoice
-                  ? `
-                    <span>已选择</span>
-                    <strong>${selectedChoice.label}</strong>
-                    <small>${selectedChoice.check}</small>
-                  `
-                  : `
-                    <span>等待选择</span>
-                    <strong>世界会在确认后继续行动</strong>
-                    <small>互斥选项将永久关闭</small>
-                  `
-              }
-            </div>
-            <button
-              class="primary-command"
-              type="button"
-              data-action="confirm-dialogue-choice"
-              ${selectedChoice ? "" : "disabled"}
-            >
-              确认行动 ${icon("arrow-right")}
-            </button>
-          </footer>
-        </section>
+          <p>${state.ui.dialogueLine}</p>
+          <small>他的目光从酒坛移到你的袖口，没有停留太久。</small>
+        </div>
+        <div class="classic-choice-list" aria-label="对话选项">
+          ${DIALOGUE_CHOICES.map(
+            (choice, index) => `
+              <button
+                type="button"
+                data-action="select-dialogue-choice"
+                data-choice-id="${choice.id}"
+                class="${state.ui.activeDialogueChoice === choice.id ? "is-selected" : ""}"
+              >
+                <span>${index + 1}</span>
+                <strong>${choice.label}</strong>
+                ${icon("chevron-right")}
+              </button>
+            `
+          ).join("")}
+        </div>
       </div>
     </article>
   `;
 }
 
-const CHECK_OUTCOMES = {
-  perfect: {
-    label: "大成功",
-    roll: 19,
-    total: 22,
-    tone: "special",
-    summary: "你不仅换走了酒坛，还在方源袖口留下了错误气味。",
-    gains: ["截胡进度 +20", "额外：方源误判 -5", "暴露值不增加"],
-  },
-  success: {
-    label: "成功",
-    roll: 12,
-    total: 15,
-    tone: "good",
-    summary: "酒坛完成偷换，方源暂时没有确认你的动作。",
-    gains: ["截胡进度 +12", "取得第一接触权", "方源警觉 +3"],
-  },
-  partial: {
-    label: "部分成功",
-    roll: 7,
-    total: 10,
-    tone: "warning",
-    summary: "酒坛到手，但袖口沾上了无法立刻清理的酒香。",
-    gains: ["截胡进度 +8", "获得：酒虫线索", "新增：气味残留"],
-  },
-  failure: {
-    label: "失败",
-    roll: 2,
-    total: 5,
-    tone: "danger",
-    summary: "方源按住了酒坛，你的手停在最不该出现的位置。",
-    gains: ["行动点 -2", "方源警觉 +10", "触发：洞口对质"],
-  },
-};
-
-function renderCheckResult(state) {
-  const outcome = CHECK_OUTCOMES[state.ui.checkOutcome] ?? CHECK_OUTCOMES.success;
-  const modifiers = [
-    { label: "主属性 · 身法", value: 7, tone: "good" },
-    { label: "技能 · 梁上手", value: 4, tone: "good" },
-    { label: "蛊虫 · 匿息", value: 3, tone: "good" },
-    { label: "情报 · 酒香", value: 4, tone: "good" },
-    { label: "准备 · 双酒坛", value: 5, tone: "good" },
-    { label: "目标防备", value: -8, tone: "danger" },
-    { label: "窄洞环境", value: -12, tone: "danger" },
-  ];
-  const modifierTotal = modifiers.reduce((sum, item) => sum + item.value, 0);
+function renderBattleCell(state, x, y, reachable) {
+  const battle = state.combat;
+  const isPlayer = battle.player.x === x && battle.player.y === y;
+  const isEnemy = battle.enemy.x === x && battle.enemy.y === y;
+  const isReachable = reachable.has(`${x},${y}`) && !isPlayer;
+  const selectedAction = state.ui.battleAction;
+  const distance = Math.abs(battle.player.x - x) + Math.abs(battle.player.y - y);
+  const targetable =
+    isEnemy &&
+    ((selectedAction === "ATTACK" && distance <= 1) ||
+      (selectedAction === "STEAL_ESSENCE" && distance <= 2));
+  const cellAction = isEnemy ? "battle-target" : isReachable ? "battle-move" : "";
 
   return `
-    <article class="panel-page check-page" data-testid="panel-UI12">
-      ${panelHeader({
-        id: "UI12",
-        eyebrow: "公开构成 / 四档结果",
-        title: "盗道判定 · 偷换酒坛",
-        summary: "所有加减项在掷骰前可见；结果不是只有成功和失败，部分成功会保留收益并生成新的局面。",
-        tools: iconButton("rotate-ccw", "重新演示判定", "reroll-check"),
-      })}
-      <div class="check-layout panel-scroll">
-        <section class="check-formula section-block">
-          <div class="section-title">
-            <span>${icon("sigma")} 判定构成</span>
-            <small>固定修正 ${modifierTotal >= 0 ? "+" : ""}${modifierTotal}</small>
-          </div>
-          <div class="modifier-list">
-            ${modifiers
-              .map(
-                ({ label, value, tone }) => `
-                  <div class="modifier-row tone-${tone}">
-                    <span>${label}</span>
-                    <strong>${value >= 0 ? "+" : ""}${value}</strong>
-                  </div>
-                `
-              )
-              .join("")}
-          </div>
-          <div class="formula-total">
-            <span>固定修正</span>
-            <strong>${modifierTotal >= 0 ? "+" : ""}${modifierTotal}</strong>
-            ${icon("plus")}
-            <span>1d20</span>
-          </div>
-        </section>
-
-        <section class="dice-result section-block tone-${outcome.tone}">
-          <div class="result-seal">
-            <span>1d20</span>
-            <strong>${outcome.roll}</strong>
-            <small>总值 ${outcome.total}</small>
-          </div>
-          <div class="result-copy">
-            ${statusBadge(outcome.label, outcome.tone)}
-            <h2>${outcome.summary}</h2>
-            <ul>
-              ${outcome.gains
-                .map(
-                  (gain) => `
-                    <li>${icon(
-                      gain.includes("新增") || gain.includes("警觉")
-                        ? "triangle-alert"
-                        : "check"
-                    )}<span>${gain}</span></li>
-                  `
-                )
-                .join("")}
-            </ul>
-          </div>
-          <button class="primary-command" type="button" data-action="accept-check">
-            写入世界状态 ${icon("arrow-right")}
-          </button>
-        </section>
-
-        <section class="threshold-sheet section-block">
-          <div class="section-title">
-            <span>${icon("chart-no-axes-column-increasing")} 结果阈值</span>
-            <small>当前总值 ${outcome.total}</small>
-          </div>
-          <div class="threshold-scale">
-            <button
-              type="button"
-              data-action="set-check-outcome"
-              data-outcome-id="failure"
-              class="${state.ui.checkOutcome === "failure" ? "is-active" : ""}"
-            >
-              <strong>0-7</strong><span>失败</span><small>未达成 + 后果</small>
-            </button>
-            <button
-              type="button"
-              data-action="set-check-outcome"
-              data-outcome-id="partial"
-              class="${state.ui.checkOutcome === "partial" ? "is-active" : ""}"
-            >
-              <strong>8-11</strong><span>部分成功</span><small>达成 + 后患</small>
-            </button>
-            <button
-              type="button"
-              data-action="set-check-outcome"
-              data-outcome-id="success"
-              class="${state.ui.checkOutcome === "success" ? "is-active" : ""}"
-            >
-              <strong>12-17</strong><span>成功</span><small>达成目标</small>
-            </button>
-            <button
-              type="button"
-              data-action="set-check-outcome"
-              data-outcome-id="perfect"
-              class="${state.ui.checkOutcome === "perfect" ? "is-active" : ""}"
-            >
-              <strong>18+</strong><span>大成功</span><small>额外收益</small>
-            </button>
-          </div>
-          <div class="fairness-note">
-            ${icon("eye")} <span>目标防备与环境难度均来自当前世界状态，可在行动前通过侦查降低。</span>
-          </div>
-        </section>
-      </div>
-    </article>
+    <button
+      type="button"
+      class="battle-cell ${isReachable ? "is-reachable" : ""} ${targetable ? "is-targetable" : ""}"
+      data-x="${x}"
+      data-y="${y}"
+      ${cellAction ? `data-action="${cellAction}"` : "disabled"}
+      aria-label="${
+        isPlayer
+          ? `古月砚所在格 ${x + 1},${y + 1}`
+          : isEnemy
+            ? `古月方源所在格 ${x + 1},${y + 1}`
+            : isReachable
+              ? `移动到 ${x + 1},${y + 1}`
+              : `地面 ${x + 1},${y + 1}`
+      }"
+    >
+      <span class="battle-tile"></span>
+      ${
+        isPlayer
+          ? `
+            <span class="battle-piece player-piece">
+              <span class="piece-health"><i style="width: ${(battle.player.hp / battle.player.maxHp) * 100}%"></i></span>
+              <img src="${CHIBI_BASE}/chibi_player.png" alt="古月砚" />
+              <strong>砚</strong>
+            </span>
+          `
+          : ""
+      }
+      ${
+        isEnemy
+          ? `
+            <span class="battle-piece enemy-piece">
+              <span class="piece-health"><i style="width: ${(battle.enemy.hp / battle.enemy.maxHp) * 100}%"></i></span>
+              <img src="${CHIBI_BASE}/chibi_fang_yuan.png" alt="古月方源" />
+              <strong>源</strong>
+            </span>
+          `
+          : ""
+      }
+    </button>
   `;
 }
-
-const COMBAT_ACTIONS = [
-  {
-    id: "moonblade",
-    name: "月刃",
-    icon: "moon",
-    cost: "5 真元",
-    target: "方源",
-    preview: "中距攻击 · 预计 12-18 伤害",
-  },
-  {
-    id: "close",
-    name: "贴身抢位",
-    icon: "move-right",
-    cost: "0 真元",
-    target: "距离",
-    preview: "距离 中 → 近 · 下一击先手 +4",
-  },
-  {
-    id: "steal",
-    name: "妙手",
-    icon: "hand",
-    cost: "3 真元",
-    target: "元石",
-    preview: "盗取 1 元石 · 暴露概率 32%",
-  },
-  {
-    id: "guard",
-    name: "守势",
-    icon: "shield",
-    cost: "0 真元",
-    target: "自身",
-    preview: "本回合受伤 -40% · 观察 +1",
-  },
-  {
-    id: "retreat",
-    name: "撤退",
-    icon: "log-out",
-    cost: "放弃目标",
-    target: "出口",
-    preview: "身法检定 · 保留已取得情报",
-  },
-];
 
 function renderCombat(state) {
-  const selectedAction = COMBAT_ACTIONS.find(
-    ({ id }) => id === state.ui.combatAction
+  const battle = state.combat;
+  const reachable = new Set(
+    state.ui.battleMoved
+      ? []
+      : getReachableCells(battle).map(({ x, y }) => `${x},${y}`)
   );
-  const round = state.ui.combatRound ?? 1;
+  const selectedAction = state.ui.battleAction;
+  const resultCopy = {
+    victory: ["胜利", "古月方源倒下，战斗经验与修为已经结算。", "good"],
+    defeat: ["战败", "你失去行动能力，本场战斗结束。", "danger"],
+    escaped: ["已撤离", "你从棋盘边缘脱离了战斗。", "warning"],
+  }[battle.result];
 
   return `
-    <article class="panel-page combat-page" data-testid="panel-UI13">
+    <article class="panel-page grid-combat-page" data-testid="panel-UI13">
       ${panelHeader({
         id: "UI13",
-        eyebrow: "三回合目标 / 场景战术",
-        title: "教学战 · 一块元石",
-        summary: "战斗围绕短目标与资源交换展开；每回合只能确认一个主行动，距离和场景目标会改变可用招式。",
+        eyebrow: "8 × 6 棋盘 / 移动后攻击",
+        title: "洞口遭遇战",
+        summary: "点击亮起的格子移动，进入攻击距离后选择普攻或蛊术，再点击目标。",
         tools: `
-          ${iconButton("pause", "暂停战斗", "pause-combat")}
+          ${iconButton("rotate-ccw", "重新开始战斗", "reset-battle")}
           ${iconButton("scroll-text", "查看战斗记录", "show-combat-log")}
         `,
       })}
-      <div class="combat-layout panel-scroll">
-        <section class="battle-stage section-block">
-          <img
-            class="battle-background"
-            src="/assets/game/environments/forest-battle.png"
-            alt=""
-          />
-          <div class="battle-stage-shade"></div>
-          <div class="fighter fighter-player">
-            <div class="fighter-bar">
-              <span>${state.player.name}</span>
-              <i><b style="width: 84%"></b></i>
-            </div>
-            <img src="${CHIBI_BASE}/chibi_player.png" alt="${state.player.name}" />
+      <div class="grid-combat-layout panel-scroll">
+        <section class="battle-board-shell section-block">
+          <div class="battle-turn-line">
+            <span>${icon("swords")} ${battle.result ? "战斗结束" : "你的回合"}</span>
+            <small>${battle.width} × ${battle.height} · 先移动，再出招</small>
           </div>
-          <div class="fighter fighter-enemy">
-            <div class="fighter-bar">
-              <span>古月方源</span>
-              <i><b style="width: 72%"></b></i>
-            </div>
-            <img src="${CHIBI_BASE}/chibi_fang_yuan.png" alt="古月方源" />
+          <div class="battle-board" role="grid" aria-label="八乘六战斗棋盘">
+            ${Array.from({ length: battle.height }, (_, y) =>
+              Array.from({ length: battle.width }, (_, x) =>
+                renderBattleCell(state, x, y, reachable)
+              ).join("")
+            ).join("")}
           </div>
-          <div class="distance-line">
-            <span>近</span><i></i><b>中距 · 6 步</b><i></i><span>远</span>
-          </div>
-          <button class="scene-object" type="button" data-action="target-scene-object">
-            ${icon("package")} 石袋
-            <small>场景目标</small>
-          </button>
-          <div class="round-strip">
-            ${[1, 2, 3]
-              .map(
-                (value) => `
-                  <span class="${
-                    value < round
-                      ? "is-done"
-                      : value === round
-                        ? "is-current"
-                        : ""
-                  }">
-                    <b>${value}</b>
-                    <small>${value === 1 ? "抢位" : value === 2 ? "夺石" : "脱离"}</small>
-                  </span>
-                `
-              )
-              .join("")}
+          <div class="battle-board-legend">
+            <span><i class="legend-reachable"></i>可移动</span>
+            <span><i class="legend-target"></i>可攻击</span>
+            <span>${icon("door-open")} 走到边缘可撤离</span>
           </div>
         </section>
 
-        <section class="combat-command-sheet section-block">
+        <section class="battle-command-panel section-block">
           <div class="section-title">
-            <span>${icon("swords")} 回合 ${round} · 选择主行动</span>
-            <small>18 秒</small>
+            <span>${icon("crosshair")} 行动</span>
+            ${statusBadge(
+              selectedAction
+                ? selectedAction === "ATTACK"
+                  ? "等待选择目标"
+                  : "蛊术已选择"
+                : "等待指令",
+              selectedAction ? "warning" : "neutral"
+            )}
           </div>
           <div class="combat-resources">
             ${meter({
               label: "生命",
-              value: state.player.health.current,
-              max: state.player.health.max,
+              value: battle.player.hp,
+              max: battle.player.maxHp,
               tone: "cinnabar",
               compact: true,
             })}
             ${meter({
               label: "青铜真元",
-              value: state.player.essence.current,
-              max: state.player.essence.max,
+              value: battle.player.essence,
+              max: battle.player.maxEssence,
               tone: "jade",
               compact: true,
             })}
           </div>
-          <div class="combat-actions">
-            ${COMBAT_ACTIONS.map(
-              (action) => `
-                <button
-                  type="button"
-                  data-action="select-combat-action"
-                  data-combat-action-id="${action.id}"
-                  class="${selectedAction?.id === action.id ? "is-selected" : ""}"
-                >
-                  <span>${icon(action.icon)}</span>
-                  <strong>${action.name}</strong>
-                  <small>${action.cost}</small>
-                </button>
-              `
-            ).join("")}
+          <div class="grid-combat-actions">
+            <button
+              type="button"
+              data-action="battle-select-action"
+              data-battle-action-id="ATTACK"
+              class="${selectedAction === "ATTACK" ? "is-selected" : ""}"
+              ${battle.result ? "disabled" : ""}
+            >
+              ${icon("sword")}<span><strong>近身攻击</strong><small>相邻 1 格 · 8 伤害</small></span>
+            </button>
+            <button
+              type="button"
+              data-action="battle-select-action"
+              data-battle-action-id="STEAL_ESSENCE"
+              class="${selectedAction === "STEAL_ESSENCE" ? "is-selected" : ""}"
+              ${battle.result || battle.player.essence < 4 ? "disabled" : ""}
+            >
+              ${icon("sparkles")}<span><strong>盗元蛊术</strong><small>距离 2 格 · 消耗 4 真元</small></span>
+            </button>
+            <button type="button" data-action="battle-defend" ${battle.result ? "disabled" : ""}>
+              ${icon("shield")}<span><strong>防御</strong><small>减半下一次受伤</small></span>
+            </button>
+            <button
+              type="button"
+              data-action="battle-escape"
+              ${battle.result || !(
+                battle.player.x === 0 ||
+                battle.player.y === 0 ||
+                battle.player.x === battle.width - 1 ||
+                battle.player.y === battle.height - 1
+              ) ? "disabled" : ""}
+            >
+              ${icon("log-out")}<span><strong>撤离</strong><small>仅棋盘边缘可用</small></span>
+            </button>
           </div>
-          <div class="combat-preview">
-            ${
+          <div class="battle-instruction">
+            ${icon(selectedAction ? "mouse-pointer-click" : "move")}
+            <p>${
               selectedAction
-                ? `
-                  <div>
-                    <span>目标 · ${selectedAction.target}</span>
-                    <strong>${selectedAction.preview}</strong>
-                  </div>
-                  <button class="primary-command" type="button" data-action="resolve-combat-action">
-                    确认行动 ${icon("arrow-right")}
-                  </button>
-                `
-                : `
-                  <div>
-                    <span>等待指令</span>
-                    <strong>选择招式以预览真元、距离与风险变化</strong>
-                  </div>
-                  <button class="primary-command" type="button" disabled>
-                    确认行动 ${icon("arrow-right")}
-                  </button>
-                `
-            }
+                ? "现在点击棋盘上的敌人。若距离不够，先点击亮起格子靠近。"
+                : state.ui.battleMoved
+                  ? "本回合移动完成，选择攻击、蛊术或防御。"
+                  : "绿色格子是本回合可达范围。移动不会结束你的回合。"
+            }</p>
           </div>
         </section>
 
-        <aside class="battle-objective section-block">
+        <aside class="battle-status-panel section-block">
           <div class="section-title">
-            <span>${icon("crosshair")} 战斗目标</span>
-            ${statusBadge("3 回合", "warning")}
+            <span>${icon("users")} 参战者</span>
+            <small>1 对 1</small>
           </div>
-          <strong>在不重伤同窗的前提下夺得石袋</strong>
-          <ul>
-            <li>${icon("check")} 撑过第一轮月刃</li>
-            <li>${icon("circle-dashed")} 接触石袋</li>
-            <li>${icon("circle-dashed")} 带着元石离开圈线</li>
-          </ul>
-          <div class="retreat-rule">
-            ${icon("door-open")}
-            <span><strong>撤退始终可用</strong>失败会失去一块元石，但不会中断主线。</span>
+          <div class="combatant-summary player-summary">
+            <img src="${CHIBI_BASE}/chibi_player.png" alt="" />
+            <span><strong>${state.player.name}</strong><small>${state.player.rank}</small></span>
+            <b>${battle.player.hp}/${battle.player.maxHp}</b>
           </div>
+          <div class="combatant-summary enemy-summary">
+            <img src="${CHIBI_BASE}/chibi_fang_yuan.png" alt="" />
+            <span><strong>古月方源</strong><small>一转初阶</small></span>
+            <b>${battle.enemy.hp}/${battle.enemy.maxHp}</b>
+          </div>
+          <div class="battle-win-rule">
+            ${icon("skull")}
+            <p>生命归零即死亡。方源没有额外保护，玩家也可以从边缘撤离。</p>
+          </div>
+          ${
+            resultCopy
+              ? `
+                <div class="battle-result tone-${resultCopy[2]}">
+                  ${icon(resultCopy[2] === "good" ? "trophy" : resultCopy[2] === "danger" ? "skull" : "door-open")}
+                  <span><strong>${resultCopy[0]}</strong><small>${resultCopy[1]}</small></span>
+                </div>
+              `
+              : ""
+          }
         </aside>
-      </div>
-    </article>
-  `;
-}
-
-function evidenceStatusTone(status) {
-  return {
-    confirmed: "good",
-    suspicious: "warning",
-    forged: "danger",
-    hidden: "special",
-    locked: "neutral",
-  }[status];
-}
-
-function evidenceStatusLabel(status) {
-  return {
-    confirmed: "已证实",
-    suspicious: "可疑",
-    forged: "伪造",
-    hidden: "已隐藏",
-    locked: "未建立",
-  }[status];
-}
-
-function renderEvidenceBoard(state) {
-  const activeEvidence =
-    EVIDENCE.find(({ id }) => id === state.ui.activeEvidenceId) ?? EVIDENCE[0];
-
-  return `
-    <article class="panel-page evidence-page" data-testid="panel-UI14">
-      ${panelHeader({
-        id: "UI14",
-        eyebrow: "来源 / 时间线 / 矛盾",
-        title: "Q03 · 贾金生案证据板",
-        summary: "每条证据保留来源与可信度；伪证和隐藏证据不会消失，而会改变铁家最终能建立的闭环。",
-        tools: `
-          ${iconButton("zoom-in", "放大证据板", "zoom-evidence")}
-          ${iconButton("download", "导出案卷", "export-evidence")}
-        `,
-      })}
-      <div class="evidence-layout panel-scroll">
-        <section class="evidence-board section-block">
-          <div class="board-grid" aria-hidden="true"></div>
-          <svg class="evidence-links" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
-            <line x1="16" y1="24" x2="46" y2="14"></line>
-            <line x1="46" y1="14" x2="73" y2="28"></line>
-            <line x1="16" y1="24" x2="30" y2="60"></line>
-            <line x1="30" y1="60" x2="61" y2="64" class="link-suspicious"></line>
-            <line x1="61" y1="64" x2="83" y2="76" class="link-forged"></line>
-            <line x1="73" y1="28" x2="83" y2="76"></line>
-          </svg>
-          ${EVIDENCE.map(
-            (evidence) => `
-              <button
-                class="evidence-node state-${evidence.status} ${
-                  activeEvidence.id === evidence.id ? "is-selected" : ""
-                }"
-                style="left: ${evidence.x}%; top: ${evidence.y}%"
-                type="button"
-                data-action="select-evidence"
-                data-evidence-id="${evidence.id}"
-              >
-                <span>${icon(
-                  evidence.status === "confirmed"
-                    ? "badge-check"
-                    : evidence.status === "forged"
-                      ? "file-warning"
-                      : evidence.status === "hidden"
-                        ? "eye-off"
-                        : evidence.status === "locked"
-                          ? "lock-keyhole"
-                          : "circle-help"
-                )}</span>
-                <small>${evidence.category}</small>
-                <strong>${evidence.title}</strong>
-              </button>
-            `
-          ).join("")}
-          <div class="evidence-board-legend">
-            <span><i class="confirmed"></i>已证实</span>
-            <span><i class="suspicious"></i>可疑</span>
-            <span><i class="forged"></i>伪造</span>
-            <span><i class="hidden"></i>隐藏</span>
-          </div>
-        </section>
-
-        <section class="evidence-detail section-block">
-          <div class="section-title">
-            <span>${icon("file-search")} 证据详情</span>
-            ${statusBadge(
-              evidenceStatusLabel(activeEvidence.status),
-              evidenceStatusTone(activeEvidence.status)
-            )}
-          </div>
-          <div class="evidence-title">
-            <small>${activeEvidence.category}</small>
-            <strong>${activeEvidence.title}</strong>
-            <span>来源：${activeEvidence.source}</span>
-          </div>
-          <div class="evidence-facts">
-            ${dataRow("取得时间", "第 22 日 · 戌正")}
-            ${dataRow("保管者", "古月砚")}
-            ${dataRow(
-              "可信度",
-              activeEvidence.status === "confirmed"
-                ? "高"
-                : activeEvidence.status === "forged"
-                  ? "已发现矛盾"
-                  : "待交叉验证"
-            )}
-            ${dataRow("铁家可见", activeEvidence.status === "hidden" ? "否" : "是")}
-          </div>
-          <div class="contradiction-block">
-            <span>${icon("split")} 关联矛盾</span>
-            <p>
-              ${
-                activeEvidence.status === "forged"
-                  ? "脚印方向与后窗泥水流向相反，可能是案发后补造。"
-                  : "需要与酉时空档和酒肆目击进行交叉验证。"
-              }
-            </p>
-          </div>
-          <div class="evidence-actions">
-            <button class="secondary-command" type="button" data-action="hide-evidence">
-              ${icon("eye-off")} 隐藏
-            </button>
-            <button class="primary-command" type="button" data-action="link-evidence">
-              ${icon("link")} 建立关联
-            </button>
-          </div>
-        </section>
       </div>
     </article>
   `;
@@ -619,11 +519,9 @@ export function renderActionPanel(panelId, state) {
     case "UI11":
       return renderDialogue(state);
     case "UI12":
-      return renderCheckResult(state);
+      return renderTownMovement(state);
     case "UI13":
       return renderCombat(state);
-    case "UI14":
-      return renderEvidenceBoard(state);
     default:
       return "";
   }
