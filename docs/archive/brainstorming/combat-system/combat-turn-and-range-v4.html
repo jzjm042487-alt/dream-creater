@@ -1,0 +1,525 @@
+<style>
+  :root {
+    --ink: #171a17;
+    --paper: #eee8d8;
+    --paper2: #ddd4c1;
+    --line: #938b7c;
+    --jade: #466f5d;
+    --blue: #547f98;
+    --red: #98483d;
+    --gold: #b8893d;
+    --muted: #6e6a61;
+  }
+
+  .turn-page {
+    max-width: 1180px;
+    margin: 0 auto;
+    color: var(--ink);
+  }
+
+  .turn-heading {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px;
+    margin-bottom: 14px;
+  }
+
+  .turn-heading h2,
+  .turn-heading p {
+    margin: 0;
+  }
+
+  .turn-heading p {
+    color: var(--muted);
+    font-size: 13px;
+  }
+
+  .turn-board {
+    border: 1px solid var(--line);
+    background: var(--paper);
+    box-shadow: 0 10px 30px rgba(23, 20, 14, 0.14);
+  }
+
+  .turn-topbar {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 16px;
+    color: #f4ecd8;
+    background: var(--ink);
+    font-size: 13px;
+  }
+
+  .turn-topbar strong {
+    color: #e4b85f;
+  }
+
+  .turn-timeline {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .turn-phase {
+    min-height: 91px;
+    padding: 11px;
+    border-right: 1px solid var(--line);
+    background: #e8e1d1;
+  }
+
+  .turn-phase:last-child {
+    border-right: 0;
+  }
+
+  .turn-phase.active {
+    border-top: 4px solid var(--jade);
+    padding-top: 7px;
+    background: #edf0e8;
+  }
+
+  .turn-phase.enemy {
+    border-top: 4px solid var(--red);
+    padding-top: 7px;
+  }
+
+  .turn-phase small,
+  .turn-phase strong,
+  .turn-phase span {
+    display: block;
+  }
+
+  .turn-phase small {
+    color: var(--muted);
+    font-size: 9px;
+  }
+
+  .turn-phase strong {
+    margin: 4px 0;
+    font-size: 13px;
+  }
+
+  .turn-phase span {
+    color: var(--muted);
+    font-size: 10px;
+    line-height: 1.35;
+  }
+
+  .turn-demo {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    min-height: 410px;
+  }
+
+  .turn-intent {
+    padding: 16px;
+    border-right: 1px solid var(--line);
+    background: var(--paper2);
+  }
+
+  .turn-section-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 10px;
+  }
+
+  .turn-section-title h3 {
+    margin: 0;
+    font-size: 16px;
+  }
+
+  .turn-section-title span {
+    color: var(--muted);
+    font-size: 10px;
+  }
+
+  .turn-intent-card {
+    border: 1px solid #80786b;
+    background: #f8f2e4;
+  }
+
+  .turn-intent-head {
+    padding: 10px;
+    color: white;
+    background: var(--red);
+  }
+
+  .turn-intent-head small,
+  .turn-intent-head strong {
+    display: block;
+  }
+
+  .turn-intent-head small {
+    color: #eddad5;
+    font-size: 9px;
+  }
+
+  .turn-intent-head strong {
+    margin-top: 3px;
+    font-size: 16px;
+  }
+
+  .turn-intent-rule {
+    display: grid;
+    grid-template-columns: 74px 1fr;
+    gap: 8px;
+    padding: 8px 10px;
+    border-bottom: 1px solid #c4baa8;
+    font-size: 11px;
+  }
+
+  .turn-intent-rule:last-child {
+    border-bottom: 0;
+  }
+
+  .turn-intent-rule span:first-child {
+    color: var(--muted);
+  }
+
+  .turn-lock-note {
+    margin-top: 10px;
+    padding: 9px;
+    border-left: 4px solid var(--gold);
+    background: #f5efe2;
+    color: var(--muted);
+    font-size: 11px;
+    line-height: 1.45;
+  }
+
+  .turn-arena {
+    padding: 16px;
+  }
+
+  .turn-ap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+
+  .turn-ap-token {
+    width: 24px;
+    height: 24px;
+    display: grid;
+    place-items: center;
+    color: white;
+    background: var(--jade);
+    border: 2px solid #2e5042;
+    font-size: 11px;
+    font-weight: 700;
+  }
+
+  .turn-ap-label {
+    color: var(--muted);
+    font-size: 11px;
+  }
+
+  .turn-distance {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    border: 1px solid #857d6f;
+    margin-bottom: 12px;
+  }
+
+  .turn-band {
+    min-height: 68px;
+    display: grid;
+    place-items: center;
+    border-right: 1px solid #a49b8b;
+    text-align: center;
+    background: #e7dfcf;
+    color: var(--muted);
+    font-size: 10px;
+  }
+
+  .turn-band:last-child {
+    border-right: 0;
+  }
+
+  .turn-band.current {
+    color: white;
+    background: var(--blue);
+  }
+
+  .turn-band.player-end {
+    border-bottom: 5px solid var(--jade);
+  }
+
+  .turn-band.enemy-end {
+    border-top: 5px solid var(--red);
+  }
+
+  .turn-band strong {
+    display: block;
+    font-size: 16px;
+  }
+
+  .turn-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+
+  .turn-action {
+    min-height: 70px;
+    padding: 9px;
+    border: 1px solid #938b7c;
+    background: #f7f1e3;
+  }
+
+  .turn-action.selected {
+    border: 2px solid var(--jade);
+    padding: 8px;
+    background: #edf0e8;
+  }
+
+  .turn-action strong,
+  .turn-action span {
+    display: block;
+  }
+
+  .turn-action strong {
+    font-size: 12px;
+  }
+
+  .turn-action span {
+    margin-top: 4px;
+    color: var(--muted);
+    font-size: 10px;
+  }
+
+  .turn-resolution {
+    display: grid;
+    grid-template-columns: 1fr 28px 1fr 28px 1fr;
+    align-items: center;
+    gap: 5px;
+    padding: 10px;
+    color: white;
+    background: #202521;
+  }
+
+  .turn-step {
+    min-height: 58px;
+  }
+
+  .turn-step small,
+  .turn-step strong,
+  .turn-step span {
+    display: block;
+  }
+
+  .turn-step small {
+    color: #bcb6aa;
+    font-size: 9px;
+  }
+
+  .turn-step strong {
+    margin: 3px 0;
+    color: #efc56f;
+    font-size: 12px;
+  }
+
+  .turn-step span {
+    color: #d5cfc2;
+    font-size: 10px;
+  }
+
+  .turn-arrow {
+    color: #a7a298;
+    text-align: center;
+  }
+
+  .turn-footer {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    border-top: 1px solid var(--line);
+    background: #d8d0bf;
+  }
+
+  .turn-rule {
+    min-height: 78px;
+    padding: 10px;
+    border-right: 1px solid var(--line);
+  }
+
+  .turn-rule:last-child {
+    border-right: 0;
+  }
+
+  .turn-rule strong,
+  .turn-rule span {
+    display: block;
+  }
+
+  .turn-rule strong {
+    font-size: 11px;
+  }
+
+  .turn-rule span {
+    margin-top: 4px;
+    color: var(--muted);
+    font-size: 10px;
+    line-height: 1.4;
+  }
+
+  @media (max-width: 900px) {
+    .turn-demo {
+      grid-template-columns: 1fr;
+    }
+
+    .turn-intent {
+      border-right: 0;
+      border-bottom: 1px solid var(--line);
+    }
+  }
+</style>
+
+<div class="turn-page">
+  <div class="turn-heading">
+    <div>
+      <h2>一回合如何运行</h2>
+      <p>敌方先公开意图，玩家用两点行动改变结算结果</p>
+    </div>
+    <p>回合与距离稿 04</p>
+  </div>
+
+  <div class="turn-board">
+    <div class="turn-topbar">
+      <span><strong>确定性战斗：</strong>满足射程即命中，不随机重掷</span>
+      <span>普通战斗目标：6–8 回合</span>
+    </div>
+
+    <div class="turn-timeline">
+      <div class="turn-phase">
+        <small>阶段 01</small>
+        <strong>回合开始</strong>
+        <span>持续状态与冷却更新，行动点重置。</span>
+      </div>
+      <div class="turn-phase enemy">
+        <small>阶段 02</small>
+        <strong>锁定敌方意图</strong>
+        <span>显示移动、射程、效果、目标与公开后备动作。</span>
+      </div>
+      <div class="turn-phase active">
+        <small>阶段 03</small>
+        <strong>玩家行动 ×2</strong>
+        <span>移动、肉搏、催蛊、偷盗、防御或组合。</span>
+      </div>
+      <div class="turn-phase enemy">
+        <small>阶段 04</small>
+        <strong>敌方执行</strong>
+        <span>按已公开意图结算，不临时换成最优攻击。</span>
+      </div>
+      <div class="turn-phase">
+        <small>阶段 05</small>
+        <strong>回合结束</strong>
+        <span>处理持续效果、胜负、逃脱和下一轮。</span>
+      </div>
+    </div>
+
+    <div class="turn-demo">
+      <aside class="turn-intent">
+        <div class="turn-section-title">
+          <h3>敌方已锁定</h3>
+          <span>山林守卫</span>
+        </div>
+
+        <div class="turn-intent-card">
+          <div class="turn-intent-head">
+            <small>下一次执行</small>
+            <strong>冲近擒拿</strong>
+          </div>
+          <div class="turn-intent-rule"><span>移动</span><strong>靠近 2 档</strong></div>
+          <div class="turn-intent-rule"><span>攻击条件</span><strong>最终距离必须为 0</strong></div>
+          <div class="turn-intent-rule"><span>命中效果</span><strong>8 伤害 + 束缚</strong></div>
+          <div class="turn-intent-rule"><span>后备动作</span><strong>无</strong></div>
+          <div class="turn-intent-rule"><span>中断条件</span><strong>失衡或缴械</strong></div>
+        </div>
+
+        <div class="turn-lock-note">
+          意图公开后不会根据玩家移动临时改招。只有界面提前写明的后备动作可以执行。
+        </div>
+      </aside>
+
+      <section class="turn-arena">
+        <div class="turn-section-title">
+          <h3>当前距离：中距 2</h3>
+          <span>玩家阶段</span>
+        </div>
+
+        <div class="turn-ap">
+          <div class="turn-ap-token">1</div>
+          <div class="turn-ap-token">2</div>
+          <div class="turn-ap-label">未使用行动不保留到下一回合</div>
+        </div>
+
+        <div class="turn-distance">
+          <div class="turn-band enemy-end"><div><strong>0</strong>贴身</div></div>
+          <div class="turn-band"><div><strong>1</strong>近距</div></div>
+          <div class="turn-band current"><div><strong>2</strong>中距</div></div>
+          <div class="turn-band player-end"><div><strong>3</strong>远距</div></div>
+          <div class="turn-band player-end"><div><strong>4</strong>战场边缘</div></div>
+        </div>
+
+        <div class="turn-actions">
+          <div class="turn-action selected">
+            <strong>行动 1 · 后撤</strong>
+            <span>距离 2 → 3；消耗 1 行动，不消耗真元。</span>
+          </div>
+          <div class="turn-action selected">
+            <strong>行动 2 · 月光蛊</strong>
+            <span>射程 2–3；距离 3 合法，造成固定切割伤害。</span>
+          </div>
+          <div class="turn-action">
+            <strong>其他选择 · 玉皮蛊</strong>
+            <span>保留距离，建立防御，等待敌方攻击。</span>
+          </div>
+          <div class="turn-action">
+            <strong>其他选择 · 蓄力杀招</strong>
+            <span>消耗全部 2 行动；本例将来不及后撤。</span>
+          </div>
+        </div>
+
+        <div class="turn-resolution">
+          <div class="turn-step">
+            <small>玩家行动后</small>
+            <strong>距离 3</strong>
+            <span>月刃已经命中</span>
+          </div>
+          <div class="turn-arrow">→</div>
+          <div class="turn-step">
+            <small>敌方移动</small>
+            <strong>靠近 2 档</strong>
+            <span>距离 3 → 1</span>
+          </div>
+          <div class="turn-arrow">→</div>
+          <div class="turn-step">
+            <small>攻击检查</small>
+            <strong>擒拿失败</strong>
+            <span>要求贴身 0，当前为 1</span>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <div class="turn-footer">
+      <div class="turn-rule">
+        <strong>行动点</strong>
+        <span>基础 2，上限 3；普通减益最低保留 1，避免连续跳过回合。</span>
+      </div>
+      <div class="turn-rule">
+        <strong>移动与逃脱</strong>
+        <span>普通移动改变 1 档；在边缘再花 1 行动确定性脱离。</span>
+      </div>
+      <div class="turn-rule">
+        <strong>命中与伤害</strong>
+        <span>射程、视线和条件满足即命中；伤害不做随机浮动。</span>
+      </div>
+      <div class="turn-rule">
+        <strong>隐藏意图</strong>
+        <span>只用于明确标记的特殊敌人；侦察蛊可揭示，普通敌人全部公开。</span>
+      </div>
+    </div>
+  </div>
+</div>

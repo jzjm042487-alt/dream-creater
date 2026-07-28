@@ -19,6 +19,20 @@
 不参与 Vite 的两个活动入口。`tests/gameState.test.js` 只保留其回归价值；Wave 1 不在这些文件上
 继续开发。
 
+## 换设备接续
+
+换机时不要从默认 `main` 分支继续开发。当前活动基线是
+`integration/wave05-qingmao`，完整进度、分支状态、资产清单和环境恢复步骤见
+[`docs/handoff/README.md`](docs/handoff/README.md)。
+
+```powershell
+git clone https://github.com/jzjm042487-alt/dream-creater.git
+cd dream-creater
+git switch integration/wave05-qingmao
+npm ci
+npx playwright install chrome
+```
+
 ## 验证
 
 ```powershell

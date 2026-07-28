@@ -1,0 +1,107 @@
+<style>
+  .art-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 18px;
+    margin-top: 22px;
+  }
+  .art-card {
+    overflow: hidden;
+    border: 1px solid #cfc7b6;
+    background: #fffdf8;
+    cursor: pointer;
+  }
+  .art-card.recommended {
+    border-color: #982f2f;
+    box-shadow: inset 0 3px 0 #982f2f;
+  }
+  .art-card img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    image-rendering: auto;
+    background: #1e1d1a;
+  }
+  .art-copy {
+    padding: 14px 15px 16px;
+  }
+  .art-copy h3 {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    margin: 0 0 7px;
+  }
+  .art-copy p {
+    margin: 0 0 10px;
+    line-height: 1.55;
+  }
+  .art-copy small {
+    color: #665f55;
+  }
+  .badge {
+    flex: none;
+    padding: 3px 7px;
+    background: #982f2f;
+    color: #fff;
+    font-size: 11px;
+  }
+  .scope-note {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
+    margin-top: 20px;
+  }
+  .scope-note span {
+    padding: 9px;
+    border-left: 3px solid #716650;
+    background: #eee8da;
+    font-size: 12px;
+    text-align: center;
+  }
+  @media (max-width: 980px) {
+    .art-grid { grid-template-columns: 1fr; }
+    .scope-note { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+
+<h2>真实游戏画面：先确定统一美术方向</h2>
+<p class="subtitle">三张都是“酒馆后院调查酒虫”的实际俯视游戏视角。点击你最想长期游玩的那一种。</p>
+
+<div class="art-grid">
+  <article class="card art-card" data-choice="retro-pixel" onclick="toggleSelect(this)">
+    <img src="../../../../assets/concepts/retro-pixel-tavern-reference.png" alt="复古像素风酒馆游戏场景">
+    <div class="art-copy">
+      <h3>A. 复古像素</h3>
+      <p>最接近九十年代群侠传气质，人物与地形直接、清楚。</p>
+      <small>资产制作最可控，但近看细节和角色表现力较弱。</small>
+    </div>
+  </article>
+
+  <article class="card art-card recommended" data-choice="modern-pixel" onclick="toggleSelect(this)">
+    <img src="./tavern-modern-pixel.png" alt="现代精细像素风酒馆游戏场景">
+    <div class="art-copy">
+      <h3><span>B. 现代精细像素</span><span class="badge">推荐</span></h3>
+      <p>保留群侠传的地图可读性，同时把山寨、蛊虫和人物做得更有质感。</p>
+      <small>最适合可玩 Demo，也容易继续扩展商队、山洞与狼潮。</small>
+    </div>
+  </article>
+
+  <article class="card art-card" data-choice="painted-ink" onclick="toggleSelect(this)">
+    <img src="./tavern-painted.png" alt="手绘国风酒馆游戏场景">
+    <div class="art-copy">
+      <h3>C. 手绘国风</h3>
+      <p>画面最有小说感，空间与人物更写实，氛围也更强。</p>
+      <small>单张很漂亮，但角色动画、碰撞和场景一致性成本最高。</small>
+    </div>
+  </article>
+</div>
+
+<div class="scope-note">
+  <span>青茅山大地图</span>
+  <span>古月山寨街区</span>
+  <span>酒馆与后院</span>
+  <span>学堂与住处</span>
+  <span>山林战斗场</span>
+</div>

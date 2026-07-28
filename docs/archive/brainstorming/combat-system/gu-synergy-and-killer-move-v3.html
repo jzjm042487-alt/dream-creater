@@ -1,0 +1,487 @@
+<style>
+  :root {
+    --ink: #171a17;
+    --paper: #eee8d8;
+    --paper2: #ddd4c1;
+    --line: #938b7c;
+    --jade: #476f5d;
+    --blue: #547f98;
+    --red: #97483d;
+    --gold: #b7893d;
+    --muted: #6e6a61;
+  }
+
+  .page {
+    max-width: 1180px;
+    margin: 0 auto;
+    color: var(--ink);
+  }
+
+  .heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 22px;
+    margin-bottom: 14px;
+  }
+
+  .heading h2,
+  .heading p {
+    margin: 0;
+  }
+
+  .heading p {
+    color: var(--muted);
+    font-size: 13px;
+  }
+
+  .board {
+    border: 1px solid var(--line);
+    background: var(--paper);
+    box-shadow: 0 10px 30px rgba(23, 20, 14, 0.14);
+  }
+
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 16px;
+    color: #f4ecd8;
+    background: var(--ink);
+    font-size: 13px;
+  }
+
+  .topbar strong {
+    color: #e4b85f;
+  }
+
+  .layers {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .layer {
+    min-height: 124px;
+    padding: 13px;
+    border-right: 1px solid var(--line);
+    background: #e9e2d2;
+  }
+
+  .layer:last-child {
+    border-right: 0;
+  }
+
+  .layer-number {
+    color: var(--muted);
+    font-size: 10px;
+  }
+
+  .layer h3 {
+    margin: 4px 0 7px;
+    font-size: 15px;
+  }
+
+  .layer p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 11px;
+    line-height: 1.5;
+  }
+
+  .layer.synergy {
+    border-top: 4px solid var(--blue);
+    padding-top: 9px;
+  }
+
+  .layer.killer {
+    border-top: 4px solid var(--red);
+    padding-top: 9px;
+  }
+
+  .layer.refine {
+    border-top: 4px solid var(--gold);
+    padding-top: 9px;
+  }
+
+  .builder-layout {
+    display: grid;
+    grid-template-columns: 310px 1fr;
+    min-height: 388px;
+  }
+
+  .aperture {
+    padding: 16px;
+    border-right: 1px solid var(--line);
+    background: var(--paper2);
+  }
+
+  .section-title {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+
+  .section-title h3 {
+    margin: 0;
+    font-size: 16px;
+  }
+
+  .section-title span {
+    color: var(--muted);
+    font-size: 11px;
+  }
+
+  .loadbar {
+    height: 9px;
+    border: 1px solid #777063;
+    background: #c6bdac;
+    margin-bottom: 12px;
+  }
+
+  .loadbar div {
+    width: 67%;
+    height: 100%;
+    background: var(--jade);
+  }
+
+  .gu-list {
+    display: grid;
+    gap: 7px;
+  }
+
+  .gu-row {
+    display: grid;
+    grid-template-columns: 1fr 62px;
+    align-items: center;
+    padding: 8px 9px;
+    border: 1px solid #938b7c;
+    background: #f6f0e2;
+  }
+
+  .gu-row strong,
+  .gu-row span {
+    display: block;
+  }
+
+  .gu-row strong {
+    font-size: 12px;
+  }
+
+  .gu-row span {
+    color: var(--muted);
+    font-size: 10px;
+    margin-top: 2px;
+  }
+
+  .policy {
+    color: var(--jade);
+    text-align: right;
+    font-size: 10px;
+    font-weight: 700;
+  }
+
+  .reserve {
+    margin-top: 9px;
+    padding: 8px;
+    border-left: 4px solid var(--gold);
+    background: #f6f0e2;
+    color: var(--muted);
+    font-size: 11px;
+  }
+
+  .builder {
+    padding: 16px;
+  }
+
+  .recipe {
+    display: grid;
+    grid-template-columns: 1fr 28px 1fr 28px 1fr;
+    align-items: stretch;
+    gap: 7px;
+  }
+
+  .slot {
+    min-height: 100px;
+    border: 1px solid #8d8576;
+    padding: 10px;
+    background: #f7f1e3;
+  }
+
+  .slot.core {
+    border-top: 4px solid var(--red);
+    padding-top: 7px;
+  }
+
+  .slot.support {
+    border-top: 4px solid var(--blue);
+    padding-top: 7px;
+  }
+
+  .slot.technique {
+    border-top: 4px solid var(--gold);
+    padding-top: 7px;
+  }
+
+  .slot small {
+    display: block;
+    color: var(--muted);
+    font-size: 9px;
+  }
+
+  .slot strong {
+    display: block;
+    margin: 7px 0 4px;
+    font-size: 14px;
+  }
+
+  .slot p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 10px;
+    line-height: 1.4;
+  }
+
+  .plus {
+    display: grid;
+    place-items: center;
+    color: var(--muted);
+    font-size: 20px;
+  }
+
+  .result {
+    margin-top: 11px;
+    display: grid;
+    grid-template-columns: 1fr 175px;
+    border: 1px solid #81796b;
+    background: #202521;
+    color: white;
+  }
+
+  .result-main {
+    padding: 11px 13px;
+  }
+
+  .result-main small {
+    color: #bfb9ac;
+  }
+
+  .result-main strong {
+    display: block;
+    margin: 3px 0 5px;
+    color: #efc56f;
+    font-size: 16px;
+  }
+
+  .result-main p {
+    margin: 0;
+    color: #d6d0c3;
+    font-size: 11px;
+  }
+
+  .result-stats {
+    padding: 10px;
+    border-left: 1px solid #5d625d;
+    font-size: 10px;
+  }
+
+  .result-stats div {
+    display: flex;
+    justify-content: space-between;
+    padding: 3px 0;
+  }
+
+  .result-stats span {
+    color: #bfb9ac;
+  }
+
+  .approaches {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-top: 12px;
+  }
+
+  .approach {
+    min-height: 87px;
+    padding: 9px;
+    border: 1px solid #968e7f;
+    background: #e5dece;
+  }
+
+  .approach.recommended {
+    border: 2px solid var(--jade);
+    padding: 8px;
+    background: #edf0e7;
+  }
+
+  .approach strong {
+    display: block;
+    font-size: 12px;
+  }
+
+  .approach span {
+    display: block;
+    margin-top: 5px;
+    color: var(--muted);
+    font-size: 10px;
+    line-height: 1.4;
+  }
+
+  .approach em {
+    color: var(--jade);
+    font-size: 9px;
+    font-style: normal;
+    font-weight: 700;
+  }
+
+  @media (max-width: 900px) {
+    .layers {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .builder-layout {
+      grid-template-columns: 1fr;
+    }
+
+    .aperture {
+      border-right: 0;
+      border-bottom: 1px solid var(--line);
+    }
+  }
+</style>
+
+<div class="page">
+  <div class="heading">
+    <div>
+      <h2>多蛊搭配不是一种规则</h2>
+      <p>共存、协同、杀招与升炼必须分别结算</p>
+    </div>
+    <p>杀招结构稿 03</p>
+  </div>
+
+  <div class="board">
+    <div class="topbar">
+      <span><strong>原著原则：</strong>核心蛊决定方向，辅助蛊强化、改造或稳定</span>
+      <span>当前范围：一至三转</span>
+    </div>
+
+    <div class="layers">
+      <div class="layer">
+        <div class="layer-number">01</div>
+        <h3>空窍共存</h3>
+        <p>多只蛊同时收入空窍。它们只是被拥有，不代表所有数值自动相加。</p>
+      </div>
+      <div class="layer synergy">
+        <div class="layer-number">02</div>
+        <h3>蛊虫协同</h3>
+        <p>月光蛊与一只小光蛊共同催动，强化月刃；第二只小光蛊不继续叠加。</p>
+      </div>
+      <div class="layer killer">
+        <div class="layer-number">03</div>
+        <h3>固定杀招</h3>
+        <p>核心蛊、辅助蛊、顺序和真元成本共同构成一份可学习、可改良的术式。</p>
+      </div>
+      <div class="layer refine">
+        <div class="layer-number">04</div>
+        <h3>蛊虫升炼</h3>
+        <p>消耗材料蛊产生新的蛊实例。这是永久变化，不是战斗中的临时组合。</p>
+      </div>
+    </div>
+
+    <div class="builder-layout">
+      <aside class="aperture">
+        <div class="section-title">
+          <h3>空窍搭配</h3>
+          <span>负荷 8 / 12</span>
+        </div>
+        <div class="loadbar"><div></div></div>
+
+        <div class="gu-list">
+          <div class="gu-row">
+            <div><strong>月光蛊</strong><span>攻击核心 · 负荷 1</span></div>
+            <div class="policy">核心能力</div>
+          </div>
+          <div class="gu-row">
+            <div><strong>小光蛊</strong><span>月刃强化 · 负荷 1</span></div>
+            <div class="policy">同种不叠</div>
+          </div>
+          <div class="gu-row">
+            <div><strong>酒虫</strong><span>真元品质 · 负荷 1</span></div>
+            <div class="policy">最高生效</div>
+          </div>
+          <div class="gu-row">
+            <div><strong>白豕蛊</strong><span>身体成长 · 负荷 1</span></div>
+            <div class="policy">成长封顶</div>
+          </div>
+          <div class="gu-row">
+            <div><strong>玉皮蛊</strong><span>持续防御 · 负荷 1</span></div>
+            <div class="policy">主动维持</div>
+          </div>
+        </div>
+
+        <div class="reserve">
+          重复月光蛊、小光蛊与其他升炼材料可以外部封存，不必全部常驻空窍。
+        </div>
+      </aside>
+
+      <section class="builder">
+        <div class="section-title">
+          <h3>推荐：固定骨架 + 可替换辅助</h3>
+          <span>示例为低阶组合技，不冒充原著命名杀招</span>
+        </div>
+
+        <div class="recipe">
+          <div class="slot core">
+            <small>固定核心蛊</small>
+            <strong>月光蛊</strong>
+            <p>决定攻击性质为月刃、切割与中远距轨迹。</p>
+          </div>
+          <div class="plus">+</div>
+          <div class="slot support">
+            <small>固定辅助蛊</small>
+            <strong>小光蛊</strong>
+            <p>强化月刃体积与攻击；同种辅助不会无限叠加。</p>
+          </div>
+          <div class="plus">+</div>
+          <div class="slot technique">
+            <small>可选角色技巧</small>
+            <strong>蓄势 / 瞄准</strong>
+            <p>改变行动时间、命中部位与破绽效果，不创造无关能力。</p>
+          </div>
+        </div>
+
+        <div class="result">
+          <div class="result-main">
+            <small>组合结果</small>
+            <strong>强化月刃</strong>
+            <p>属于已知蛊虫协同。获得正式杀招传承后，同一结构可以扩展为完整术式。</p>
+          </div>
+          <div class="result-stats">
+            <div><span>行动</span><strong>2</strong></div>
+            <div><span>距离</span><strong>中–远</strong></div>
+            <div><span>目标</span><strong>单体 / 部位</strong></div>
+            <div><span>风险</span><strong>可被打断</strong></div>
+          </div>
+        </div>
+
+        <div class="approaches">
+          <div class="approach">
+            <strong>A · 全固定配方</strong>
+            <span>最接近传承学习，平衡简单，但玩家搭配空间较少。</span>
+          </div>
+          <div class="approach">
+            <strong>B · 完全自由拼装</strong>
+            <span>创造性最高，但组合数量失控，也容易出现违背原著能力的搭配。</span>
+          </div>
+          <div class="approach recommended">
+            <strong>C · 固定骨架 + 可替换辅助</strong>
+            <em>推荐</em>
+            <span>核心与必要蛊固定，允许一项兼容辅助或角色技巧改变表现。</span>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+</div>

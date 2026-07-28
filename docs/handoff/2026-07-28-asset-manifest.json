@@ -1,0 +1,871 @@
+{
+  "schemaVersion": 1,
+  "snapshotDate": "2026-07-28",
+  "policy": "Every listed file must be committed. Build output, dependencies, logs, test output, browser saves, credentials, and copyrighted source prose are excluded.",
+  "roots": [
+    {
+      "root": "assets",
+      "category": "concept-or-map"
+    },
+    {
+      "root": "public/assets",
+      "category": "runtime"
+    },
+    {
+      "root": "docs/game-design/assets",
+      "category": "production-source-and-review"
+    },
+    {
+      "root": "docs/archive/brainstorming",
+      "category": "archived-brainstorm"
+    },
+    {
+      "root": "docs/handoff/captures",
+      "category": "handoff-capture"
+    }
+  ],
+  "totals": {
+    "files": 104,
+    "bytes": 131798148,
+    "byCategory": {
+      "concept-or-map": {
+        "files": 3,
+        "bytes": 3321225
+      },
+      "runtime": {
+        "files": 34,
+        "bytes": 49824528
+      },
+      "production-source-and-review": {
+        "files": 44,
+        "bytes": 71496904
+      },
+      "archived-brainstorm": {
+        "files": 16,
+        "bytes": 4755836
+      },
+      "handoff-capture": {
+        "files": 7,
+        "bytes": 2399655
+      }
+    },
+    "byExtension": {
+      ".png": {
+        "files": 87,
+        "bytes": 131689976
+      },
+      ".svg": {
+        "files": 1,
+        "bytes": 2405
+      },
+      ".html": {
+        "files": 13,
+        "bytes": 95842
+      },
+      ".md": {
+        "files": 3,
+        "bytes": 9925
+      }
+    }
+  },
+  "files": [
+    {
+      "path": "assets/concepts/player-character-reference.png",
+      "category": "concept-or-map",
+      "bytes": 1140440,
+      "sha256": "77b181a5ef514e2d0dc2e1845b510aae35bc36050e0c0d4bf94925320c2cf60d",
+      "width": 1254,
+      "height": 1254
+    },
+    {
+      "path": "assets/concepts/retro-pixel-tavern-reference.png",
+      "category": "concept-or-map",
+      "bytes": 2178380,
+      "sha256": "8fc837fecdbcb8d77ae67444d3d969d54fa42bd26a2b0bece16cc964c09a8018",
+      "width": 1672,
+      "height": 941
+    },
+    {
+      "path": "assets/qingmao-map.svg",
+      "category": "concept-or-map",
+      "bytes": 2405,
+      "sha256": "9793d7a94397ababb96247803ae48528da8b1848246a189f59ea51fb81a33e2b"
+    },
+    {
+      "path": "docs/archive/brainstorming/combat-system/aperture-and-combat-architecture-v2.html",
+      "category": "archived-brainstorm",
+      "bytes": 10127,
+      "sha256": "fcdf0e98d7dbcf86a317e7e8cf4a06e77187e9d3423189896e92eceae9a9ca40"
+    },
+    {
+      "path": "docs/archive/brainstorming/combat-system/combat-aperture-concept.html",
+      "category": "archived-brainstorm",
+      "bytes": 10774,
+      "sha256": "70f55fa7c6b32f323728353ad1840488637cef080a0289b81418d54e616e5fd9"
+    },
+    {
+      "path": "docs/archive/brainstorming/combat-system/combat-turn-and-range-v4.html",
+      "category": "archived-brainstorm",
+      "bytes": 11915,
+      "sha256": "719ae2e0a76772f3f1cdb01b39d146d5fbb4c9d48187cdde1a465152be5066d2"
+    },
+    {
+      "path": "docs/archive/brainstorming/combat-system/gu-synergy-and-killer-move-v3.html",
+      "category": "archived-brainstorm",
+      "bytes": 10746,
+      "sha256": "e590828d91014a8105a2c6f4ab007e420a08688262abc4172343616c59c61aec"
+    },
+    {
+      "path": "docs/archive/brainstorming/gu-system/canonical-gu-rosters.html",
+      "category": "archived-brainstorm",
+      "bytes": 4988,
+      "sha256": "ff9cd03409024686ddfd48a90a6a86a481f6797bacc65c48a20a32f0ad84176b"
+    },
+    {
+      "path": "docs/archive/brainstorming/gu-system/capture-and-refinement-flow.html",
+      "category": "archived-brainstorm",
+      "bytes": 6040,
+      "sha256": "9452626618f61c8e12fc6b7790185b38d9a4023624ab43c823f7784473f74c49"
+    },
+    {
+      "path": "docs/archive/brainstorming/gu-system/gu-care-and-advancement.html",
+      "category": "archived-brainstorm",
+      "bytes": 7396,
+      "sha256": "8d066cf93e6c9bbf720b218a746db70b064336913ece1d74b8c288c4b0584c69"
+    },
+    {
+      "path": "docs/archive/brainstorming/gu-system/gu-core-loop.html",
+      "category": "archived-brainstorm",
+      "bytes": 6315,
+      "sha256": "f6404aeb0462f9ae3da3b08c1e4b2edff9cafad1faf7fc289780ac0c1cf75a51"
+    },
+    {
+      "path": "docs/archive/brainstorming/gu-system/mvp-gu-acquisition-map.html",
+      "category": "archived-brainstorm",
+      "bytes": 5613,
+      "sha256": "994ac969e1303b28e755c400dd9cedcd13803222e6d96fe52379e4d00df7d587"
+    },
+    {
+      "path": "docs/archive/brainstorming/gu-system/wine-worm-tracking-loop.html",
+      "category": "archived-brainstorm",
+      "bytes": 6564,
+      "sha256": "f15ecd2060cd888c726017e4154bc60f3c9e6d0c3459ded5bab3b7b5e587de71"
+    },
+    {
+      "path": "docs/archive/brainstorming/README.md",
+      "category": "archived-brainstorm",
+      "bytes": 1176,
+      "sha256": "c812e4b832e904747394bcae53f05ddd53fe2e8fd453ce8ce202191711b73fd0"
+    },
+    {
+      "path": "docs/archive/brainstorming/wave0-core/core-loop.html",
+      "category": "archived-brainstorm",
+      "bytes": 6740,
+      "sha256": "9de0c5594f9ec7b68a7f713a97bfe09d63a325ed2b1a993e536d4ab71bffb4e3"
+    },
+    {
+      "path": "docs/archive/brainstorming/wave0-core/map-structure.html",
+      "category": "archived-brainstorm",
+      "bytes": 5466,
+      "sha256": "063121d04c72b1cefea67246d1f0f1c791faf2ba6e546a1b617b7c132fe55146"
+    },
+    {
+      "path": "docs/archive/brainstorming/wave0-core/tavern-modern-pixel.png",
+      "category": "archived-brainstorm",
+      "bytes": 2320619,
+      "sha256": "13f5e768c6ace07c24d5955793ee04c48602083b80e9fef17a6917a7b808dc73",
+      "width": 1672,
+      "height": 941
+    },
+    {
+      "path": "docs/archive/brainstorming/wave0-core/tavern-painted.png",
+      "category": "archived-brainstorm",
+      "bytes": 2338199,
+      "sha256": "d2c78bed655e201930bc3ab16409c4f005a113ba7c091e65503562910400e209",
+      "width": 1672,
+      "height": 941
+    },
+    {
+      "path": "docs/archive/brainstorming/wave0-core/visual-style-comparison.html",
+      "category": "archived-brainstorm",
+      "bytes": 3158,
+      "sha256": "f121695b7a861e2a8794c28d6d124fdee27a9b760ded31fe43eb2b1e1911ff20"
+    },
+    {
+      "path": "docs/game-design/assets/character-state-ui-reference-v2.png",
+      "category": "production-source-and-review",
+      "bytes": 2154792,
+      "sha256": "c70a50f1a4e80df65969059a1b788856fda2acb857e446181fd1165f74cf9b7e",
+      "width": 1672,
+      "height": 941
+    },
+    {
+      "path": "docs/game-design/assets/character-state-ui/portraits/portrait_npc_caravan_manager_normal.png",
+      "category": "production-source-and-review",
+      "bytes": 1478685,
+      "sha256": "4b0623b3ed11c291251a8f2aa392143bbfd8cb618622a1960d7753dddea9a591",
+      "width": 1024,
+      "height": 1536
+    },
+    {
+      "path": "docs/game-design/assets/character-state-ui/portraits/portrait_npc_caravan_manager_outerwear_missing.png",
+      "category": "production-source-and-review",
+      "bytes": 1408129,
+      "sha256": "802f610728ddc721edc1d93ccb6de0a039870d0dd84f6b7968fbdc4adc6440bf",
+      "width": 1024,
+      "height": 1536
+    },
+    {
+      "path": "docs/game-design/assets/character-state-ui/portraits/portrait_npc_caravan_manager_privacy_layer_missing.png",
+      "category": "production-source-and-review",
+      "bytes": 1442533,
+      "sha256": "1701903159d9b3d97a87fc0bf14f3694ea60e9b65570c3ad92ce6ae8acd8189c",
+      "width": 1024,
+      "height": 1536
+    },
+    {
+      "path": "docs/game-design/assets/character-state-ui/portraits/portrait_npc_clan_steward_normal.png",
+      "category": "production-source-and-review",
+      "bytes": 1356114,
+      "sha256": "cccf0671b5a5271d8fa4ed02dc24d4552a22cb4d63d99ad28b779ebf046c24be",
+      "width": 1024,
+      "height": 1536
+    },
+    {
+      "path": "docs/game-design/assets/character-state-ui/portraits/portrait_npc_clan_steward_outerwear_missing.png",
+      "category": "production-source-and-review",
+      "bytes": 1291692,
+      "sha256": "b05c247b85a579cf8898cf74ef6b8ca54bada2a4e899f5268cd7a4b942876b94",
+      "width": 1024,
+      "height": 1536
+    },
+    {
+      "path": "docs/game-design/assets/character-state-ui/portraits/portrait_npc_clan_steward_privacy_layer_missing.png",
+      "category": "production-source-and-review",
+      "bytes": 1393653,
+      "sha256": "0b8016a66fe0aa27cdc1ca588808d0287e6ffbeabc1bc1eca042b17734f48823",
+      "width": 1024,
+      "height": 1536
+    },
+    {
+      "path": "docs/game-design/assets/character-state-ui/portraits/portrait_npc_demonic_cultivator_normal.png",
+      "category": "production-source-and-review",
+      "bytes": 1411113,
+      "sha256": "955e84ccbd1439acac93a9ddca93ab585ed4c61f837dc4c9b913c27d0d245fcb",
+      "width": 1024,
+      "height": 1536
+    },
+    {
+      "path": "docs/game-design/assets/character-state-ui/portraits/portrait_npc_demonic_cultivator_outerwear_missing.png",
+      "category": "production-source-and-review",
+      "bytes": 1609128,
+      "sha256": "a2600b6b11c7b874ef449620f070c28f7a043849986d53985de7dca6dc8e069e",
+      "width": 1024,
+      "height": 1536
+    },
+    {
+      "path": "docs/game-design/assets/character-state-ui/portraits/portrait_npc_demonic_cultivator_privacy_layer_missing.png",
+      "category": "production-source-and-review",
+      "bytes": 1627389,
+      "sha256": "38a2975ac4ba21a1795a63d52bd222aeae02cd224755acd39e461532d25c597a",
+      "width": 1024,
+      "height": 1536
+    },
+    {
+      "path": "docs/game-design/assets/character-state-ui/portraits/portrait_npc_medicine_physician_normal.png",
+      "category": "production-source-and-review",
+      "bytes": 1590142,
+      "sha256": "126ee950d2e9901d358097833e28f0edd319852285c80a939ac7204c1bcb96aa",
+      "width": 1024,
+      "height": 1536
+    },
+    {
+      "path": "docs/game-design/assets/character-state-ui/portraits/portrait_npc_medicine_physician_outerwear_missing.png",
+      "category": "production-source-and-review",
+      "bytes": 1497484,
+      "sha256": "54239dc7080528c0b4768afe04a0d5868acf111b1c43193e285f638b6db1049b",
+      "width": 1024,
+      "height": 1536
+    },
+    {
+      "path": "docs/game-design/assets/character-state-ui/portraits/portrait_npc_medicine_physician_privacy_layer_missing.png",
+      "category": "production-source-and-review",
+      "bytes": 1533625,
+      "sha256": "d8d8c7a0be83ba09c76d2a2388fc9c97a8954691b8701090224eaca1d1943160",
+      "width": 1024,
+      "height": 1536
+    },
+    {
+      "path": "docs/game-design/assets/character-state-ui/portraits/portrait_npc_tavern_keeper_normal.png",
+      "category": "production-source-and-review",
+      "bytes": 1469082,
+      "sha256": "62b73c93f4e19b38e9733d6af18fdce7e9b2722c6ee063394051f3e53dad677e",
+      "width": 1024,
+      "height": 1536
+    },
+    {
+      "path": "docs/game-design/assets/character-state-ui/portraits/portrait_npc_tavern_keeper_outerwear_missing.png",
+      "category": "production-source-and-review",
+      "bytes": 1247132,
+      "sha256": "3cfa8444e6c794d564493811185672dc898d2634b16350e2ccb3a357cd7ddeb0",
+      "width": 1024,
+      "height": 1536
+    },
+    {
+      "path": "docs/game-design/assets/character-state-ui/portraits/portrait_npc_tavern_keeper_privacy_layer_missing.png",
+      "category": "production-source-and-review",
+      "bytes": 1470866,
+      "sha256": "fecbfb2723326dfece00a06407b9f665bea7f4294ff101be514839d5f32efa60",
+      "width": 1024,
+      "height": 1536
+    },
+    {
+      "path": "docs/game-design/assets/character-state-ui/README.md",
+      "category": "production-source-and-review",
+      "bytes": 8148,
+      "sha256": "ec55ba6305944df120d2f99bab256b28fc4d4dcf13fc8d2e1b52447a9fec886a"
+    },
+    {
+      "path": "docs/game-design/assets/character-state-ui/reviews/all-character-three-state-overview.png",
+      "category": "production-source-and-review",
+      "bytes": 1296863,
+      "sha256": "24f9dfcf2d634ccd3c39a90f9475fb06eb1b512e5725760bb87539c9466ba7d8",
+      "width": 1520,
+      "height": 1320
+    },
+    {
+      "path": "docs/game-design/assets/character-state-ui/reviews/normal-identity-lineup.png",
+      "category": "production-source-and-review",
+      "bytes": 1073440,
+      "sha256": "b1debe4ea83e910343b59016ef61385dea31a59341e7be9879e1b9638b6748d3",
+      "width": 2100,
+      "height": 670
+    },
+    {
+      "path": "docs/game-design/assets/character-state-ui/reviews/npc_caravan_manager-three-state-review.png",
+      "category": "production-source-and-review",
+      "bytes": 1003762,
+      "sha256": "76613d05f399f7c8d4b36fd11c26d61f8cceaf684398a4a462cd2387c83e8ac0",
+      "width": 1536,
+      "height": 874
+    },
+    {
+      "path": "docs/game-design/assets/character-state-ui/reviews/npc_clan_steward-three-state-review.png",
+      "category": "production-source-and-review",
+      "bytes": 926778,
+      "sha256": "d98cfb763838b4d3250fb4b3059489588966ff2cfdb5504e747b1ce980ff1382",
+      "width": 1536,
+      "height": 874
+    },
+    {
+      "path": "docs/game-design/assets/character-state-ui/reviews/npc_demonic_cultivator-three-state-review.png",
+      "category": "production-source-and-review",
+      "bytes": 1078592,
+      "sha256": "0f496e71ab4b1d14ada17aa2b4532fedd9526d34413c269b6a2e9d9f9bdf3136",
+      "width": 1536,
+      "height": 874
+    },
+    {
+      "path": "docs/game-design/assets/character-state-ui/reviews/npc_medicine_physician-three-state-review.png",
+      "category": "production-source-and-review",
+      "bytes": 1087668,
+      "sha256": "ef0e9594f0d0e356e38f0fd68a8c4d734dd64e1d5b9de40df4324a6446b14488",
+      "width": 1536,
+      "height": 874
+    },
+    {
+      "path": "docs/game-design/assets/character-state-ui/reviews/npc_tavern_keeper-three-state-review.png",
+      "category": "production-source-and-review",
+      "bytes": 965018,
+      "sha256": "2f1a30d407e0fcea65410469dc7b1a42a9a0f8b19ff2e59fdb8f69e27b27070f",
+      "width": 1536,
+      "height": 874
+    },
+    {
+      "path": "docs/game-design/assets/character-state-ui/sources/portrait_npc_caravan_manager_normal-source.png",
+      "category": "production-source-and-review",
+      "bytes": 2009377,
+      "sha256": "0cde7c89aab155cc63e162669c8a06b4036f714ab10fe3dd5b714dd564ed787b",
+      "width": 1024,
+      "height": 1536
+    },
+    {
+      "path": "docs/game-design/assets/character-state-ui/sources/portrait_npc_caravan_manager_outerwear_missing-source.png",
+      "category": "production-source-and-review",
+      "bytes": 1963101,
+      "sha256": "19822543da79ccf0d9e53bdb4320d9d44db0fa8c162b85706dfd5887cc45ba8b",
+      "width": 1024,
+      "height": 1536
+    },
+    {
+      "path": "docs/game-design/assets/character-state-ui/sources/portrait_npc_caravan_manager_privacy_layer_missing-source.png",
+      "category": "production-source-and-review",
+      "bytes": 1945361,
+      "sha256": "cc02197e6dbd4c7be0810ed743dc2fa2eecedc99bcc1296d3c22d4530c4bfde5",
+      "width": 1024,
+      "height": 1536
+    },
+    {
+      "path": "docs/game-design/assets/character-state-ui/sources/portrait_npc_clan_steward_normal-source.png",
+      "category": "production-source-and-review",
+      "bytes": 1879990,
+      "sha256": "42c49a6a7e2dda45fc07b8eabbe4403dcb8eecfd019c2b167bb4157625a98d3f",
+      "width": 1024,
+      "height": 1536
+    },
+    {
+      "path": "docs/game-design/assets/character-state-ui/sources/portrait_npc_clan_steward_outerwear_missing-source.png",
+      "category": "production-source-and-review",
+      "bytes": 1839328,
+      "sha256": "a8a062ae858cf1360bcabc8ec4bca1f1e0e832ee6cc3c60364fa855798dc5f02",
+      "width": 1024,
+      "height": 1536
+    },
+    {
+      "path": "docs/game-design/assets/character-state-ui/sources/portrait_npc_clan_steward_privacy_layer_missing-source.png",
+      "category": "production-source-and-review",
+      "bytes": 2039624,
+      "sha256": "786263c55cee75f5a01bfa4c2c085c081f833ded9dba45f09caeaf738f6c952f",
+      "width": 1024,
+      "height": 1536
+    },
+    {
+      "path": "docs/game-design/assets/character-state-ui/sources/portrait_npc_demonic_cultivator_normal-source.png",
+      "category": "production-source-and-review",
+      "bytes": 1952346,
+      "sha256": "f0e4b7362f8cfd17179f5f8689f9b31acd42cc70ece23d6f8c23b22b04b0b279",
+      "width": 1024,
+      "height": 1536
+    },
+    {
+      "path": "docs/game-design/assets/character-state-ui/sources/portrait_npc_demonic_cultivator_outerwear_missing-source.png",
+      "category": "production-source-and-review",
+      "bytes": 2073493,
+      "sha256": "f5fb743de99575312b6ae1ddc90025d7d55c2e30a64eb0820b81e7b2264da4c8",
+      "width": 1024,
+      "height": 1536
+    },
+    {
+      "path": "docs/game-design/assets/character-state-ui/sources/portrait_npc_demonic_cultivator_privacy_layer_missing-source.png",
+      "category": "production-source-and-review",
+      "bytes": 2240380,
+      "sha256": "5cc29ef67b50dba2bc5cc4ea16d839d4d49ffa61c9595c8c5d05c7b125f17fa3",
+      "width": 1024,
+      "height": 1536
+    },
+    {
+      "path": "docs/game-design/assets/character-state-ui/sources/portrait_npc_medicine_physician_normal-source.png",
+      "category": "production-source-and-review",
+      "bytes": 2121512,
+      "sha256": "8b603eab6d3447b5838503f1d72bf028a694a6832f0491e11a1c5a4043fd13c3",
+      "width": 1024,
+      "height": 1536
+    },
+    {
+      "path": "docs/game-design/assets/character-state-ui/sources/portrait_npc_medicine_physician_outerwear_missing-source.png",
+      "category": "production-source-and-review",
+      "bytes": 2050121,
+      "sha256": "816079d208587cc2333c5b1b70ab99fcf46232f8d913075a71596d71483cd938",
+      "width": 1024,
+      "height": 1536
+    },
+    {
+      "path": "docs/game-design/assets/character-state-ui/sources/portrait_npc_medicine_physician_privacy_layer_missing-source.png",
+      "category": "production-source-and-review",
+      "bytes": 2069280,
+      "sha256": "be9924db33c08d9b061c1ee10bfc77d4bc6e08bf65a997575ab1fb340060fad2",
+      "width": 1024,
+      "height": 1536
+    },
+    {
+      "path": "docs/game-design/assets/character-state-ui/sources/portrait_npc_tavern_keeper_normal-source.png",
+      "category": "production-source-and-review",
+      "bytes": 1949232,
+      "sha256": "b6684f08e9b9914841e5df4231e90e27bc66dd1589d7d5b78c047ff94b68482e",
+      "width": 1024,
+      "height": 1536
+    },
+    {
+      "path": "docs/game-design/assets/character-state-ui/sources/portrait_npc_tavern_keeper_outerwear_missing-source.png",
+      "category": "production-source-and-review",
+      "bytes": 1970293,
+      "sha256": "8067bb01e2a5fa72e53d5839deaaf04587ff1489922f9db4981d3fa09c43527d",
+      "width": 1024,
+      "height": 1536
+    },
+    {
+      "path": "docs/game-design/assets/character-state-ui/sources/portrait_npc_tavern_keeper_privacy_layer_missing-source.png",
+      "category": "production-source-and-review",
+      "bytes": 1983178,
+      "sha256": "7c039ca7021b855a185cc73ac12b4bcc6f0e21741a8702bf9a0b4b318dcff526",
+      "width": 1024,
+      "height": 1536
+    },
+    {
+      "path": "docs/game-design/assets/character-state-ui/sources/ui_hostile_fx_overlay-source.png",
+      "category": "production-source-and-review",
+      "bytes": 1379537,
+      "sha256": "a6eaf07c08071ae6fa1c2321b0c6ab2b72f6c7f43419465288f361029cfedb12",
+      "width": 1024,
+      "height": 1536
+    },
+    {
+      "path": "docs/game-design/assets/character-state-ui/sources/ui-icon-sheet-source.png",
+      "category": "production-source-and-review",
+      "bytes": 2232498,
+      "sha256": "71c4de593c0fe18195fc809da548e14f0e8002672ec3d4e165e56c85841a2284",
+      "width": 1254,
+      "height": 1254
+    },
+    {
+      "path": "docs/game-design/assets/character-state-ui/sources/ui-icon-sheet-transparent.png",
+      "category": "production-source-and-review",
+      "bytes": 1825582,
+      "sha256": "1934f9103219ccfb7fe40a54efbab77e456ff1a30c7bde7af6d5b672d114d026",
+      "width": 1254,
+      "height": 1254
+    },
+    {
+      "path": "docs/game-design/assets/character-state-ui/ui_hostile_fx_overlay.png",
+      "category": "production-source-and-review",
+      "bytes": 260500,
+      "sha256": "9d2c44a7f3347bf3aaf0a5e8fe6754709447de5564f910bc85671a5b8997ce44",
+      "width": 1024,
+      "height": 1536
+    },
+    {
+      "path": "docs/game-design/assets/character-state-ui/ui-icon-sheet.png",
+      "category": "production-source-and-review",
+      "bytes": 4290343,
+      "sha256": "371a9590d294cb0fc8e6298e22794789d20767709b267d7b3d5602c49a6d0eb7",
+      "width": 2048,
+      "height": 2048
+    },
+    {
+      "path": "docs/handoff/captures/wave0/wave0-date-fix.png",
+      "category": "handoff-capture",
+      "bytes": 188136,
+      "sha256": "1f3240b6b7a9883bd00c70db82cd3ae25d6279ab6052cd6c0e43f5b93579b75c",
+      "width": 900,
+      "height": 2105
+    },
+    {
+      "path": "docs/handoff/captures/wave0/wave0-desktop.png",
+      "category": "handoff-capture",
+      "bytes": 192367,
+      "sha256": "5d6d61822608ad8f6f42753564dba1e8f4f4d27336809412c5943917af3cd8b6",
+      "width": 1366,
+      "height": 1176
+    },
+    {
+      "path": "docs/handoff/captures/wave0/wave0-mobile.png",
+      "category": "handoff-capture",
+      "bytes": 119091,
+      "sha256": "cba5c0a826e98f5d2129e418bba065a322ca9d4608291282a6fcecba68754bd4",
+      "width": 390,
+      "height": 2089
+    },
+    {
+      "path": "docs/handoff/captures/wave0/wave0-wine-worm-complete.png",
+      "category": "handoff-capture",
+      "bytes": 229527,
+      "sha256": "66925ffe8a611b1d5ae14b6d87e58c398cd7a5a7cfb8870fb5a2f3fc92201e06",
+      "width": 1366,
+      "height": 1305
+    },
+    {
+      "path": "docs/handoff/captures/wave05/town-run-final.png",
+      "category": "handoff-capture",
+      "bytes": 448767,
+      "sha256": "d56d0845536c002d8a66edd91c161fe4a774dda4696553fdb7db46b7f74bee5f",
+      "width": 465,
+      "height": 760
+    },
+    {
+      "path": "docs/handoff/captures/wave05/wave05-game.png",
+      "category": "handoff-capture",
+      "bytes": 1027046,
+      "sha256": "36ffc489f0571148ae63f3bb6dff7f4bfcb2c3db1767e2ac32ffebc8503bf895",
+      "width": 1440,
+      "height": 900
+    },
+    {
+      "path": "docs/handoff/captures/wave05/wave05-theft.png",
+      "category": "handoff-capture",
+      "bytes": 194721,
+      "sha256": "e7edf87b2c9867eedf20b2e57f416b6c98019c8e8134efba0e3317e94edec6b5",
+      "width": 1440,
+      "height": 900
+    },
+    {
+      "path": "public/assets/game/characters/chibi/chibi_fang_yuan.png",
+      "category": "runtime",
+      "bytes": 532048,
+      "sha256": "4013291eae906b42da73d1a1c614533cc275f738e0daedaeeafbcf59fed08de4",
+      "width": 1254,
+      "height": 1254
+    },
+    {
+      "path": "public/assets/game/characters/chibi/chibi_npc_caravan_manager.png",
+      "category": "runtime",
+      "bytes": 667374,
+      "sha256": "789db0b1b67e0fb17b8f99bda5190299e13ae82037cad5d45588aa5fa70555d4",
+      "width": 1254,
+      "height": 1254
+    },
+    {
+      "path": "public/assets/game/characters/chibi/chibi_npc_clan_steward.png",
+      "category": "runtime",
+      "bytes": 633730,
+      "sha256": "978662bf3d51923e2c202c6552a6cf6a85e16a004de48637c551984af0a58728",
+      "width": 1254,
+      "height": 1254
+    },
+    {
+      "path": "public/assets/game/characters/chibi/chibi_player.png",
+      "category": "runtime",
+      "bytes": 476086,
+      "sha256": "77bbfec285b5eb9ca5463dfb2148f9dc58292f4f77a9486acbbc2daa66e93b09",
+      "width": 1254,
+      "height": 1254
+    },
+    {
+      "path": "public/assets/game/characters/chibi/sources/chibi_fang_yuan-source.png",
+      "category": "runtime",
+      "bytes": 1238160,
+      "sha256": "9c3934645e3ae550bbf1f36f98964e67886300856b469bff929389fd50ee992c",
+      "width": 1254,
+      "height": 1254
+    },
+    {
+      "path": "public/assets/game/characters/chibi/sources/chibi_npc_caravan_manager-source.png",
+      "category": "runtime",
+      "bytes": 1349280,
+      "sha256": "f9cae8310e41bd3dfe026097c2f4f95abdd6bd3de85529e190b0aebc71af3f51",
+      "width": 1254,
+      "height": 1254
+    },
+    {
+      "path": "public/assets/game/characters/chibi/sources/chibi_npc_clan_steward-source.png",
+      "category": "runtime",
+      "bytes": 1342214,
+      "sha256": "be478b09b5339c78fe3dc2082468f2342dcada61df928d44fc497adadc35902c",
+      "width": 1254,
+      "height": 1254
+    },
+    {
+      "path": "public/assets/game/characters/chibi/sources/chibi_player-source.png",
+      "category": "runtime",
+      "bytes": 1202204,
+      "sha256": "0bff4e7746dd4163f29f86aeec709e9620ce51899beb0588ea865190c6300207",
+      "width": 1254,
+      "height": 1254
+    },
+    {
+      "path": "public/assets/game/characters/player/player_run_sheet_8f.png",
+      "category": "runtime",
+      "bytes": 810449,
+      "sha256": "bf12dded89a823e7002f866e1f262a7767a1287f2dfbbd9d7f3c875239bdc021",
+      "width": 1024,
+      "height": 1536
+    },
+    {
+      "path": "public/assets/game/characters/player/player_run_sheet.png",
+      "category": "runtime",
+      "bytes": 665708,
+      "sha256": "1bd103cf4e9531c2c4248a20778df9f5e1427f0858136e8b15e93d4adfc9170b",
+      "width": 1448,
+      "height": 1086
+    },
+    {
+      "path": "public/assets/game/characters/player/README.md",
+      "category": "runtime",
+      "bytes": 601,
+      "sha256": "7d2884d99d89795b3debe06b491ddba69da8204a656f1865d9f309812b32bc84"
+    },
+    {
+      "path": "public/assets/game/characters/player/sources/player_run_sheet_8f-source.png",
+      "category": "runtime",
+      "bytes": 1722647,
+      "sha256": "a9bc4ce2e743eca3726fc72ce8bb9db22565ebeb86510d33d98fc49e7c836804",
+      "width": 1024,
+      "height": 1536
+    },
+    {
+      "path": "public/assets/game/characters/player/sources/player_run_sheet-source.png",
+      "category": "runtime",
+      "bytes": 1439556,
+      "sha256": "d3e39012504d5fa2760c478ec1f9bb7112a5531e730b4d4a03cebc71a34fd58c",
+      "width": 1448,
+      "height": 1086
+    },
+    {
+      "path": "public/assets/game/environments/academy.png",
+      "category": "runtime",
+      "bytes": 2398304,
+      "sha256": "6cce0ffeda5dcca4a10e41a23b22c959d76db0c8deddf4d8910242fbc11e3116",
+      "width": 1672,
+      "height": 941
+    },
+    {
+      "path": "public/assets/game/environments/dorm.png",
+      "category": "runtime",
+      "bytes": 2226806,
+      "sha256": "c3b7698510cdd9d36677fd386bbaac9313fb53644abc0687c20db30f87cd02b6",
+      "width": 1672,
+      "height": 941
+    },
+    {
+      "path": "public/assets/game/environments/forest-battle.png",
+      "category": "runtime",
+      "bytes": 3065641,
+      "sha256": "bae48709393a8607517efecceb191613e86aae2e115669badb412a5ea80da547",
+      "width": 1672,
+      "height": 941
+    },
+    {
+      "path": "public/assets/game/environments/tavern.png",
+      "category": "runtime",
+      "bytes": 2300481,
+      "sha256": "708c143ebb9b554f33b268aaf12bad9faa51672542c8669d0b6112fb33114395",
+      "width": 1672,
+      "height": 941
+    },
+    {
+      "path": "public/assets/game/environments/village.png",
+      "category": "runtime",
+      "bytes": 2773582,
+      "sha256": "e6648faf97b6122b55264de7af14f651a910b68a5c025c2bf92938335b505418",
+      "width": 1672,
+      "height": 941
+    },
+    {
+      "path": "public/assets/game/environments/world-map.png",
+      "category": "runtime",
+      "bytes": 3152890,
+      "sha256": "7e9279b58c772a232124a46203c0c1175907df5bd97c2db645640ec7062004f7",
+      "width": 1672,
+      "height": 941
+    },
+    {
+      "path": "public/assets/game/portraits/portrait_npc_caravan_manager_normal.png",
+      "category": "runtime",
+      "bytes": 1478685,
+      "sha256": "4b0623b3ed11c291251a8f2aa392143bbfd8cb618622a1960d7753dddea9a591",
+      "width": 1024,
+      "height": 1536
+    },
+    {
+      "path": "public/assets/game/portraits/portrait_npc_caravan_manager_outerwear_missing.png",
+      "category": "runtime",
+      "bytes": 1408129,
+      "sha256": "802f610728ddc721edc1d93ccb6de0a039870d0dd84f6b7968fbdc4adc6440bf",
+      "width": 1024,
+      "height": 1536
+    },
+    {
+      "path": "public/assets/game/portraits/portrait_npc_caravan_manager_privacy_layer_missing.png",
+      "category": "runtime",
+      "bytes": 1442533,
+      "sha256": "1701903159d9b3d97a87fc0bf14f3694ea60e9b65570c3ad92ce6ae8acd8189c",
+      "width": 1024,
+      "height": 1536
+    },
+    {
+      "path": "public/assets/game/portraits/portrait_npc_clan_steward_normal.png",
+      "category": "runtime",
+      "bytes": 1356114,
+      "sha256": "cccf0671b5a5271d8fa4ed02dc24d4552a22cb4d63d99ad28b779ebf046c24be",
+      "width": 1024,
+      "height": 1536
+    },
+    {
+      "path": "public/assets/game/portraits/portrait_npc_clan_steward_outerwear_missing.png",
+      "category": "runtime",
+      "bytes": 1291692,
+      "sha256": "b05c247b85a579cf8898cf74ef6b8ca54bada2a4e899f5268cd7a4b942876b94",
+      "width": 1024,
+      "height": 1536
+    },
+    {
+      "path": "public/assets/game/portraits/portrait_npc_clan_steward_privacy_layer_missing.png",
+      "category": "runtime",
+      "bytes": 1393653,
+      "sha256": "0b8016a66fe0aa27cdc1ca588808d0287e6ffbeabc1bc1eca042b17734f48823",
+      "width": 1024,
+      "height": 1536
+    },
+    {
+      "path": "public/assets/game/portraits/portrait_npc_demonic_cultivator_normal.png",
+      "category": "runtime",
+      "bytes": 1411113,
+      "sha256": "955e84ccbd1439acac93a9ddca93ab585ed4c61f837dc4c9b913c27d0d245fcb",
+      "width": 1024,
+      "height": 1536
+    },
+    {
+      "path": "public/assets/game/portraits/portrait_npc_demonic_cultivator_outerwear_missing.png",
+      "category": "runtime",
+      "bytes": 1609128,
+      "sha256": "a2600b6b11c7b874ef449620f070c28f7a043849986d53985de7dca6dc8e069e",
+      "width": 1024,
+      "height": 1536
+    },
+    {
+      "path": "public/assets/game/portraits/portrait_npc_demonic_cultivator_privacy_layer_missing.png",
+      "category": "runtime",
+      "bytes": 1627389,
+      "sha256": "38a2975ac4ba21a1795a63d52bd222aeae02cd224755acd39e461532d25c597a",
+      "width": 1024,
+      "height": 1536
+    },
+    {
+      "path": "public/assets/game/portraits/portrait_npc_medicine_physician_normal.png",
+      "category": "runtime",
+      "bytes": 1590142,
+      "sha256": "126ee950d2e9901d358097833e28f0edd319852285c80a939ac7204c1bcb96aa",
+      "width": 1024,
+      "height": 1536
+    },
+    {
+      "path": "public/assets/game/portraits/portrait_npc_medicine_physician_outerwear_missing.png",
+      "category": "runtime",
+      "bytes": 1497484,
+      "sha256": "54239dc7080528c0b4768afe04a0d5868acf111b1c43193e285f638b6db1049b",
+      "width": 1024,
+      "height": 1536
+    },
+    {
+      "path": "public/assets/game/portraits/portrait_npc_medicine_physician_privacy_layer_missing.png",
+      "category": "runtime",
+      "bytes": 1533625,
+      "sha256": "d8d8c7a0be83ba09c76d2a2388fc9c97a8954691b8701090224eaca1d1943160",
+      "width": 1024,
+      "height": 1536
+    },
+    {
+      "path": "public/assets/game/portraits/portrait_npc_tavern_keeper_normal.png",
+      "category": "runtime",
+      "bytes": 1469082,
+      "sha256": "62b73c93f4e19b38e9733d6af18fdce7e9b2722c6ee063394051f3e53dad677e",
+      "width": 1024,
+      "height": 1536
+    },
+    {
+      "path": "public/assets/game/portraits/portrait_npc_tavern_keeper_outerwear_missing.png",
+      "category": "runtime",
+      "bytes": 1247132,
+      "sha256": "3cfa8444e6c794d564493811185672dc898d2634b16350e2ccb3a357cd7ddeb0",
+      "width": 1024,
+      "height": 1536
+    },
+    {
+      "path": "public/assets/game/portraits/portrait_npc_tavern_keeper_privacy_layer_missing.png",
+      "category": "runtime",
+      "bytes": 1470866,
+      "sha256": "fecbfb2723326dfece00a06407b9f665bea7f4294ff101be514839d5f32efa60",
+      "width": 1024,
+      "height": 1536
+    }
+  ]
+}

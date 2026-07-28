@@ -1,0 +1,432 @@
+<style>
+  :root {
+    --ink: #171a17;
+    --paper: #eee8d8;
+    --paper2: #ddd4c1;
+    --line: #958d7d;
+    --jade: #456f5d;
+    --blue: #547f98;
+    --red: #98483d;
+    --gold: #b88a3c;
+    --muted: #6f6b62;
+  }
+
+  .page {
+    max-width: 1180px;
+    margin: 0 auto;
+    color: var(--ink);
+  }
+
+  .heading {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px;
+    margin-bottom: 14px;
+  }
+
+  .heading h2,
+  .heading p {
+    margin: 0;
+  }
+
+  .heading p {
+    color: var(--muted);
+    font-size: 13px;
+  }
+
+  .board {
+    border: 1px solid var(--line);
+    background: var(--paper);
+    box-shadow: 0 10px 30px rgba(25, 22, 16, 0.14);
+  }
+
+  .topline {
+    padding: 10px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--ink);
+    color: #f4ecd7;
+    font-size: 13px;
+  }
+
+  .topline strong {
+    color: #e5ba64;
+  }
+
+  .architecture {
+    display: grid;
+    grid-template-columns: 1.15fr 0.85fr;
+    min-height: 500px;
+  }
+
+  .storage {
+    padding: 18px;
+    border-right: 1px solid var(--line);
+  }
+
+  .section-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 11px;
+  }
+
+  .section-title h3 {
+    margin: 0;
+    font-size: 17px;
+  }
+
+  .section-title span {
+    color: var(--muted);
+    font-size: 11px;
+  }
+
+  .aperture {
+    display: grid;
+    grid-template-columns: 180px 1fr;
+    gap: 16px;
+    border: 1px solid #827b6d;
+    padding: 14px;
+    background: #e4ddcb;
+  }
+
+  .sea {
+    min-height: 230px;
+    border: 3px solid var(--gold);
+    background: #264853;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 14px;
+  }
+
+  .sea strong {
+    font-size: 18px;
+  }
+
+  .sea .essence {
+    font-size: 38px;
+    font-family: serif;
+    text-align: center;
+  }
+
+  .sea small {
+    color: #c9dce0;
+  }
+
+  .gu-cloud {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    align-content: start;
+  }
+
+  .gu {
+    min-height: 62px;
+    border: 1px solid #968e7f;
+    background: #f7f1e3;
+    padding: 7px;
+    position: relative;
+  }
+
+  .gu strong,
+  .gu span {
+    display: block;
+  }
+
+  .gu strong {
+    font-size: 12px;
+  }
+
+  .gu span {
+    color: var(--muted);
+    font-size: 10px;
+    margin-top: 4px;
+  }
+
+  .gu.vital {
+    border: 2px solid var(--gold);
+    padding: 6px;
+  }
+
+  .gu.vital::after {
+    content: "本命";
+    position: absolute;
+    right: 4px;
+    top: 4px;
+    color: #7c581c;
+    font-size: 9px;
+    font-weight: 700;
+  }
+
+  .gu.duplicate {
+    background: #e8e2d5;
+  }
+
+  .below-storage {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 12px;
+  }
+
+  .holding {
+    border-left: 4px solid var(--blue);
+    padding: 10px 12px;
+    background: #f4efe3;
+  }
+
+  .holding.body {
+    border-left-color: var(--red);
+  }
+
+  .holding strong,
+  .holding span {
+    display: block;
+  }
+
+  .holding strong {
+    font-size: 13px;
+  }
+
+  .holding span {
+    margin-top: 3px;
+    color: var(--muted);
+    font-size: 11px;
+  }
+
+  .rules {
+    padding: 18px;
+    background: var(--paper2);
+  }
+
+  .flow {
+    border: 1px solid var(--line);
+    background: #f3eddf;
+    margin-bottom: 10px;
+  }
+
+  .flow-head {
+    padding: 8px 10px;
+    display: flex;
+    justify-content: space-between;
+    background: #d2c9b6;
+    font-size: 13px;
+    font-weight: 700;
+  }
+
+  .flow-body {
+    padding: 10px;
+    font-size: 12px;
+  }
+
+  .flow-body p {
+    margin: 0 0 7px;
+  }
+
+  .flow-body p:last-child {
+    margin-bottom: 0;
+  }
+
+  .tag {
+    display: inline-block;
+    padding: 2px 5px;
+    border: 1px solid #857e70;
+    margin-right: 4px;
+    background: #fbf6ea;
+    font-size: 10px;
+  }
+
+  .cap-rule {
+    display: grid;
+    grid-template-columns: 74px 1fr;
+    gap: 8px;
+    padding: 6px 0;
+    border-bottom: 1px solid #c2b9a7;
+  }
+
+  .cap-rule:last-child {
+    border-bottom: 0;
+  }
+
+  .cap-rule strong {
+    color: var(--jade);
+  }
+
+  .action-source {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    padding: 12px;
+    border-top: 1px solid var(--line);
+    background: #d8d0bf;
+  }
+
+  .source {
+    min-height: 94px;
+    padding: 9px;
+    border: 1px solid #898173;
+    background: #f5efe1;
+  }
+
+  .source h4 {
+    margin: 0 0 5px;
+    font-size: 13px;
+  }
+
+  .source p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 11px;
+  }
+
+  .source.gu-source {
+    border-top: 4px solid var(--blue);
+  }
+
+  .source.body-source {
+    border-top: 4px solid var(--red);
+  }
+
+  .source.combo-source {
+    border-top: 4px solid var(--gold);
+  }
+
+  .footer-note {
+    margin: 12px 0 0;
+    color: var(--muted);
+    font-size: 12px;
+  }
+
+  @media (max-width: 900px) {
+    .architecture {
+      grid-template-columns: 1fr;
+    }
+
+    .storage {
+      border-right: 0;
+      border-bottom: 1px solid var(--line);
+    }
+  }
+</style>
+
+<div class="page">
+  <div class="heading">
+    <div>
+      <h2>空窍、蛊虫与角色招式</h2>
+      <p>不设固定只数格子，按蛊阶负荷、真元、行动和叠加规则控制强度</p>
+    </div>
+    <p>体系修正版 02</p>
+  </div>
+
+  <div class="board">
+    <div class="topline">
+      <span><strong>一只普通空窍</strong> · 一只本命蛊 · 多只安全负荷内普通蛊</span>
+      <span>快捷栏只是操作便利，不是容量</span>
+    </div>
+
+    <div class="architecture">
+      <section class="storage">
+        <div class="section-title">
+          <h3>已炼化蛊：收入空窍，全部可调用</h3>
+          <span>无固定只数；按蛊阶计算负荷</span>
+        </div>
+
+        <div class="aperture">
+          <div class="sea">
+            <strong>青铜真元海</strong>
+            <div class="essence">70%</div>
+            <small>真元决定催动次数；空窍安全负荷决定常驻规模</small>
+          </div>
+
+          <div class="gu-cloud">
+            <div class="gu vital"><strong>月光蛊</strong><span>核心：凝聚月刃</span></div>
+            <div class="gu"><strong>玉皮蛊</strong><span>主动：持续防御</span></div>
+            <div class="gu"><strong>酒虫</strong><span>辅助：真元品质</span></div>
+            <div class="gu"><strong>白豕蛊</strong><span>成长：永久力量</span></div>
+            <div class="gu duplicate"><strong>月光蛊 ×2</strong><span>备用或升炼素材</span></div>
+            <div class="gu duplicate"><strong>小光蛊 ×2</strong><span>组合与升炼素材</span></div>
+            <div class="gu"><strong>侦察蛊</strong><span>被动：感知</span></div>
+            <div class="gu"><strong>经济蛊</strong><span>被动：生产</span></div>
+            <div class="gu"><strong>负荷 8 / 12</strong><span>高阶蛊占用更多安全负荷</span></div>
+          </div>
+        </div>
+
+        <div class="below-storage">
+          <div class="holding">
+            <strong>外部封存与储备</strong>
+            <span>未炼化、野生、超出安全负荷或待升炼的蛊，保留独立实例</span>
+          </div>
+          <div class="holding body">
+            <strong>身体植入</strong>
+            <span>地听肉耳草等特殊蛊按原著占据身体状态，不算第二空窍</span>
+          </div>
+        </div>
+      </section>
+
+      <aside class="rules">
+        <div class="section-title">
+          <h3>强度控制</h3>
+          <span>不靠背包格子</span>
+        </div>
+
+        <div class="flow">
+          <div class="flow-head"><span>同类被动叠加</span><span>有上限</span></div>
+          <div class="flow-body">
+            <div class="cap-rule">
+              <strong>同种蛊</strong>
+              <span>默认只取最高效果；重复实例仍可升炼、交易和替换。</span>
+            </div>
+            <div class="cap-rule">
+              <strong>同效果组</strong>
+              <span>第一只全额，后续递减，并受修炼、经济、防御等分类硬上限约束。</span>
+            </div>
+            <div class="cap-rule">
+              <strong>不同功能</strong>
+              <span>可以同时生效，鼓励广泛收集，而不是堆同一种小蛊。</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="flow">
+          <div class="flow-head"><span>一只蛊如何产生招式</span><span>一核多用</span></div>
+          <div class="flow-body">
+            <p><span class="tag">核心能力</span>月光蛊只能围绕“凝聚月刃”，不会凭空多出火球或治疗。</p>
+            <p><span class="tag">催动方式</span>快斩、蓄力、瞄准部位，是同一能力的不同用法。</p>
+            <p><span class="tag">组合杀招</span>两只以上蛊配合时，才形成新的完整招式。</p>
+          </div>
+        </div>
+
+        <div class="flow">
+          <div class="flow-head"><span>距离与范围</span><span>写在每种催动方式上</span></div>
+          <div class="flow-body">
+            <p>五档距离：贴身、近距、中距、远距、战场边缘。</p>
+            <p>目标形状：自身、单体、直线、横扫、区域。MVP 先实现一对一单线，数据预留三线多人战。</p>
+          </div>
+        </div>
+      </aside>
+    </div>
+
+    <div class="action-source">
+      <div class="source body-source">
+        <h4>角色肉搏与武艺</h4>
+        <p>拳脚、兵器、格挡、擒拿和身法不消耗真元，用于稳定输出与制造破绽。</p>
+      </div>
+      <div class="source gu-source">
+        <h4>蛊虫催动</h4>
+        <p>提供远程、爆发、防御、侦察和特殊规则，消耗真元并受射程约束。</p>
+      </div>
+      <div class="source combo-source">
+        <h4>组合杀招</h4>
+        <p>角色技巧与多只蛊共同组成，条件更严格，但能改变行动、距离或目标状态。</p>
+      </div>
+    </div>
+  </div>
+
+  <p class="footer-note">
+    战斗快捷栏可以收藏常用招式，但玩家随时能展开空窍列表调用其他已炼化蛊。
+  </p>
+</div>
