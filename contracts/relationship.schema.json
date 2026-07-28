@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://dream-creater.local/contracts/relationship.schema.json",
+  "title": "Demo V2 Kinship And Social Relationship Edge",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["sourceCharacterId", "targetCharacterId", "kind"],
+  "properties": {
+    "sourceCharacterId": { "type": "string", "x-idRegistry": "characters" },
+    "targetCharacterId": { "type": "string", "x-idRegistry": "characters" },
+    "kind": { "type": "string", "x-idRegistry": "relationshipKinds" },
+    "note": { "type": "string", "minLength": 1 }
+  }
+}

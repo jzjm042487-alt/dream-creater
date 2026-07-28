@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://dream-creater.local/contracts/dialogue.schema.json",
+  "title": "Demo V2 Dialogue Pack",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "locale", "questId", "nodes"],
+  "properties": {
+    "id": { "type": "string", "pattern": "^[A-Za-z0-9_.:-]+$" },
+    "locale": { "type": "string", "enum": ["zh-CN"] },
+    "questId": { "type": "string", "x-idRegistry": "quests" },
+    "nodes": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "speakerId", "emotionId", "text"],
+        "properties": {
+          "id": { "type": "string", "x-idRegistry": "dialogueNodes" },
+          "speakerId": { "type": "string", "x-idRegistry": "characters" },
+          "emotionId": { "type": "string", "x-idRegistry": "emotions" },
+          "questStepId": { "type": "string", "x-idRegistry": "questSteps" },
+          "text": { "type": "string", "minLength": 1 },
+          "choices": {
+            "type": "array",
+            "maxItems": 3,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["label", "action"],
+              "properties": {
+                "label": { "type": "string", "minLength": 1 },
+                "action": { "type": "string", "x-idRegistry": "dialogueChoiceActions" },
+                "nextNodeId": { "type": "string", "x-idRegistry": "dialogueNodes" },
+                "targetLocationId": { "type": "string", "x-idRegistry": "locations" },
+                "battleId": { "type": "string", "x-idRegistry": "battles" },
+                "shopId": { "type": "string", "x-idRegistry": "shops" },
+                "panelId": { "type": "string", "x-idRegistry": "panelIds" },
+                "opportunityId": { "type": "string", "x-idRegistry": "opportunities" },
+                "eventDeltaId": { "type": "string", "x-idRegistry": "eventDeltas" }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

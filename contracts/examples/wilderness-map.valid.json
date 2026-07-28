@@ -1,0 +1,33 @@
+{
+  "$schema": "../../contracts/wilderness-map.schema.json",
+  "id": "map_qingmao_wilderness_v2",
+  "locationId": "loc_qingmao_wilderness",
+  "entryNodeByOrigin": { "loc_gu_yue_village": "node_qm_entry" },
+  "entryFacingByOrigin": { "loc_gu_yue_village": "north" },
+  "availableOrdinaryDestinations": ["loc_gu_yue_village"],
+  "directTravelLocations": ["loc_gu_yue_village"],
+  "nodes": [
+    {
+      "id": "node_qm_entry",
+      "label": "Entry",
+      "description": "A narrow path.",
+      "edges": [{ "direction": "north", "to": "node_qm_old_pine" }]
+    },
+    {
+      "id": "node_qm_old_pine",
+      "label": "Pine",
+      "description": "A pine.",
+      "destinationId": "loc_gu_yue_village",
+      "edges": [{ "direction": "south", "to": "node_qm_entry" }]
+    }
+  ],
+  "ordinaryRoutes": [
+    {
+      "id": "route_qm_to_village",
+      "destinationId": "loc_gu_yue_village",
+      "sequence": ["forward"]
+    }
+  ],
+  "hiddenRoutes": [],
+  "eventSlots": []
+}

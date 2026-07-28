@@ -1,5 +1,10 @@
 # Qing Mao MVP Full UI Prototype Implementation Plan
 
+> **Status: Deprecated as of 2026-07-27.** This plan records the former
+> 18-panel prototype and must not be executed further. It is superseded by
+> `2026-07-27-simplified-qing-mao-mvp.md` and
+> `../specs/2026-07-27-qing-mao-simplified-mvp-design.md`.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use test-driven-development to implement this plan task by task.
 
 **Goal:** Build a clickable, production-shaped prototype for all 18 Qing Mao MVP UI panels using the latest script state and the existing environment, portrait, and chibi assets.

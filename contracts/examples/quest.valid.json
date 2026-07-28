@@ -1,0 +1,225 @@
+{
+  "id": "quest_main_qingmao",
+  "title": "Qing Mao Main Chapter",
+  "status": "active",
+  "currentStepId": "D00-S01",
+  "nextStepId": "D01-S01",
+  "steps": [
+    {
+      "id": "D00-S01",
+      "objective": "Complete Day 0.",
+      "completionTrigger": "COMPLETE_D00_S01",
+      "terminal": false,
+      "nextStepId": "D01-S01"
+    },
+    {
+      "id": "D01-S01",
+      "objective": "Complete Day 1.",
+      "completionTrigger": "COMPLETE_D01_S01",
+      "terminal": false,
+      "nextStepId": "D02-S01"
+    },
+    {
+      "id": "D02-S01",
+      "objective": "Complete Day 2.",
+      "completionTrigger": "COMPLETE_D02_S01",
+      "terminal": false,
+      "nextStepId": "D03-S01"
+    },
+    {
+      "id": "D03-S01",
+      "objective": "Complete Day 3.",
+      "completionTrigger": "COMPLETE_D03_S01",
+      "terminal": false,
+      "nextStepId": "D04-S01"
+    },
+    {
+      "id": "D04-S01",
+      "objective": "Complete Day 4.",
+      "completionTrigger": "COMPLETE_D04_S01",
+      "terminal": false,
+      "nextStepId": "D05-S01"
+    },
+    {
+      "id": "D05-S01",
+      "objective": "Complete Day 5.",
+      "completionTrigger": "COMPLETE_D05_S01",
+      "terminal": false,
+      "nextStepId": "D06-S01"
+    },
+    {
+      "id": "D06-S01",
+      "objective": "Complete Day 6.",
+      "completionTrigger": "COMPLETE_D06_S01",
+      "terminal": false,
+      "nextStepId": "D07-S01"
+    },
+    {
+      "id": "D07-S01",
+      "objective": "Complete Day 7.",
+      "completionTrigger": "COMPLETE_D07_S01",
+      "terminal": false,
+      "nextStepId": "D08-S01"
+    },
+    {
+      "id": "D08-S01",
+      "objective": "Complete Day 8.",
+      "completionTrigger": "COMPLETE_D08_S01",
+      "terminal": false,
+      "nextStepId": "D09-S01"
+    },
+    {
+      "id": "D09-S01",
+      "objective": "Complete Day 9.",
+      "completionTrigger": "COMPLETE_D09_S01",
+      "terminal": false,
+      "nextStepId": "D10-S01"
+    },
+    {
+      "id": "D10-S01",
+      "objective": "Complete Day 10.",
+      "completionTrigger": "COMPLETE_D10_S01",
+      "terminal": false,
+      "nextStepId": "D11-S01"
+    },
+    {
+      "id": "D11-S01",
+      "objective": "Complete Day 11.",
+      "completionTrigger": "COMPLETE_D11_S01",
+      "terminal": false,
+      "nextStepId": "D12-S01"
+    },
+    {
+      "id": "D12-S01",
+      "objective": "Complete Day 12.",
+      "completionTrigger": "COMPLETE_D12_S01",
+      "terminal": false,
+      "nextStepId": "D13-S01"
+    },
+    {
+      "id": "D13-S01",
+      "objective": "Complete Day 13.",
+      "completionTrigger": "COMPLETE_D13_S01",
+      "terminal": false,
+      "nextStepId": "D14-S01"
+    },
+    {
+      "id": "D14-S01",
+      "objective": "Complete Day 14.",
+      "completionTrigger": "COMPLETE_D14_S01",
+      "terminal": false,
+      "nextStepId": "D15-S01"
+    },
+    {
+      "id": "D15-S01",
+      "objective": "Complete Day 15.",
+      "completionTrigger": "COMPLETE_D15_S01",
+      "terminal": false,
+      "nextStepId": "D16-S01"
+    },
+    {
+      "id": "D16-S01",
+      "objective": "Complete Day 16.",
+      "completionTrigger": "COMPLETE_D16_S01",
+      "terminal": false,
+      "nextStepId": "D17-S01"
+    },
+    {
+      "id": "D17-S01",
+      "objective": "Complete Day 17.",
+      "completionTrigger": "COMPLETE_D17_S01",
+      "terminal": false,
+      "nextStepId": "D18-S01"
+    },
+    {
+      "id": "D18-S01",
+      "objective": "Complete Day 18.",
+      "completionTrigger": "COMPLETE_D18_S01",
+      "terminal": false,
+      "nextStepId": "D19-S01"
+    },
+    {
+      "id": "D19-S01",
+      "objective": "Complete Day 19.",
+      "completionTrigger": "COMPLETE_D19_S01",
+      "terminal": false,
+      "nextStepId": "D20-S01"
+    },
+    {
+      "id": "D20-S01",
+      "objective": "Complete Day 20.",
+      "completionTrigger": "COMPLETE_D20_S01",
+      "terminal": false,
+      "nextStepId": "D21-S01"
+    },
+    {
+      "id": "D21-S01",
+      "objective": "Complete Day 21.",
+      "completionTrigger": "COMPLETE_D21_S01",
+      "terminal": false,
+      "nextStepId": "D22-S01"
+    },
+    {
+      "id": "D22-S01",
+      "objective": "Complete Day 22.",
+      "completionTrigger": "COMPLETE_D22_S01",
+      "terminal": false,
+      "nextStepId": "D23-S01"
+    },
+    {
+      "id": "D23-S01",
+      "objective": "Complete Day 23.",
+      "completionTrigger": "COMPLETE_D23_S01",
+      "terminal": false,
+      "nextStepId": "D24-S01"
+    },
+    {
+      "id": "D24-S01",
+      "objective": "Complete Day 24.",
+      "completionTrigger": "COMPLETE_D24_S01",
+      "terminal": false,
+      "nextStepId": "D25-S01"
+    },
+    {
+      "id": "D25-S01",
+      "objective": "Complete Day 25.",
+      "completionTrigger": "COMPLETE_D25_S01",
+      "terminal": false,
+      "nextStepId": "D26-S01"
+    },
+    {
+      "id": "D26-S01",
+      "objective": "Complete Day 26.",
+      "completionTrigger": "COMPLETE_D26_S01",
+      "terminal": false,
+      "nextStepId": "D27-S01"
+    },
+    {
+      "id": "D27-S01",
+      "objective": "Complete Day 27.",
+      "completionTrigger": "COMPLETE_D27_S01",
+      "terminal": false,
+      "nextStepId": "D28-S01"
+    },
+    {
+      "id": "D28-S01",
+      "objective": "Complete Day 28.",
+      "completionTrigger": "COMPLETE_D28_S01",
+      "terminal": false,
+      "nextStepId": "D29-S01"
+    },
+    {
+      "id": "D29-S01",
+      "objective": "Complete Day 29.",
+      "completionTrigger": "COMPLETE_D29_S01",
+      "terminal": false,
+      "nextStepId": "D30-S01"
+    },
+    {
+      "id": "D30-S01",
+      "objective": "Choose a departure route.",
+      "completionTrigger": "COMPLETE_D30_S01",
+      "terminal": true
+    }
+  ]
+}

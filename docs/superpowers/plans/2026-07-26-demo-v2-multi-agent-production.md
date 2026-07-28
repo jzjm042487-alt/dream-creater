@@ -1,5 +1,10 @@
 # Demo V2 Multi-Agent Production Plan
 
+> **Status: Deprecated as of 2026-07-27.** Wave 0 outputs remain historical
+> inputs, but the state-heavy production order and downstream work orders are no
+> longer implementation authority. Use `2026-07-27-simplified-qing-mao-mvp.md`
+> and `../specs/2026-07-27-qing-mao-simplified-mvp-design.md`.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Produce a second playable vertical slice that replaces meaningless wilderness walking with hidden directional routes, externalizes the wine-worm narrative content, introduces a minimal relationship graph, and upgrades the five required characters without breaking the existing demo.

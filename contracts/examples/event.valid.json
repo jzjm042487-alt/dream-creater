@@ -1,0 +1,48 @@
+{
+  "id": "qingmao_wilderness.zh-CN",
+  "locale": "zh-CN",
+  "events": [
+    {
+      "id": "event_qm_entry_hint",
+      "kind": "environmentHint",
+      "lifetime": "expedition",
+      "text": "The mountain air carries a faint wine sweetness."
+    },
+    {
+      "id": "event_wilderness_boar",
+      "kind": "battle",
+      "lifetime": "daily",
+      "text": "A boar bursts out from the scrape marks.",
+      "eventDeltaId": "delta_boar_victory"
+    },
+    {
+      "id": "event_hidden_cave_discovery",
+      "kind": "hiddenDiscovery",
+      "lifetime": "permanent",
+      "text": "The moss opens to a hidden cave.",
+      "eventDeltaId": "delta_hidden_cave_discovered"
+    }
+  ],
+  "eventDeltas": [
+    {
+      "id": "delta_hidden_cave_discovered",
+      "applyOnce": true,
+      "effects": {
+        "discoverLocationId": "loc_hidden_cave"
+      }
+    },
+    {
+      "id": "delta_boar_victory",
+      "applyOnce": false,
+      "effects": {
+        "cultivationDelta": 8,
+        "stonesDelta": 2,
+        "addInventoryItemId": "item_boar_tusk",
+        "addBuff": {
+          "id": "buff_danger_sense",
+          "duration": "scene"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,414 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "id": "demo-v2-ids",
+  "version": 4,
+  "stableIds": {
+    "characters": [
+      "char_player",
+      "char_fang_yuan",
+      "char_fang_zheng",
+      "char_gu_yue_mo_bei",
+      "char_gu_yue_chi_cheng",
+      "char_gu_yue_qing_shu",
+      "char_bai_ning_bing",
+      "char_jia_jin_sheng",
+      "char_jia_fu",
+      "char_tie_ruonan",
+      "char_tie_xue_leng",
+      "char_wine_merchant",
+      "char_tavern_clerk",
+      "char_academy_elder"
+    ],
+    "quests": ["quest_main_qingmao"],
+    "questSteps": [
+      "D00-S01",
+      "D01-S01",
+      "D02-S01",
+      "D03-S01",
+      "D04-S01",
+      "D05-S01",
+      "D06-S01",
+      "D07-S01",
+      "D08-S01",
+      "D09-S01",
+      "D10-S01",
+      "D11-S01",
+      "D12-S01",
+      "D13-S01",
+      "D14-S01",
+      "D15-S01",
+      "D16-S01",
+      "D17-S01",
+      "D18-S01",
+      "D19-S01",
+      "D20-S01",
+      "D21-S01",
+      "D22-S01",
+      "D23-S01",
+      "D24-S01",
+      "D25-S01",
+      "D26-S01",
+      "D27-S01",
+      "D28-S01",
+      "D29-S01",
+      "D30-S01"
+    ],
+    "locations": [
+      "loc_qingmao_wilderness",
+      "loc_gu_yue_village",
+      "loc_bamboo_hunting_ground",
+      "loc_hidden_cave",
+      "loc_theft_cache"
+    ],
+    "events": [
+      "event_wilderness_boar",
+      "event_qm_entry_hint",
+      "event_hidden_cave_discovery",
+      "event_theft_cache_discovery"
+    ],
+    "gu": [
+      "gu_moonlight",
+      "gu_wine_worm",
+      "gu_white_boar",
+      "gu_jade_skin",
+      "gu_earth_communication_ear_grass",
+      "gu_nine_leaf_vitality_grass",
+      "gu_moon_glow",
+      "gu_four_flavors_liquor_worm",
+      "gu_white_jade"
+    ],
+    "emotions": [
+      "emotion_neutral",
+      "emotion_guarded",
+      "emotion_hostile",
+      "emotion_alarmed",
+      "emotion_wounded"
+    ],
+    "relationshipKinds": [
+      "relation_blood_parent",
+      "relation_blood_child",
+      "relation_blood_sibling",
+      "relation_spouse",
+      "relation_extended_family",
+      "relation_friend",
+      "relation_mentor",
+      "relation_rival",
+      "relation_acquaintance"
+    ],
+    "cultivationRanks": [
+      "rank_mortal",
+      "rank_one",
+      "rank_two",
+      "rank_three"
+    ],
+    "buffIds": [
+      "buff_training_focus",
+      "buff_danger_sense",
+      "buff_wine_worm_support"
+    ],
+    "debuffIds": [
+      "debuff_wounded",
+      "debuff_poisoned",
+      "debuff_suppressed"
+    ],
+    "items": [
+      "item_moon_orchid_petal",
+      "item_healing_medicine",
+      "item_wolf_pelt",
+      "item_earth_flower_powder",
+      "item_vitality_leaf",
+      "item_nine_leaf_vitality_grass",
+      "item_green_vine_talisman",
+      "item_mountain_material",
+      "item_field_supplies",
+      "item_stone_chip_material",
+      "item_boar_tusk"
+    ],
+    "recipes": [
+      "recipe_low_rank_healing"
+    ],
+    "opportunities": [
+      "opportunity_wine_worm",
+      "opportunity_flower_wine_inheritance",
+      "opportunity_merchant_goods",
+      "opportunity_nine_leaf_vitality",
+      "opportunity_qing_shu_fate"
+    ],
+    "battles": [
+      "B-D07-01",
+      "B-D10-01",
+      "B-D17-01",
+      "B-D19-01",
+      "B-D21-01",
+      "B-D24-01",
+      "B-D26-01",
+      "B-D27-01",
+      "B-D29-01",
+      "B-Q02-01",
+      "B-Q03-01",
+      "B-Q04-01",
+      "B-Q05-01"
+    ],
+    "shops": [
+      "shop_caravan",
+      "shop_supply_stall",
+      "shop_clan_pharmacy"
+    ]
+  },
+  "systemIds": {
+    "wildernessMaps": ["map_qingmao_wilderness_v2"],
+    "graphNodes": [
+      "node_qm_entry",
+      "node_qm_old_pine",
+      "node_qm_split_stone",
+      "node_qm_bamboo_shadow",
+      "node_qm_boar_scrape",
+      "node_qm_stream_bend",
+      "node_qm_village_ridge",
+      "node_qm_hunting_gate",
+      "node_qm_moss_wall",
+      "node_qm_cave_mouth",
+      "node_qm_theft_cache"
+    ],
+    "ordinaryRoutes": [
+      "route_qm_to_village",
+      "route_qm_to_bamboo_hunting_ground"
+    ],
+    "hiddenRoutes": [
+      "route_qm_hidden_cave",
+      "route_qm_theft_cache"
+    ],
+    "dialogueNodes": [
+      "dlg_wilderness_entry",
+      "dlg_wilderness_boar_warning",
+      "dlg_hidden_cave_found",
+      "dlg_theft_cache_found",
+      "dlg_destination_gu_yue_village",
+      "dlg_destination_bamboo_hunting_ground"
+    ],
+    "eventDeltas": [
+      "delta_hidden_cave_discovered",
+      "delta_theft_cache_looted",
+      "delta_boar_victory",
+      "delta_boar_escape",
+      "delta_boar_defeat"
+    ],
+    "eventSlots": [
+      "slot_qm_entry_hint",
+      "slot_qm_boar_daily",
+      "slot_qm_hidden_cave",
+      "slot_qm_theft_cache"
+    ],
+    "directions": ["north", "east", "south", "west"],
+    "relativeCommands": ["forward", "back", "left", "right"],
+    "eventLifetimes": ["permanent", "daily", "expedition"],
+    "eventKinds": [
+      "environmentHint",
+      "battle",
+      "hiddenDiscovery",
+      "theftCache",
+      "destination"
+    ],
+    "questStatuses": ["inactive", "active", "completed"],
+    "opportunityStatuses": ["inactive", "available", "contested", "resolved", "gone"],
+    "statusDurations": ["turns", "scene", "untilRest"],
+    "dialogueChoiceActions": [
+      "nextNode",
+      "endDialogue",
+      "openMap",
+      "startBattle",
+      "openShop",
+      "openPanel",
+      "openOpportunity",
+      "applyEventDelta"
+    ],
+    "panelIds": [
+      "panel_character",
+      "panel_aperture",
+      "panel_inventory",
+      "panel_quest",
+      "panel_talent_roster",
+      "panel_canon_lookup"
+    ],
+    "battleAiDifficulties": [
+      "ai_difficulty_beginner",
+      "ai_difficulty_standard",
+      "ai_difficulty_hard",
+      "ai_difficulty_prodigy"
+    ],
+    "battleAiProfiles": [
+      "ai_profile_melee_pursuer",
+      "ai_profile_charger",
+      "ai_profile_ranged_skirmisher",
+      "ai_profile_guardian",
+      "ai_profile_duelist",
+      "ai_profile_pack_hunter",
+      "ai_profile_boss_hunter"
+    ],
+    "battleAiIntents": [
+      "finish",
+      "attack",
+      "reposition",
+      "defend",
+      "conserve",
+      "phase_action"
+    ],
+    "battleActionCategories": [
+      "damage",
+      "control",
+      "defend",
+      "reposition",
+      "pass"
+    ],
+    "battleBalanceReferenceBuilds": [
+      "reference_minimum",
+      "reference_balanced",
+      "reference_specialist"
+    ],
+    "battleBalancePlayerPolicies": [
+      "player_policy_aggressive",
+      "player_policy_kiting",
+      "player_policy_defensive",
+      "player_policy_conserving",
+      "player_policy_retreat_aware"
+    ],
+    "battleAiDiagnostics": ["ai_no_legal_plan"],
+    "characterLifeStatuses": ["alive", "wounded", "dead", "departed"],
+    "equipmentSlots": ["weapon", "armor", "artifact"],
+    "guAbilityFamilies": ["gu_family_cultivation_support"],
+    "guAbilityTags": [
+      "combat_ranged_attack",
+      "moon_path",
+      "cultivation_essence_quality",
+      "body_strength_growth",
+      "combat_body_defense",
+      "exploration_ground_sense",
+      "healing_leaf_production",
+      "renewable_asset"
+    ],
+    "guClueKinds": [
+      "clue_habitat",
+      "clue_feeding",
+      "clue_activity",
+      "clue_capture_weakness"
+    ],
+    "guLifecycleStatuses": [
+      "contained_unrefined",
+      "refining",
+      "refined_bonded",
+      "consumed_advancement"
+    ],
+    "guConcealmentStatuses": [
+      "not_required",
+      "unhidden",
+      "hidden",
+      "aperture",
+      "body_implanted"
+    ],
+    "guCareStatuses": [
+      "not_applicable",
+      "fed",
+      "hungry",
+      "weak",
+      "dormant"
+    ],
+    "guFeedingModes": [
+      "stocked",
+      "self_sustaining",
+      "canon_pending"
+    ],
+    "guAdvancementModes": [
+      "mastery_simplified",
+      "canonical_recipe"
+    ],
+    "guTrackingOpportunities": ["tracking_wine_worm_flower_wine"],
+    "guTrackingResolutionTypes": [
+      "wild_available",
+      "captured_from_wild",
+      "migrated_existing_instance"
+    ],
+    "guHolderRouteIntel": [
+      "intel_wine_patrol_handover",
+      "intel_wine_patrol_sheet",
+      "intel_wine_patrol_window_hint",
+      "intel_wine_correct_merchant_jar"
+    ],
+    "guSources": [
+      "source_gu_moonlight_academy_allocation",
+      "tracking_wine_worm_flower_wine",
+      "source_gu_white_boar_flower_wine_cache_1",
+      "source_gu_jade_skin_flower_wine_cache_2",
+      "source_gu_earth_ear_flower_wine_cache_3",
+      "source_gu_nine_leaf_estate_settlement",
+      "advance_moonlight_to_moon_glow",
+      "advance_wine_worm_to_four_flavors",
+      "advance_white_boar_jade_skin_to_white_jade"
+    ],
+    "guTrackingClues": [
+      "clue_wine_habitat_stone_fissure",
+      "clue_wine_feeding_green_bamboo_wine",
+      "clue_wine_activity_rain_dawn",
+      "clue_wine_capture_drunk_sealed_jar"
+    ],
+    "guCaptureBaits": [
+      "bait_green_bamboo_wine",
+      "bait_cloudy_rice_wine",
+      "bait_moon_orchid_petals"
+    ],
+    "guCaptureTimings": [
+      "timing_after_rain_dawn",
+      "timing_clear_midday",
+      "timing_dry_night"
+    ],
+    "guCaptureContainers": [
+      "container_corked_wine_jar",
+      "container_cloth_pouch",
+      "container_open_bamboo_basket"
+    ],
+    "guAdvancements": [
+      "advance_moonlight_to_moon_glow",
+      "advance_wine_worm_to_four_flavors",
+      "advance_white_boar_jade_skin_to_white_jade"
+    ],
+    "permanentEffects": ["strength_boar_1"]
+  },
+  "legacyIds": {
+    "quests": [
+      "quest_wine_worm",
+      "quest_flower_wine_inheritance",
+      "quest_merchant_opportunity",
+      "quest_nine_leaf_vitality",
+      "quest_qing_shu_fate"
+    ],
+    "questSteps": [
+      "step_wine_find_lead",
+      "step_wine_reach_hiding_place",
+      "step_wine_resolve_opportunity"
+    ],
+    "questStates": [
+      "state_wine_unknown",
+      "state_wine_clerk_observed",
+      "state_wine_patrol_known",
+      "state_wine_jar_confirmed",
+      "state_wine_player_unhidden",
+      "state_wine_player_hidden",
+      "state_wine_player_refined",
+      "state_wine_fang_yuan_owned"
+    ],
+    "relationshipDimensions": [
+      "relation_trust",
+      "relation_vigilance",
+      "relation_enmity",
+      "relation_debt",
+      "relation_interest"
+    ],
+    "statusEffects": [
+      "buff_training_focus",
+      "buff_danger_sense",
+      "buff_wine_worm_support",
+      "debuff_wounded",
+      "debuff_poisoned",
+      "debuff_suppressed"
+    ]
+  }
+}

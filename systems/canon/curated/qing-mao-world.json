@@ -1,0 +1,1304 @@
+{
+  "schemaVersion": 1,
+  "sourceSha256": "e48d91ad4d7b62fb60986050e735ffe634bc552d797945114d7e46034202708e",
+  "scope": "Qing Mao Mountain opening geography, factions, relation snapshots and major local characters.",
+  "evidencePolicy": "All statements are paraphrased and point to chapter/source-line locators. Relation records are time-scoped because alliances and hostility change.",
+  "locations": [
+    {
+      "id": "canon_location_qing_mao_mountain",
+      "name": "青茅山",
+      "parentId": "canon_location_southern_border",
+      "kind": "mountain-region",
+      "statusTimeline": [
+        {
+          "fromChapterId": "v01-s001",
+          "throughChapterId": "v01-s198",
+          "status": "inhabited",
+          "summary": "A small Southern Border region shared by three clan villages, with bamboo forest, streams, waterfalls, beast territories and competing resource points."
+        },
+        {
+          "fromChapterId": "v01-s199",
+          "throughChapterId": null,
+          "status": "frozen-disaster-zone",
+          "summary": "The mountain becomes an ice-bound dead zone after the final battle and Bai Ning Bing's extreme-physique detonation."
+        }
+      ],
+      "geography": [
+        "Xiong village occupies the front mountain.",
+        "Gu Yue village occupies the middle slope.",
+        "Bai village sits at the rear-mountain waterfall."
+      ],
+      "gameExpansionAnchors": [
+        "The three-village layout gives a stable early regional map.",
+        "The merchant route continues from Gu Yue village to Xiong village and then Bai village.",
+        "The Yellow Dragon River route carries the story away from the destroyed mountain toward White Bone Mountain."
+      ],
+      "evidence": [
+        {
+          "chapterId": "v01-s001",
+          "sourceLines": [
+            104,
+            119
+          ],
+          "facts": [
+            "Gu Yue settlement",
+            "neighboring villages"
+          ]
+        },
+        {
+          "chapterId": "v01-s065",
+          "sourceLines": [
+            4860,
+            4860
+          ],
+          "facts": [
+            "three-village geography"
+          ]
+        },
+        {
+          "chapterId": "v01-s198",
+          "sourceLines": [
+            17034,
+            17036
+          ],
+          "facts": [
+            "ice disaster begins"
+          ]
+        },
+        {
+          "chapterId": "v01-s199",
+          "sourceLines": [
+            17037,
+            17085
+          ],
+          "facts": [
+            "ice disaster",
+            "abandonment"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "canon_location_gu_yue_village",
+      "name": "古月山寨",
+      "parentId": "canon_location_qing_mao_mountain",
+      "kind": "clan-village",
+      "controlledById": "canon_faction_gu_yue_clan",
+      "geography": [
+        "Built on the middle slope of Qing Mao Mountain.",
+        "Founded around an underground spirit spring whose primeval-stone output is the settlement's economic base."
+      ],
+      "subLocations": [
+        {
+          "id": "canon_location_gu_yue_academy",
+          "name": "古月学堂",
+          "functions": [
+            "aperture awakening",
+            "student training",
+            "monthly subsidies",
+            "Gu allocation"
+          ]
+        },
+        {
+          "id": "canon_location_gu_yue_gu_room",
+          "name": "学堂蛊室",
+          "functions": [
+            "vital Gu selection",
+            "second Gu selection",
+            "limited clan stock"
+          ]
+        },
+        {
+          "id": "canon_location_gu_yue_tavern",
+          "name": "山寨酒肆",
+          "functions": [
+            "green-bamboo-wine supply",
+            "rumor and merchant contact",
+            "Wine Worm lure preparation"
+          ]
+        }
+      ],
+      "resources": [
+        "primeval stones from the spirit spring",
+        "moon orchids for Moonlight Gu",
+        "green-bamboo wine",
+        "Moonlight Gu stock"
+      ],
+      "evidence": [
+        {
+          "chapterId": "v01-s004",
+          "sourceLines": [
+            314,
+            314
+          ],
+          "facts": [
+            "migration",
+            "spirit-spring foundation"
+          ]
+        },
+        {
+          "chapterId": "v01-s008",
+          "sourceLines": [
+            588,
+            598
+          ],
+          "facts": [
+            "Moonlight Gu allocation and local specialty"
+          ]
+        },
+        {
+          "chapterId": "v01-s012",
+          "sourceLines": [
+            885,
+            950
+          ],
+          "facts": [
+            "green-bamboo-wine economy"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "canon_location_bai_village",
+      "name": "白家寨",
+      "parentId": "canon_location_qing_mao_mountain",
+      "kind": "clan-village",
+      "controlledById": "canon_faction_bai_clan",
+      "geography": [
+        "Located beside the rear-mountain waterfall and deep pool."
+      ],
+      "resources": [
+        "Stream Gu as clan symbol",
+        "white-grain liquor",
+        "water and ice compatible Gu ecology"
+      ],
+      "evidence": [
+        {
+          "chapterId": "v01-s014",
+          "sourceLines": [
+            1084,
+            1090
+          ],
+          "facts": [
+            "waterfall location"
+          ]
+        },
+        {
+          "chapterId": "v01-s022",
+          "sourceLines": [
+            1635,
+            1635
+          ],
+          "facts": [
+            "Stream Gu symbol"
+          ]
+        },
+        {
+          "chapterId": "v01-s117",
+          "sourceLines": [
+            9314,
+            9316
+          ],
+          "facts": [
+            "white-grain liquor",
+            "rising power"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "canon_location_xiong_village",
+      "name": "熊家寨",
+      "parentId": "canon_location_qing_mao_mountain",
+      "kind": "clan-village",
+      "controlledById": "canon_faction_xiong_clan",
+      "geography": [
+        "Located on the front mountain."
+      ],
+      "resources": [
+        "Bear Strength Gu as clan symbol",
+        "bear-gall liquor",
+        "strength-focused Gu Masters"
+      ],
+      "evidence": [
+        {
+          "chapterId": "v01-s022",
+          "sourceLines": [
+            1635,
+            1635
+          ],
+          "facts": [
+            "Bear Strength Gu symbol"
+          ]
+        },
+        {
+          "chapterId": "v01-s065",
+          "sourceLines": [
+            4860,
+            4860
+          ],
+          "facts": [
+            "front-mountain location"
+          ]
+        },
+        {
+          "chapterId": "v01-s124",
+          "sourceLines": [
+            9995,
+            10000
+          ],
+          "facts": [
+            "strength-focused population"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "canon_location_flower_wine_inheritance",
+      "name": "花酒行者遗藏",
+      "parentId": "canon_location_qing_mao_mountain",
+      "kind": "hidden-micro-inheritance",
+      "controlledById": null,
+      "accessPattern": [
+        "Carry strong green-bamboo wine into the night bamboo forest.",
+        "Wait for the Wine Worm to approach and drink.",
+        "Do not capture it immediately; follow the intoxicated Gu upstream.",
+        "Enter the giant-rock fissure reached beside the stream.",
+        "Use later inheritance Gu and body growth to pass staged gates."
+      ],
+      "stages": [
+        {
+          "stage": 1,
+          "rewards": [
+            "canon_gu_wine_worm",
+            "primeval stones",
+            "recorded evidence of the Flower Wine Monk conflict"
+          ]
+        },
+        {
+          "stage": 2,
+          "gate": "locate and open an Earth Treasury Flower",
+          "rewards": [
+            "canon_gu_white_boar"
+          ]
+        },
+        {
+          "stage": 3,
+          "gate": "build one-boar strength and move the round stone",
+          "rewards": [
+            "canon_gu_jade_skin",
+            "access to the jade-eye stone-monkey forest"
+          ]
+        },
+        {
+          "stage": 4,
+          "gate": "defeat the stone-monkey king and continue through the stone forest",
+          "rewards": [
+            "canon_gu_hidden_stone"
+          ]
+        },
+        {
+          "stage": 5,
+          "gate": "return during the wolf-tide period and uncover a later Earth Treasury Flower",
+          "rewards": [
+            "canon_gu_earth_communication_ear_grass"
+          ]
+        },
+        {
+          "stage": 6,
+          "gate": "use scouting and reach rank three to handle the wild guardian",
+          "rewards": [
+            "canon_gu_chainsaw_golden_centipede"
+          ]
+        }
+      ],
+      "designExtraction": [
+        "The source uses lure, observation, tracking, environmental navigation, body-growth gates, hidden caches, beast combat and risky body installation rather than repeated random grinding.",
+        "Each obtained Gu either solves the next gate or opens a distinct approach, creating a canonical acquisition-loop template for the game."
+      ],
+      "evidence": [
+        {
+          "chapterId": "v01-s013",
+          "sourceLines": [
+            970,
+            1040
+          ],
+          "facts": [
+            "wine lure"
+          ]
+        },
+        {
+          "chapterId": "v01-s014",
+          "sourceLines": [
+            1041,
+            1126
+          ],
+          "facts": [
+            "tracking route",
+            "first chamber"
+          ]
+        },
+        {
+          "chapterId": "v01-s063",
+          "sourceLines": [
+            4717,
+            4766
+          ],
+          "facts": [
+            "Earth Treasury Flower",
+            "White Boar Gu"
+          ]
+        },
+        {
+          "chapterId": "v01-s079",
+          "sourceLines": [
+            5939,
+            6020
+          ],
+          "facts": [
+            "strength gate",
+            "Jade Skin Gu",
+            "stone-monkey forest"
+          ]
+        },
+        {
+          "chapterId": "v01-s128",
+          "sourceLines": [
+            10321,
+            10409
+          ],
+          "facts": [
+            "stealth return",
+            "Earth Communication Ear Grass"
+          ]
+        },
+        {
+          "chapterId": "v01-s129",
+          "sourceLines": [
+            10486,
+            10503
+          ],
+          "facts": [
+            "wild rank-three guardian"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "canon_location_three_clan_alliance_slope",
+      "name": "会盟坡",
+      "parentId": "canon_location_qing_mao_mountain",
+      "kind": "diplomatic-site",
+      "controlledById": null,
+      "functions": [
+        "formal three-clan alliance",
+        "combat demonstrations",
+        "resource and prestige negotiation"
+      ],
+      "evidence": [
+        {
+          "chapterId": "v01-s124",
+          "sourceLines": [
+            9986,
+            10005
+          ],
+          "facts": [
+            "site history",
+            "alliance gathering"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "canon_location_merchant_caravan_camp",
+      "name": "商队营地",
+      "parentId": "canon_location_gu_yue_village",
+      "kind": "temporary-market",
+      "controlledById": "canon_faction_jia_caravan",
+      "functions": [
+        "Gu and material trade",
+        "gambling-stone market",
+        "information exchange",
+        "route connection between the three villages"
+      ],
+      "evidence": [
+        {
+          "chapterId": "v01-s039",
+          "sourceLines": [
+            2794,
+            2794
+          ],
+          "facts": [
+            "temporary market form"
+          ]
+        },
+        {
+          "chapterId": "v01-s045",
+          "sourceLines": [
+            3194,
+            3248
+          ],
+          "facts": [
+            "Gu Yue to Xiong to Bai route",
+            "regional intelligence"
+          ]
+        }
+      ]
+    }
+  ],
+  "factions": [
+    {
+      "id": "canon_faction_gu_yue_clan",
+      "name": "古月一族",
+      "baseLocationId": "canon_location_gu_yue_village",
+      "alignment": "righteous-clan",
+      "regionalRole": "traditional-hegemon-in-decline",
+      "symbolGuId": "canon_gu_moonlight",
+      "specialties": [
+        "moon and light Gu lines",
+        "academy cultivation",
+        "primeval-stone production"
+      ],
+      "strategicPressures": [
+        "Bai village's rapid rise",
+        "need to cultivate Fang Zheng as an answer to Bai Ning Bing",
+        "wolf-tide survival",
+        "internal clan factions competing for talent and resources"
+      ],
+      "evidence": [
+        {
+          "chapterId": "v01-s022",
+          "sourceLines": [
+            1635,
+            1635
+          ],
+          "facts": [
+            "symbol Gu"
+          ]
+        },
+        {
+          "chapterId": "v01-s031",
+          "sourceLines": [
+            2308,
+            2309
+          ],
+          "facts": [
+            "regional scale and hegemon status"
+          ]
+        },
+        {
+          "chapterId": "v01-s045",
+          "sourceLines": [
+            3248,
+            3248
+          ],
+          "facts": [
+            "hegemon status challenged"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "canon_faction_bai_clan",
+      "name": "白家",
+      "baseLocationId": "canon_location_bai_village",
+      "alignment": "righteous-clan",
+      "regionalRole": "rising-challenger",
+      "symbolGuId": "canon_gu_stream",
+      "specialties": [
+        "water Gu",
+        "ice-water synergy",
+        "white-grain liquor"
+      ],
+      "strategicPressures": [
+        "turn Bai Ning Bing's talent into regional advantage before the extreme physique destroys its owner",
+        "gain resources and prestige from the three-clan alliance",
+        "survive the wolf tide"
+      ],
+      "evidence": [
+        {
+          "chapterId": "v01-s045",
+          "sourceLines": [
+            3248,
+            3248
+          ],
+          "facts": [
+            "rapid rise",
+            "Bai Ning Bing advantage"
+          ]
+        },
+        {
+          "chapterId": "v01-s121",
+          "sourceLines": [
+            9679,
+            9680
+          ],
+          "facts": [
+            "regional imbalance",
+            "temporary cooperation"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "canon_faction_xiong_clan",
+      "name": "熊家",
+      "baseLocationId": "canon_location_xiong_village",
+      "alignment": "righteous-clan",
+      "regionalRole": "strength-specialist-third-power",
+      "symbolGuId": "canon_gu_bear_strength",
+      "specialties": [
+        "strength Gu",
+        "large-bodied close-combat Gu Masters",
+        "bear-gall liquor"
+      ],
+      "strategicPressures": [
+        "weak management compared with its combat culture",
+        "negotiate alliance benefits through strength demonstrations",
+        "survive the wolf tide"
+      ],
+      "evidence": [
+        {
+          "chapterId": "v01-s121",
+          "sourceLines": [
+            9679,
+            9689
+          ],
+          "facts": [
+            "management weakness",
+            "diplomatic posture"
+          ]
+        },
+        {
+          "chapterId": "v01-s124",
+          "sourceLines": [
+            9995,
+            10000
+          ],
+          "facts": [
+            "strength culture"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "canon_faction_jia_caravan",
+      "name": "贾家商队",
+      "baseLocationId": null,
+      "alignment": "merchant",
+      "regionalRole": "mobile-market-and-information-bridge",
+      "symbolGuId": null,
+      "specialties": [
+        "cross-region trade",
+        "Gu and refinement materials",
+        "gambling stones",
+        "temporary markets"
+      ],
+      "strategicPressures": [
+        "maintain market rules under local clan protection",
+        "resolve Jia Jin Sheng's death without provoking the host clan",
+        "continue a profitable route across all three villages"
+      ],
+      "evidence": [
+        {
+          "chapterId": "v01-s039",
+          "sourceLines": [
+            2794,
+            2794
+          ],
+          "facts": [
+            "temporary market"
+          ]
+        },
+        {
+          "chapterId": "v01-s045",
+          "sourceLines": [
+            3194,
+            3248
+          ],
+          "facts": [
+            "route",
+            "trade leverage"
+          ]
+        }
+      ]
+    }
+  ],
+  "relations": [
+    {
+      "id": "canon_relation_gu_yue_bai_pre_alliance",
+      "fromId": "canon_faction_gu_yue_clan",
+      "toId": "canon_faction_bai_clan",
+      "fromChapterId": "v01-s001",
+      "throughChapterId": "v01-s123",
+      "dimensions": {
+        "trust": -60,
+        "hostility": 70,
+        "competition": 95,
+        "cooperation": 10
+      },
+      "status": "rival-hegemon-and-rising-challenger",
+      "summary": "Gu Yue sees Bai's growth and Bai Ning Bing as a direct threat; both sides suspect assassination and resource interference."
+    },
+    {
+      "id": "canon_relation_gu_yue_xiong_pre_alliance",
+      "fromId": "canon_faction_gu_yue_clan",
+      "toId": "canon_faction_xiong_clan",
+      "fromChapterId": "v01-s001",
+      "throughChapterId": "v01-s123",
+      "dimensions": {
+        "trust": -45,
+        "hostility": 50,
+        "competition": 75,
+        "cooperation": 15
+      },
+      "status": "regional-rivals",
+      "summary": "They contest status and alliance benefits, but Xiong's strength makes it a necessary source of help during regional disasters."
+    },
+    {
+      "id": "canon_relation_bai_xiong_pre_alliance",
+      "fromId": "canon_faction_bai_clan",
+      "toId": "canon_faction_xiong_clan",
+      "fromChapterId": "v01-s001",
+      "throughChapterId": "v01-s123",
+      "dimensions": {
+        "trust": -40,
+        "hostility": 45,
+        "competition": 70,
+        "cooperation": 15
+      },
+      "status": "regional-rivals",
+      "summary": "Their elites compete openly, while both monitor Gu Yue's traditional position."
+    },
+    {
+      "id": "canon_relation_three_clan_wolf_tide_alliance",
+      "fromId": "canon_faction_gu_yue_clan",
+      "toId": "canon_faction_bai_clan",
+      "additionalPartyIds": [
+        "canon_faction_xiong_clan"
+      ],
+      "fromChapterId": "v01-s124",
+      "throughChapterId": "v01-s198",
+      "dimensions": {
+        "trust": -15,
+        "hostility": 25,
+        "competition": 70,
+        "cooperation": 85
+      },
+      "status": "temporary-mutual-defense-alliance",
+      "summary": "The wolf tide forces joint defense and emergency aid. Internal killing is forbidden, violations trigger joint investigation and punishment, but prestige and resource competition remain active."
+    },
+    {
+      "id": "canon_relation_three_clan_post_disaster",
+      "fromId": "canon_faction_gu_yue_clan",
+      "toId": "canon_faction_bai_clan",
+      "additionalPartyIds": [
+        "canon_faction_xiong_clan"
+      ],
+      "fromChapterId": "v01-s199",
+      "throughChapterId": null,
+      "dimensions": {
+        "trust": null,
+        "hostility": null,
+        "competition": null,
+        "cooperation": null
+      },
+      "status": "collapsed",
+      "summary": "The three local clan structures cease to function after Qing Mao Mountain freezes and most inhabitants die."
+    }
+  ],
+  "characters": [
+    {
+      "id": "canon_character_fang_yuan",
+      "name": "方源",
+      "openingAffiliationId": "canon_faction_gu_yue_clan",
+      "openingRole": "reborn-clan-youth-and-independent-schemer",
+      "openingCultivation": {
+        "rank": 1,
+        "aptitude": "C-grade",
+        "primevalSeaPercent": 44
+      },
+      "coreTraits": [
+        "retains five hundred years of future experience after rebirth",
+        "prioritizes immortality and personal benefit",
+        "uses clan membership instrumentally while building independent resources"
+      ],
+      "keyRelations": [
+        {
+          "targetId": "canon_character_fang_zheng",
+          "status": "twin-brother-and-growing-rival"
+        },
+        {
+          "targetId": "canon_character_bai_ning_bing",
+          "status": "enemy-turned-mutually-coercive-travel-partner"
+        },
+        {
+          "targetId": "canon_character_flower_wine_monk",
+          "status": "posthumous-inheritance-beneficiary"
+        }
+      ],
+      "evidence": [
+        {
+          "chapterId": "v01-s001",
+          "sourceLines": [
+            68,
+            155
+          ],
+          "facts": [
+            "rebirth",
+            "opening identity"
+          ]
+        },
+        {
+          "chapterId": "v01-s006",
+          "sourceLines": [
+            440,
+            450
+          ],
+          "facts": [
+            "aperture",
+            "aptitude"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "canon_character_fang_zheng",
+      "name": "方正",
+      "openingAffiliationId": "canon_faction_gu_yue_clan",
+      "openingRole": "A-grade-clan-heir-candidate",
+      "openingCultivation": {
+        "rank": 1,
+        "aptitude": "A-grade",
+        "primevalSeaPercent": null
+      },
+      "coreTraits": [
+        "receives concentrated clan investment as the village's rare A-grade talent",
+        "begins dependent and insecure under Fang Yuan's shadow",
+        "is deliberately developed into a future leader and counterweight to Bai Ning Bing"
+      ],
+      "keyRelations": [
+        {
+          "targetId": "canon_character_fang_yuan",
+          "status": "twin-brother-and-rival"
+        },
+        {
+          "targetId": "canon_character_gu_yue_bo",
+          "status": "political-protege"
+        },
+        {
+          "targetId": "canon_character_gu_yue_qing_shu",
+          "status": "mentor-and-team-leader"
+        }
+      ],
+      "evidence": [
+        {
+          "chapterId": "v01-s007",
+          "sourceLines": [
+            530,
+            543
+          ],
+          "facts": [
+            "A-grade aptitude",
+            "clan investment"
+          ]
+        },
+        {
+          "chapterId": "v01-s063",
+          "sourceLines": [
+            4682,
+            4715
+          ],
+          "facts": [
+            "clan-leader patronage",
+            "Jade Skin reward"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "canon_character_bai_ning_bing",
+      "name": "白凝冰",
+      "openingAffiliationId": "canon_faction_bai_clan",
+      "openingRole": "regional-genius-and-doomed-extreme-physique",
+      "openingCultivation": {
+        "rank": 2,
+        "aptitude": "Northern Dark Ice Soul Physique",
+        "primevalSeaPercent": null
+      },
+      "coreTraits": [
+        "drives Bai village's rise through overwhelming talent",
+        "seeks danger and excitement while expecting the extreme physique to kill him",
+        "uses a highly coherent ice-water Gu set"
+      ],
+      "keyRelations": [
+        {
+          "targetId": "canon_character_fang_yuan",
+          "status": "rival-then-coerced-partner"
+        },
+        {
+          "targetId": "canon_character_gu_yue_qing_shu",
+          "status": "lethal-rival"
+        }
+      ],
+      "evidence": [
+        {
+          "chapterId": "v01-s001",
+          "sourceLines": [
+            119,
+            119
+          ],
+          "facts": [
+            "regional reputation"
+          ]
+        },
+        {
+          "chapterId": "v01-s135",
+          "sourceLines": [
+            11063,
+            11071
+          ],
+          "facts": [
+            "extreme physique",
+            "fatal pressure"
+          ]
+        },
+        {
+          "chapterId": "v01-s198",
+          "sourceLines": [
+            17034,
+            17036
+          ],
+          "facts": [
+            "detonation"
+          ]
+        },
+        {
+          "chapterId": "v01-s199",
+          "sourceLines": [
+            17037,
+            17073
+          ],
+          "facts": [
+            "partnership departure"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "canon_character_gu_yue_bo",
+      "name": "古月博",
+      "openingAffiliationId": "canon_faction_gu_yue_clan",
+      "openingRole": "clan-leader",
+      "openingCultivation": {
+        "rank": 4,
+        "aptitude": null,
+        "primevalSeaPercent": null
+      },
+      "coreTraits": [
+        "balances internal clan factions and external village pressure",
+        "invests heavily in Fang Zheng",
+        "tolerates useful irregularities when they benefit clan survival"
+      ],
+      "keyRelations": [
+        {
+          "targetId": "canon_character_fang_zheng",
+          "status": "patron-and-leader-maker"
+        },
+        {
+          "targetId": "canon_character_gu_yue_qing_shu",
+          "status": "clan-subordinate-and-adopted-political-successor-figure"
+        }
+      ],
+      "evidence": [
+        {
+          "chapterId": "v01-s063",
+          "sourceLines": [
+            4682,
+            4715
+          ],
+          "facts": [
+            "leadership",
+            "Fang Zheng policy"
+          ]
+        },
+        {
+          "chapterId": "v01-s078",
+          "sourceLines": [
+            5905,
+            5913
+          ],
+          "facts": [
+            "balancing factions and rivals"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "canon_character_gu_yue_qing_shu",
+      "name": "古月青书",
+      "openingAffiliationId": "canon_faction_gu_yue_clan",
+      "openingRole": "elite-rank-two-team-leader",
+      "openingCultivation": {
+        "rank": 2,
+        "aptitude": null,
+        "primevalSeaPercent": null
+      },
+      "coreTraits": [
+        "loyal clan elite and mentor to Fang Zheng",
+        "specializes in wood Gu while retaining the Gu Yue moon foundation",
+        "sacrifices himself in the battle against Bai Ning Bing"
+      ],
+      "keyRelations": [
+        {
+          "targetId": "canon_character_fang_zheng",
+          "status": "mentor"
+        },
+        {
+          "targetId": "canon_character_bai_ning_bing",
+          "status": "lethal-rival"
+        }
+      ],
+      "evidence": [
+        {
+          "chapterId": "v01-s139",
+          "sourceLines": [
+            11446,
+            11725
+          ],
+          "facts": [
+            "clan motive",
+            "Bai Ning Bing battle",
+            "wood transformation"
+          ]
+        },
+        {
+          "chapterId": "v01-s143",
+          "sourceLines": [
+            11777,
+            11845
+          ],
+          "facts": [
+            "death and aftermath"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "canon_character_xiong_li",
+      "name": "熊力",
+      "openingAffiliationId": "canon_faction_xiong_clan",
+      "openingRole": "elite-strength-team-leader",
+      "openingCultivation": {
+        "rank": 2,
+        "aptitude": null,
+        "primevalSeaPercent": null
+      },
+      "coreTraits": [
+        "represents Xiong village's strength culture",
+        "uses public contests to improve his clan's negotiating position",
+        "can cooperate under wolf-tide necessity without abandoning faction pride"
+      ],
+      "keyRelations": [
+        {
+          "targetId": "canon_character_fang_yuan",
+          "status": "strength-contest-rival"
+        }
+      ],
+      "evidence": [
+        {
+          "chapterId": "v01-s121",
+          "sourceLines": [
+            9679,
+            9689
+          ],
+          "facts": [
+            "faction analysis",
+            "diplomatic mission"
+          ]
+        },
+        {
+          "chapterId": "v01-s123",
+          "sourceLines": [
+            9862,
+            9870
+          ],
+          "facts": [
+            "strength contest stakes"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "canon_character_flower_wine_monk",
+      "name": "花酒行者",
+      "openingAffiliationId": null,
+      "openingRole": "dead-rank-five-demonic-inheritance-owner",
+      "openingCultivation": {
+        "rank": 5,
+        "aptitude": null,
+        "primevalSeaPercent": null
+      },
+      "coreTraits": [
+        "independent demonic Gu Master known for wine and predation",
+        "fought the fourth Gu Yue clan leader after a failed trap and counter-trap",
+        "left a hurried but coherent strength-oriented micro-inheritance"
+      ],
+      "keyRelations": [
+        {
+          "targetId": "canon_faction_gu_yue_clan",
+          "status": "historical-enemy"
+        },
+        {
+          "targetId": "canon_character_fang_yuan",
+          "status": "posthumous-inheritance-source"
+        }
+      ],
+      "evidence": [
+        {
+          "chapterId": "v01-s007",
+          "sourceLines": [
+            551,
+            563
+          ],
+          "facts": [
+            "rank",
+            "public history"
+          ]
+        },
+        {
+          "chapterId": "v01-s015",
+          "sourceLines": [
+            1152,
+            1180
+          ],
+          "facts": [
+            "recorded conflict"
+          ]
+        },
+        {
+          "chapterId": "v01-s061",
+          "sourceLines": [
+            4578,
+            4584
+          ],
+          "facts": [
+            "inheritance construction"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "canon_character_jia_fu",
+      "name": "贾富",
+      "openingAffiliationId": "canon_faction_jia_caravan",
+      "openingRole": "caravan-leader-and-merchant",
+      "openingCultivation": {
+        "rank": 4,
+        "aptitude": null,
+        "primevalSeaPercent": null
+      },
+      "coreTraits": [
+        "balances profit, family competition and local-clan diplomacy",
+        "investigates Jia Jin Sheng's death because it threatens both kinship and business legitimacy"
+      ],
+      "keyRelations": [
+        {
+          "targetId": "canon_character_jia_jin_sheng",
+          "status": "older-brother-and-commercial-rival"
+        },
+        {
+          "targetId": "canon_faction_gu_yue_clan",
+          "status": "merchant-guest-and-investigator"
+        }
+      ],
+      "evidence": [
+        {
+          "chapterId": "v01-s045",
+          "sourceLines": [
+            3194,
+            3248
+          ],
+          "facts": [
+            "merchant route",
+            "regional appraisal"
+          ]
+        },
+        {
+          "chapterId": "v01-s056",
+          "sourceLines": [
+            4183,
+            4183
+          ],
+          "facts": [
+            "death investigation tension"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "canon_character_jia_jin_sheng",
+      "name": "贾金生",
+      "openingAffiliationId": "canon_faction_jia_caravan",
+      "openingRole": "merchant-heir-and-opening-murder-victim",
+      "openingCultivation": {
+        "rank": 1,
+        "aptitude": null,
+        "primevalSeaPercent": null
+      },
+      "coreTraits": [
+        "uses aggressive bargaining and gambling-stone trade",
+        "his death becomes an investigation thread and a source of leverage over Gu Yue village"
+      ],
+      "keyRelations": [
+        {
+          "targetId": "canon_character_jia_fu",
+          "status": "younger-brother-and-rival"
+        },
+        {
+          "targetId": "canon_character_fang_yuan",
+          "status": "secret-murder-victim"
+        }
+      ],
+      "evidence": [
+        {
+          "chapterId": "v01-s042",
+          "sourceLines": [
+            2972,
+            2972
+          ],
+          "facts": [
+            "merchant behavior"
+          ]
+        },
+        {
+          "chapterId": "v01-s046",
+          "sourceLines": [
+            3259,
+            3315
+          ],
+          "facts": [
+            "death event"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "canon_character_tie_xue_leng",
+      "name": "铁血冷",
+      "openingAffiliationId": "canon_faction_tie_clan",
+      "openingRole": "renowned-righteous-investigator",
+      "openingCultivation": {
+        "rank": 5,
+        "aptitude": null,
+        "primevalSeaPercent": null
+      },
+      "coreTraits": [
+        "uses forensic reasoning and Gu methods to investigate major crimes",
+        "brings Tie Ruo Nan to Qing Mao Mountain as an apprentice and successor"
+      ],
+      "keyRelations": [
+        {
+          "targetId": "canon_character_tie_ruo_nan",
+          "status": "father-and-mentor"
+        },
+        {
+          "targetId": "canon_character_fang_yuan",
+          "status": "investigator-and-hidden-suspect"
+        }
+      ],
+      "evidence": [
+        {
+          "chapterId": "v01-s174",
+          "sourceLines": [
+            14783,
+            14855
+          ],
+          "facts": [
+            "investigation method",
+            "mentor relation"
+          ]
+        },
+        {
+          "chapterId": "v01-s198",
+          "sourceLines": [
+            16996,
+            17036
+          ],
+          "facts": [
+            "final battle"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "canon_character_tie_ruo_nan",
+      "name": "铁若男",
+      "openingAffiliationId": "canon_faction_tie_clan",
+      "openingRole": "young-investigator",
+      "openingCultivation": {
+        "rank": 2,
+        "aptitude": null,
+        "primevalSeaPercent": null
+      },
+      "coreTraits": [
+        "strong commitment to law and truth",
+        "learns evidence-based investigation from Tie Xue Leng",
+        "develops a continuing conflict with Fang Yuan after Qing Mao Mountain"
+      ],
+      "keyRelations": [
+        {
+          "targetId": "canon_character_tie_xue_leng",
+          "status": "daughter-and-student"
+        },
+        {
+          "targetId": "canon_character_fang_yuan",
+          "status": "investigator-and-long-term-enemy"
+        }
+      ],
+      "evidence": [
+        {
+          "chapterId": "v01-s174",
+          "sourceLines": [
+            14783,
+            14855
+          ],
+          "facts": [
+            "forensic reasoning",
+            "mentor relation"
+          ]
+        },
+        {
+          "chapterId": "v01-s175",
+          "sourceLines": [
+            14856,
+            14942
+          ],
+          "facts": [
+            "investigation pressure"
+          ]
+        }
+      ]
+    }
+  ],
+  "timeline": [
+    {
+      "id": "canon_timeline_qing_mao_opening",
+      "fromChapterId": "v01-s001",
+      "throughChapterId": "v01-s123",
+      "summary": "Three rival villages compete under Gu Yue's weakening traditional hegemony while Fang Yuan acquires the Flower Wine Monk inheritance."
+    },
+    {
+      "id": "canon_timeline_three_clan_alliance",
+      "fromChapterId": "v01-s124",
+      "throughChapterId": "v01-s198",
+      "summary": "The wolf tide creates a formal but distrustful mutual-defense alliance, while internal rivalry and the hidden first-generation Gu Yue plot continue."
+    },
+    {
+      "id": "canon_timeline_qing_mao_collapse",
+      "fromChapterId": "v01-s199",
+      "throughChapterId": "v01-s199",
+      "summary": "The local order collapses, Qing Mao Mountain freezes, and Fang Yuan leaves with Bai Ning Bing."
+    }
+  ]
+}

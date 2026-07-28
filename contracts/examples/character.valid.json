@@ -1,0 +1,18 @@
+{
+  "id": "char_player",
+  "displayName": "Player",
+  "publicIdentity": "A newly awakened Gu Yue youth.",
+  "privateGoal": "Build a viable Gu loadout and choose a path beyond Qing Mao Mountain.",
+  "knownFacts": ["The back mountain begins outside Gu Yue Village."],
+  "secrets": ["Carries memories from another world."],
+  "relationshipBaseline": [
+    {
+      "sourceCharacterId": "char_player",
+      "targetCharacterId": "char_fang_yuan",
+      "kind": "relation_rival",
+      "note": "Both compete for early opportunities under the same world rules."
+    }
+  ],
+  "speechPattern": "Short, cautious observations.",
+  "availableEmotions": ["emotion_neutral", "emotion_guarded"]
+}

@@ -1,0 +1,1329 @@
+{
+  "schemaVersion": 1,
+  "sourcePolicy": "Names in this file are manually verified seeds. Generated mentions remain candidates until promoted here.",
+  "guDenyNames": [
+    "四大移动蛊",
+    "至尊仙胎的仙蛊",
+    "什么蛊",
+    "某种蛊",
+    "其他蛊",
+    "各种蛊"
+  ],
+  "gu": [
+    {
+      "id": "canon_gu_hope",
+      "name": "希望蛊",
+      "aliases": []
+    },
+    {
+      "id": "canon_gu_moonlight",
+      "name": "月光蛊",
+      "aliases": []
+    },
+    {
+      "id": "canon_gu_little_light",
+      "name": "小光蛊",
+      "aliases": []
+    },
+    {
+      "id": "canon_gu_stream",
+      "name": "溪流蛊",
+      "aliases": []
+    },
+    {
+      "id": "canon_gu_bear_strength",
+      "name": "熊力蛊",
+      "aliases": []
+    },
+    {
+      "id": "canon_gu_wine_worm",
+      "name": "酒虫",
+      "aliases": []
+    },
+    {
+      "id": "canon_gu_four_flavors_liquor_worm",
+      "name": "四味酒虫",
+      "aliases": []
+    },
+    {
+      "id": "canon_gu_seven_fragrances_liquor_worm",
+      "name": "七香酒虫",
+      "aliases": []
+    },
+    {
+      "id": "canon_gu_nine_eyes_liquor_worm",
+      "name": "九眼酒虫",
+      "aliases": []
+    },
+    {
+      "id": "canon_gu_white_boar",
+      "name": "白豕蛊",
+      "aliases": []
+    },
+    {
+      "id": "canon_gu_black_boar",
+      "name": "黑豕蛊",
+      "aliases": [
+        "黒豕蛊"
+      ]
+    },
+    {
+      "id": "canon_gu_jade_skin",
+      "name": "玉皮蛊",
+      "aliases": []
+    },
+    {
+      "id": "canon_gu_white_jade",
+      "name": "白玉蛊",
+      "aliases": []
+    },
+    {
+      "id": "canon_gu_stone_skin",
+      "name": "石皮蛊",
+      "aliases": []
+    },
+    {
+      "id": "canon_gu_hidden_scales",
+      "name": "隐鳞蛊",
+      "aliases": []
+    },
+    {
+      "id": "canon_gu_hidden_stone",
+      "name": "隐石蛊",
+      "aliases": []
+    },
+    {
+      "id": "canon_gu_fish_scales",
+      "name": "鱼鳞蛊",
+      "aliases": []
+    },
+    {
+      "id": "canon_gu_whirlwind",
+      "name": "旋风蛊",
+      "aliases": []
+    },
+    {
+      "id": "canon_gu_trace_stone",
+      "name": "痕石蛊",
+      "aliases": []
+    },
+    {
+      "id": "canon_gu_earth_communication_ear_grass",
+      "name": "地听肉耳草",
+      "aliases": []
+    },
+    {
+      "id": "canon_gu_nine_leaf_vitality_grass",
+      "name": "九叶生机草",
+      "aliases": []
+    },
+    {
+      "id": "canon_gu_treasury_flower",
+      "name": "兜率花",
+      "aliases": []
+    },
+    {
+      "id": "canon_gu_moon_raiment",
+      "name": "月霓裳",
+      "aliases": []
+    },
+    {
+      "id": "canon_gu_moonwhirl",
+      "name": "月旋蛊",
+      "aliases": []
+    },
+    {
+      "id": "canon_gu_moon_scar",
+      "name": "月痕蛊",
+      "aliases": []
+    },
+    {
+      "id": "canon_gu_moon_glow",
+      "name": "月芒蛊",
+      "aliases": []
+    },
+    {
+      "id": "canon_gu_water_shield",
+      "name": "水罩蛊",
+      "aliases": []
+    },
+    {
+      "id": "canon_gu_frost_demon",
+      "name": "霜妖蛊",
+      "aliases": []
+    },
+    {
+      "id": "canon_gu_ice_muscles",
+      "name": "冰肌蛊",
+      "aliases": []
+    },
+    {
+      "id": "canon_gu_ice_cone",
+      "name": "冰锥蛊",
+      "aliases": []
+    },
+    {
+      "id": "canon_gu_ice_blade",
+      "name": "冰刃蛊",
+      "aliases": []
+    },
+    {
+      "id": "canon_gu_sky_canopy",
+      "name": "天蓬蛊",
+      "aliases": []
+    },
+    {
+      "id": "canon_gu_chainsaw_golden_centipede",
+      "name": "锯齿金蜈",
+      "aliases": []
+    },
+    {
+      "id": "canon_gu_thunder_wings",
+      "name": "雷翼蛊",
+      "aliases": []
+    },
+    {
+      "id": "canon_gu_electric_eye",
+      "name": "电眼蛊",
+      "aliases": []
+    },
+    {
+      "id": "canon_gu_green_copper_relic",
+      "name": "青铜舍利蛊",
+      "aliases": []
+    },
+    {
+      "id": "canon_gu_red_steel_relic",
+      "name": "赤铁舍利蛊",
+      "aliases": []
+    },
+    {
+      "id": "canon_gu_white_silver_relic",
+      "name": "白银舍利蛊",
+      "aliases": []
+    },
+    {
+      "id": "canon_gu_yellow_gold_relic",
+      "name": "黄金舍利蛊",
+      "aliases": []
+    },
+    {
+      "id": "canon_gu_purple_crystal_relic",
+      "name": "紫晶舍利蛊",
+      "aliases": []
+    },
+    {
+      "id": "canon_gu_bamboo_gentleman",
+      "name": "竹君子",
+      "aliases": [
+        "竹君子蛊"
+      ]
+    },
+    {
+      "id": "canon_gu_poison_vow",
+      "name": "毒誓蛊",
+      "aliases": []
+    },
+    {
+      "id": "canon_gu_river_swallowing_toad",
+      "name": "吞江蟾",
+      "aliases": []
+    },
+    {
+      "id": "canon_gu_blood_skull",
+      "name": "血颅蛊",
+      "aliases": []
+    },
+    {
+      "id": "canon_gu_blood_moon",
+      "name": "血月蛊",
+      "aliases": []
+    },
+    {
+      "id": "canon_gu_blood_drop",
+      "name": "血滴子",
+      "aliases": []
+    },
+    {
+      "id": "canon_gu_bone_spear",
+      "name": "骨枪蛊",
+      "aliases": []
+    },
+    {
+      "id": "canon_gu_spiral_bone_spear",
+      "name": "螺旋骨枪蛊",
+      "aliases": []
+    },
+    {
+      "id": "canon_gu_bone_spike",
+      "name": "骨刺",
+      "aliases": [
+        "骨刺蛊"
+      ]
+    },
+    {
+      "id": "canon_gu_flesh_bone_unity",
+      "name": "骨肉团圆蛊",
+      "aliases": []
+    },
+    {
+      "id": "canon_gu_yin_yang_rotation",
+      "name": "阴阳转身蛊",
+      "aliases": []
+    },
+    {
+      "id": "canon_gu_yang",
+      "name": "阳蛊",
+      "aliases": []
+    },
+    {
+      "id": "canon_gu_yin",
+      "name": "阴蛊",
+      "aliases": []
+    },
+    {
+      "id": "canon_gu_all_out_effort",
+      "name": "全力以赴蛊",
+      "aliases": []
+    },
+    {
+      "id": "canon_gu_self_reliance",
+      "name": "自力更生蛊",
+      "aliases": []
+    },
+    {
+      "id": "canon_gu_bitter_strength",
+      "name": "苦力蛊",
+      "aliases": []
+    },
+    {
+      "id": "canon_gu_horizontal_charge",
+      "name": "横冲直撞蛊",
+      "aliases": []
+    },
+    {
+      "id": "canon_gu_spring_autumn_cicada",
+      "name": "春秋蝉",
+      "aliases": []
+    },
+    {
+      "id": "canon_gu_fixed_immortal_travel",
+      "name": "定仙游",
+      "aliases": [
+        "定仙游蛊",
+        "定仙游仙蛊"
+      ]
+    },
+    {
+      "id": "canon_gu_second_aperture",
+      "name": "第二空窍蛊",
+      "aliases": []
+    },
+    {
+      "id": "canon_gu_sovereign_immortal_fetus",
+      "name": "至尊仙胎蛊",
+      "aliases": []
+    },
+    {
+      "id": "canon_gu_fate",
+      "name": "宿命蛊",
+      "aliases": [
+        "宿命仙蛊"
+      ]
+    },
+    {
+      "id": "canon_gu_wisdom",
+      "name": "智慧蛊",
+      "aliases": [
+        "智慧仙蛊"
+      ]
+    },
+    {
+      "id": "canon_gu_strength",
+      "name": "力量蛊",
+      "aliases": []
+    },
+    {
+      "id": "canon_gu_love",
+      "name": "爱情蛊",
+      "aliases": [
+        "爱情仙蛊"
+      ]
+    },
+    {
+      "id": "canon_gu_attitude",
+      "name": "态度蛊",
+      "aliases": [
+        "态度仙蛊"
+      ]
+    },
+    {
+      "id": "canon_gu_perseverance",
+      "name": "坚持",
+      "aliases": [
+        "坚持蛊",
+        "坚持仙蛊"
+      ]
+    },
+    {
+      "id": "canon_gu_connect_luck",
+      "name": "连运",
+      "aliases": [
+        "连运蛊",
+        "连运仙蛊"
+      ]
+    },
+    {
+      "id": "canon_gu_dog_shit_luck",
+      "name": "狗屎运蛊",
+      "aliases": []
+    },
+    {
+      "id": "canon_gu_fortune_rivalling_heaven",
+      "name": "鸿运齐天",
+      "aliases": [
+        "鸿运齐天蛊",
+        "鸿运齐天仙蛊"
+      ]
+    },
+    {
+      "id": "canon_gu_disaster_beckoning",
+      "name": "招灾",
+      "aliases": [
+        "招灾蛊",
+        "招灾仙蛊"
+      ]
+    },
+    {
+      "id": "canon_gu_mountain_as_before",
+      "name": "山如故",
+      "aliases": [
+        "山如故蛊",
+        "山如故仙蛊"
+      ]
+    },
+    {
+      "id": "canon_gu_river_as_before",
+      "name": "江如故",
+      "aliases": [
+        "江如故蛊",
+        "江如故仙蛊"
+      ]
+    },
+    {
+      "id": "canon_gu_cleanse_soul",
+      "name": "净魂",
+      "aliases": [
+        "净魂蛊",
+        "净魂仙蛊"
+      ]
+    },
+    {
+      "id": "canon_gu_self_strength",
+      "name": "我力蛊",
+      "aliases": [
+        "我力仙蛊"
+      ]
+    },
+    {
+      "id": "canon_gu_strength_qi",
+      "name": "力气蛊",
+      "aliases": [
+        "力气仙蛊"
+      ]
+    },
+    {
+      "id": "canon_gu_flying_bear_strength",
+      "name": "飞熊之力蛊",
+      "aliases": [
+        "飞熊之力仙蛊"
+      ]
+    },
+    {
+      "id": "canon_gu_calamity_diverting",
+      "name": "排难蛊",
+      "aliases": [
+        "排难仙蛊"
+      ]
+    },
+    {
+      "id": "canon_gu_unravel_mystery",
+      "name": "解谜蛊",
+      "aliases": [
+        "解谜仙蛊"
+      ]
+    },
+    {
+      "id": "canon_gu_dream_wings",
+      "name": "梦翼蛊",
+      "aliases": [
+        "梦翼仙蛊"
+      ]
+    },
+    {
+      "id": "canon_gu_change_form",
+      "name": "变形蛊",
+      "aliases": [
+        "变形仙蛊"
+      ]
+    },
+    {
+      "id": "canon_gu_flying_sword",
+      "name": "飞剑蛊",
+      "aliases": [
+        "飞剑仙蛊"
+      ]
+    },
+    {
+      "id": "canon_gu_sword_escape",
+      "name": "剑遁蛊",
+      "aliases": [
+        "剑遁仙蛊"
+      ]
+    },
+    {
+      "id": "canon_gu_wisdom_sword",
+      "name": "慧剑蛊",
+      "aliases": [
+        "慧剑仙蛊"
+      ]
+    },
+    {
+      "id": "canon_gu_year",
+      "name": "年蛊",
+      "aliases": [
+        "年仙蛊"
+      ]
+    },
+    {
+      "id": "canon_gu_flowing_years_like_water",
+      "name": "似水流年蛊",
+      "aliases": [
+        "似水流年仙蛊"
+      ]
+    },
+    {
+      "id": "canon_gu_heavenly_secret",
+      "name": "天机蛊",
+      "aliases": [
+        "天机仙蛊"
+      ]
+    },
+    {
+      "id": "canon_gu_heavenly_web",
+      "name": "天网蛊",
+      "aliases": [
+        "天网仙蛊"
+      ]
+    }
+  ],
+  "locations": [
+    {
+      "id": "canon_location_gu_world",
+      "name": "蛊界",
+      "aliases": []
+    },
+    {
+      "id": "canon_location_southern_border",
+      "name": "南疆",
+      "aliases": []
+    },
+    {
+      "id": "canon_location_central_continent",
+      "name": "中洲",
+      "aliases": []
+    },
+    {
+      "id": "canon_location_northern_plains",
+      "name": "北原",
+      "aliases": []
+    },
+    {
+      "id": "canon_location_eastern_sea",
+      "name": "东海",
+      "aliases": []
+    },
+    {
+      "id": "canon_location_western_desert",
+      "name": "西漠",
+      "aliases": []
+    },
+    {
+      "id": "canon_location_qing_mao_mountain",
+      "name": "青茅山",
+      "aliases": []
+    },
+    {
+      "id": "canon_location_gu_yue_village",
+      "name": "古月山寨",
+      "aliases": []
+    },
+    {
+      "id": "canon_location_gu_yue_academy",
+      "name": "古月学堂",
+      "aliases": []
+    },
+    {
+      "id": "canon_location_gu_yue_gu_room",
+      "name": "学堂蛊室",
+      "aliases": []
+    },
+    {
+      "id": "canon_location_flower_wine_inheritance",
+      "name": "花酒行者遗藏",
+      "aliases": [
+        "花酒行者的遗藏",
+        "花酒行者的传承",
+        "石缝秘洞"
+      ]
+    },
+    {
+      "id": "canon_location_three_clan_alliance_slope",
+      "name": "会盟坡",
+      "aliases": []
+    },
+    {
+      "id": "canon_location_merchant_caravan_camp",
+      "name": "商队营地",
+      "aliases": [
+        "商队驻地"
+      ]
+    },
+    {
+      "id": "canon_location_bai_village",
+      "name": "白家寨",
+      "aliases": []
+    },
+    {
+      "id": "canon_location_xiong_village",
+      "name": "熊家寨",
+      "aliases": []
+    },
+    {
+      "id": "canon_location_yellow_dragon_river",
+      "name": "黄龙江",
+      "aliases": []
+    },
+    {
+      "id": "canon_location_bai_gu_mountain",
+      "name": "白骨山",
+      "aliases": []
+    },
+    {
+      "id": "canon_location_shang_clan_city",
+      "name": "商家城",
+      "aliases": []
+    },
+    {
+      "id": "canon_location_san_cha_mountain",
+      "name": "三叉山",
+      "aliases": []
+    },
+    {
+      "id": "canon_location_hu_immortal_blessed_land",
+      "name": "狐仙福地",
+      "aliases": []
+    },
+    {
+      "id": "canon_location_dang_hun_mountain",
+      "name": "荡魂山",
+      "aliases": []
+    },
+    {
+      "id": "canon_location_luo_po_valley",
+      "name": "落魄谷",
+      "aliases": []
+    },
+    {
+      "id": "canon_location_lang_ya_blessed_land",
+      "name": "琅琊福地",
+      "aliases": []
+    },
+    {
+      "id": "canon_location_imperial_court_blessed_land",
+      "name": "王庭福地",
+      "aliases": []
+    },
+    {
+      "id": "canon_location_eighty_eight_true_yang_building",
+      "name": "八十八角真阳楼",
+      "aliases": []
+    },
+    {
+      "id": "canon_location_heavenly_court",
+      "name": "天庭",
+      "aliases": []
+    },
+    {
+      "id": "canon_location_yi_tian_mountain",
+      "name": "义天山",
+      "aliases": []
+    },
+    {
+      "id": "canon_location_crazed_demon_cave",
+      "name": "疯魔窟",
+      "aliases": []
+    },
+    {
+      "id": "canon_location_reverse_flow_river",
+      "name": "逆流河",
+      "aliases": []
+    },
+    {
+      "id": "canon_location_river_of_time",
+      "name": "光阴长河",
+      "aliases": [
+        "时光长河"
+      ]
+    },
+    {
+      "id": "canon_location_treasure_yellow_heaven",
+      "name": "宝黄天",
+      "aliases": []
+    },
+    {
+      "id": "canon_location_blue_dragon_whale",
+      "name": "苍蓝龙鲸",
+      "aliases": []
+    },
+    {
+      "id": "canon_location_divine_emperor_city",
+      "name": "神帝城",
+      "aliases": [
+        "帝神宫"
+      ]
+    },
+    {
+      "id": "canon_location_immemorial_white_heaven",
+      "name": "太古白天",
+      "aliases": []
+    },
+    {
+      "id": "canon_location_immemorial_black_heaven",
+      "name": "太古黑天",
+      "aliases": []
+    }
+  ],
+  "factions": [
+    {
+      "id": "canon_faction_gu_yue_clan",
+      "name": "古月一族",
+      "aliases": [
+        "古月族"
+      ]
+    },
+    {
+      "id": "canon_faction_bai_clan",
+      "name": "白家",
+      "aliases": []
+    },
+    {
+      "id": "canon_faction_xiong_clan",
+      "name": "熊家",
+      "aliases": []
+    },
+    {
+      "id": "canon_faction_jia_caravan",
+      "name": "贾家商队",
+      "aliases": [
+        "商队"
+      ]
+    },
+    {
+      "id": "canon_faction_shang_clan",
+      "name": "商家",
+      "aliases": []
+    },
+    {
+      "id": "canon_faction_tie_clan",
+      "name": "铁家",
+      "aliases": []
+    },
+    {
+      "id": "canon_faction_wu_clan",
+      "name": "武家",
+      "aliases": []
+    },
+    {
+      "id": "canon_faction_qiao_clan",
+      "name": "乔家",
+      "aliases": []
+    },
+    {
+      "id": "canon_faction_chi_clan",
+      "name": "池家",
+      "aliases": []
+    },
+    {
+      "id": "canon_faction_ba_clan",
+      "name": "巴家",
+      "aliases": []
+    },
+    {
+      "id": "canon_faction_heavenly_court",
+      "name": "天庭",
+      "aliases": []
+    },
+    {
+      "id": "canon_faction_spirit_affinity_house",
+      "name": "灵缘斋",
+      "aliases": []
+    },
+    {
+      "id": "canon_faction_immortal_crane_sect",
+      "name": "仙鹤门",
+      "aliases": []
+    },
+    {
+      "id": "canon_faction_heavens_envy_manor",
+      "name": "天妒楼",
+      "aliases": []
+    },
+    {
+      "id": "canon_faction_ancient_soul_sect",
+      "name": "古魂门",
+      "aliases": []
+    },
+    {
+      "id": "canon_faction_combat_immortal_sect",
+      "name": "战仙宗",
+      "aliases": []
+    },
+    {
+      "id": "canon_faction_myriad_dragon_dock",
+      "name": "万龙坞",
+      "aliases": []
+    },
+    {
+      "id": "canon_faction_heavenly_lotus_sect",
+      "name": "天莲派",
+      "aliases": []
+    },
+    {
+      "id": "canon_faction_spirit_butterfly_valley",
+      "name": "灵蝶谷",
+      "aliases": []
+    },
+    {
+      "id": "canon_faction_black_heaven_temple",
+      "name": "黑天寺",
+      "aliases": []
+    },
+    {
+      "id": "canon_faction_wind_cloud_manor",
+      "name": "风云府",
+      "aliases": []
+    },
+    {
+      "id": "canon_faction_longevity_heaven",
+      "name": "长生天",
+      "aliases": []
+    },
+    {
+      "id": "canon_faction_golden_tribes",
+      "name": "黄金家族",
+      "aliases": []
+    },
+    {
+      "id": "canon_faction_hei_tribe",
+      "name": "黑家",
+      "aliases": []
+    },
+    {
+      "id": "canon_faction_chu_sect",
+      "name": "楚门",
+      "aliases": []
+    },
+    {
+      "id": "canon_faction_lang_ya_sect",
+      "name": "琅琊派",
+      "aliases": []
+    },
+    {
+      "id": "canon_faction_shadow_sect",
+      "name": "影宗",
+      "aliases": []
+    },
+    {
+      "id": "canon_faction_zombie_alliance",
+      "name": "僵盟",
+      "aliases": []
+    },
+    {
+      "id": "canon_faction_southern_alliance",
+      "name": "南联",
+      "aliases": []
+    },
+    {
+      "id": "canon_faction_fang_clan",
+      "name": "房家",
+      "aliases": []
+    },
+    {
+      "id": "canon_faction_wan_clan",
+      "name": "万家",
+      "aliases": []
+    },
+    {
+      "id": "canon_faction_tang_clan",
+      "name": "唐家",
+      "aliases": []
+    },
+    {
+      "id": "canon_faction_song_clan",
+      "name": "宋家",
+      "aliases": []
+    },
+    {
+      "id": "canon_faction_shen_clan",
+      "name": "沈家",
+      "aliases": []
+    }
+  ],
+  "characters": [
+    {
+      "id": "canon_character_fang_yuan",
+      "name": "方源",
+      "aliases": [
+        "古月方源"
+      ]
+    },
+    {
+      "id": "canon_character_fang_zheng",
+      "name": "方正",
+      "aliases": [
+        "古月方正"
+      ]
+    },
+    {
+      "id": "canon_character_bai_ning_bing",
+      "name": "白凝冰",
+      "aliases": []
+    },
+    {
+      "id": "canon_character_shang_xin_ci",
+      "name": "商心慈",
+      "aliases": []
+    },
+    {
+      "id": "canon_character_tie_ruo_nan",
+      "name": "铁若男",
+      "aliases": []
+    },
+    {
+      "id": "canon_character_gu_yue_bo",
+      "name": "古月博",
+      "aliases": []
+    },
+    {
+      "id": "canon_character_gu_yue_qing_shu",
+      "name": "古月青书",
+      "aliases": []
+    },
+    {
+      "id": "canon_character_gu_yue_yao_ji",
+      "name": "古月药姬",
+      "aliases": []
+    },
+    {
+      "id": "canon_character_gu_yue_chi_lian",
+      "name": "古月赤练",
+      "aliases": []
+    },
+    {
+      "id": "canon_character_gu_yue_mo_chen",
+      "name": "古月漠尘",
+      "aliases": []
+    },
+    {
+      "id": "canon_character_gu_yue_chi_cheng",
+      "name": "古月赤城",
+      "aliases": []
+    },
+    {
+      "id": "canon_character_gu_yue_mo_bei",
+      "name": "古月漠北",
+      "aliases": []
+    },
+    {
+      "id": "canon_character_xiong_li",
+      "name": "熊力",
+      "aliases": []
+    },
+    {
+      "id": "canon_character_flower_wine_monk",
+      "name": "花酒行者",
+      "aliases": []
+    },
+    {
+      "id": "canon_character_jia_fu",
+      "name": "贾富",
+      "aliases": []
+    },
+    {
+      "id": "canon_character_jia_jin_sheng",
+      "name": "贾金生",
+      "aliases": []
+    },
+    {
+      "id": "canon_character_tie_xue_leng",
+      "name": "铁血冷",
+      "aliases": []
+    },
+    {
+      "id": "canon_character_hei_lou_lan",
+      "name": "黑楼兰",
+      "aliases": []
+    },
+    {
+      "id": "canon_character_tai_bai_yun_sheng",
+      "name": "太白云生",
+      "aliases": []
+    },
+    {
+      "id": "canon_character_emma_fairy",
+      "name": "黎山仙子",
+      "aliases": []
+    },
+    {
+      "id": "canon_character_feng_jiu_ge",
+      "name": "凤九歌",
+      "aliases": []
+    },
+    {
+      "id": "canon_character_feng_jin_huang",
+      "name": "凤金煌",
+      "aliases": []
+    },
+    {
+      "id": "canon_character_zhao_lian_yun",
+      "name": "赵怜云",
+      "aliases": []
+    },
+    {
+      "id": "canon_character_he_feng_yang",
+      "name": "鹤风扬",
+      "aliases": []
+    },
+    {
+      "id": "canon_character_ying_wu_xie",
+      "name": "影无邪",
+      "aliases": []
+    },
+    {
+      "id": "canon_character_lang_ya_land_spirit",
+      "name": "琅琊地灵",
+      "aliases": []
+    },
+    {
+      "id": "canon_character_wu_yong",
+      "name": "武庸",
+      "aliases": []
+    },
+    {
+      "id": "canon_character_chi_qu_you",
+      "name": "池曲由",
+      "aliases": []
+    },
+    {
+      "id": "canon_character_fang_di_chang",
+      "name": "房睇长",
+      "aliases": []
+    },
+    {
+      "id": "canon_character_bing_sai_chuan",
+      "name": "冰塞川",
+      "aliases": []
+    },
+    {
+      "id": "canon_character_qin_ding_ling",
+      "name": "秦鼎菱",
+      "aliases": []
+    },
+    {
+      "id": "canon_character_shen_cong_sheng",
+      "name": "沈从声",
+      "aliases": []
+    },
+    {
+      "id": "canon_character_shen_shang",
+      "name": "沈伤",
+      "aliases": []
+    },
+    {
+      "id": "canon_character_song_qi_yuan",
+      "name": "宋启元",
+      "aliases": []
+    },
+    {
+      "id": "canon_character_duke_long",
+      "name": "龙公",
+      "aliases": []
+    },
+    {
+      "id": "canon_character_fairy_zi_wei",
+      "name": "紫薇仙子",
+      "aliases": []
+    },
+    {
+      "id": "canon_character_primordial_origin",
+      "name": "元始仙尊",
+      "aliases": []
+    },
+    {
+      "id": "canon_character_star_constellation",
+      "name": "星宿仙尊",
+      "aliases": []
+    },
+    {
+      "id": "canon_character_limitless",
+      "name": "无极魔尊",
+      "aliases": []
+    },
+    {
+      "id": "canon_character_reckless_savage",
+      "name": "狂蛮魔尊",
+      "aliases": []
+    },
+    {
+      "id": "canon_character_red_lotus",
+      "name": "红莲魔尊",
+      "aliases": []
+    },
+    {
+      "id": "canon_character_genesis_lotus",
+      "name": "元莲仙尊",
+      "aliases": []
+    },
+    {
+      "id": "canon_character_thieving_heaven",
+      "name": "盗天魔尊",
+      "aliases": []
+    },
+    {
+      "id": "canon_character_giant_sun",
+      "name": "巨阳仙尊",
+      "aliases": []
+    },
+    {
+      "id": "canon_character_spectral_soul",
+      "name": "幽魂魔尊",
+      "aliases": [
+        "魔尊幽魂"
+      ]
+    },
+    {
+      "id": "canon_character_paradise_earth",
+      "name": "乐土仙尊",
+      "aliases": []
+    },
+    {
+      "id": "canon_character_ren_zu",
+      "name": "人祖",
+      "aliases": []
+    }
+  ],
+  "paths": [
+    {
+      "id": "canon_path_heaven",
+      "name": "天道",
+      "aliases": []
+    },
+    {
+      "id": "canon_path_human",
+      "name": "人道",
+      "aliases": []
+    },
+    {
+      "id": "canon_path_wisdom",
+      "name": "智道",
+      "aliases": []
+    },
+    {
+      "id": "canon_path_strength",
+      "name": "力道",
+      "aliases": []
+    },
+    {
+      "id": "canon_path_soul",
+      "name": "魂道",
+      "aliases": []
+    },
+    {
+      "id": "canon_path_time",
+      "name": "宙道",
+      "aliases": []
+    },
+    {
+      "id": "canon_path_space",
+      "name": "宇道",
+      "aliases": []
+    },
+    {
+      "id": "canon_path_luck",
+      "name": "运道",
+      "aliases": []
+    },
+    {
+      "id": "canon_path_qi",
+      "name": "气道",
+      "aliases": []
+    },
+    {
+      "id": "canon_path_blood",
+      "name": "血道",
+      "aliases": []
+    },
+    {
+      "id": "canon_path_dream",
+      "name": "梦道",
+      "aliases": []
+    },
+    {
+      "id": "canon_path_theft",
+      "name": "偷道",
+      "aliases": [
+        "盗道"
+      ]
+    },
+    {
+      "id": "canon_path_transformation",
+      "name": "变化道",
+      "aliases": []
+    },
+    {
+      "id": "canon_path_refinement",
+      "name": "炼道",
+      "aliases": []
+    },
+    {
+      "id": "canon_path_formation",
+      "name": "阵道",
+      "aliases": []
+    },
+    {
+      "id": "canon_path_information",
+      "name": "信道",
+      "aliases": []
+    },
+    {
+      "id": "canon_path_food",
+      "name": "食道",
+      "aliases": []
+    },
+    {
+      "id": "canon_path_enslavement",
+      "name": "奴道",
+      "aliases": []
+    },
+    {
+      "id": "canon_path_sword",
+      "name": "剑道",
+      "aliases": []
+    },
+    {
+      "id": "canon_path_blade",
+      "name": "刀道",
+      "aliases": []
+    },
+    {
+      "id": "canon_path_water",
+      "name": "水道",
+      "aliases": []
+    },
+    {
+      "id": "canon_path_fire",
+      "name": "炎道",
+      "aliases": [
+        "火道"
+      ]
+    },
+    {
+      "id": "canon_path_earth",
+      "name": "土道",
+      "aliases": []
+    },
+    {
+      "id": "canon_path_wood",
+      "name": "木道",
+      "aliases": []
+    },
+    {
+      "id": "canon_path_metal",
+      "name": "金道",
+      "aliases": []
+    },
+    {
+      "id": "canon_path_ice",
+      "name": "冰道",
+      "aliases": [
+        "冰雪道"
+      ]
+    },
+    {
+      "id": "canon_path_lightning",
+      "name": "雷道",
+      "aliases": []
+    },
+    {
+      "id": "canon_path_wind",
+      "name": "风道",
+      "aliases": []
+    },
+    {
+      "id": "canon_path_light",
+      "name": "光道",
+      "aliases": []
+    },
+    {
+      "id": "canon_path_dark",
+      "name": "暗道",
+      "aliases": []
+    },
+    {
+      "id": "canon_path_star",
+      "name": "星道",
+      "aliases": []
+    },
+    {
+      "id": "canon_path_rule",
+      "name": "律道",
+      "aliases": []
+    },
+    {
+      "id": "canon_path_sound",
+      "name": "音道",
+      "aliases": []
+    },
+    {
+      "id": "canon_path_phantom",
+      "name": "虚道",
+      "aliases": []
+    },
+    {
+      "id": "canon_path_painting",
+      "name": "画道",
+      "aliases": []
+    },
+    {
+      "id": "canon_path_weapon",
+      "name": "兵道",
+      "aliases": []
+    },
+    {
+      "id": "canon_path_pill",
+      "name": "丹道",
+      "aliases": []
+    },
+    {
+      "id": "canon_path_bone",
+      "name": "骨道",
+      "aliases": []
+    },
+    {
+      "id": "canon_path_poison",
+      "name": "毒道",
+      "aliases": []
+    }
+  ]
+}

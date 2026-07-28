@@ -1,5 +1,9 @@
 # Tianwai Daojuben Demo Implementation Plan
 
+> **Status: Deprecated as of 2026-07-27.** This text-only, alert-driven plan is
+> retained for history only. Use `2026-07-27-simplified-qing-mao-mvp.md` and
+> `../specs/2026-07-27-qing-mao-simplified-mvp-design.md` instead.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Build a small browser-playable text RPG demo that proves the core loop: daily action, theft checks, Fang Yuan alert, memory hints, and the first Wine Worm lead.

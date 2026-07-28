@@ -1,0 +1,38 @@
+{
+  "id": "quest_main_qingmao.zh-CN",
+  "locale": "zh-CN",
+  "questId": "quest_main_qingmao",
+  "nodes": [
+    {
+      "id": "dlg_wilderness_entry",
+      "speakerId": "char_player",
+      "emotionId": "emotion_neutral",
+      "questStepId": "D05-S01",
+      "text": "The mountain path is quiet.",
+      "choices": [
+        {
+          "label": "Follow the scent.",
+          "action": "nextNode",
+          "nextNodeId": "dlg_hidden_cave_found"
+        },
+        {
+          "label": "Return to the map.",
+          "action": "openMap",
+          "targetLocationId": "loc_qingmao_wilderness"
+        }
+      ]
+    },
+    {
+      "id": "dlg_hidden_cave_found",
+      "speakerId": "char_player",
+      "emotionId": "emotion_guarded",
+      "text": "There is a hollow behind the moss.",
+      "choices": [
+        {
+          "label": "End the conversation.",
+          "action": "endDialogue"
+        }
+      ]
+    }
+  ]
+}

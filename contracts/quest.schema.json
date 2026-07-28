@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://dream-creater.local/contracts/quest.schema.json",
+  "title": "Demo V2 Step-Flow Quest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "title", "status", "currentStepId", "steps"],
+  "properties": {
+    "id": { "type": "string", "x-idRegistry": "quests" },
+    "title": { "type": "string", "minLength": 1 },
+    "status": { "type": "string", "x-idRegistry": "questStatuses" },
+    "currentStepId": { "type": "string", "x-idRegistry": "questSteps" },
+    "nextStepId": { "type": "string", "x-idRegistry": "questSteps" },
+    "steps": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "objective", "completionTrigger", "terminal"],
+        "properties": {
+          "id": { "type": "string", "x-idRegistry": "questSteps" },
+          "objective": { "type": "string", "minLength": 1 },
+          "completionTrigger": { "type": "string", "minLength": 1 },
+          "terminal": { "type": "boolean" },
+          "nextStepId": { "type": "string", "x-idRegistry": "questSteps" },
+          "eventDeltaId": { "type": "string", "x-idRegistry": "eventDeltas" }
+        }
+      }
+    }
+  }
+}

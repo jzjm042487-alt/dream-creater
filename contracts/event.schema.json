@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://dream-creater.local/contracts/event.schema.json",
+  "title": "Demo V2 Event Pack",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "locale", "events", "eventDeltas"],
+  "properties": {
+    "id": { "type": "string", "pattern": "^[A-Za-z0-9_.:-]+$" },
+    "locale": { "type": "string", "enum": ["zh-CN"] },
+    "events": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "kind", "lifetime", "text"],
+        "properties": {
+          "id": { "type": "string", "x-idRegistry": "events" },
+          "kind": { "type": "string", "x-idRegistry": "eventKinds" },
+          "lifetime": { "type": "string", "x-idRegistry": "eventLifetimes" },
+          "text": { "type": "string", "minLength": 1 },
+          "eventDeltaId": { "type": "string", "x-idRegistry": "eventDeltas" }
+        }
+      }
+    },
+    "eventDeltas": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "applyOnce", "effects"],
+        "properties": {
+          "id": { "type": "string", "x-idRegistry": "eventDeltas" },
+          "applyOnce": { "type": "boolean" },
+          "effects": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "discoverLocationId": { "type": "string", "x-idRegistry": "locations" },
+              "addInventoryItemId": { "type": "string", "x-idRegistry": "items" },
+              "stonesDelta": { "type": "integer", "minimum": -99, "maximum": 99 },
+              "cultivationDelta": { "type": "integer", "minimum": 0, "maximum": 100 },
+              "addBuff": { "$ref": "buff-instance.schema.json" },
+              "addDebuff": { "$ref": "debuff-instance.schema.json" },
+              "setQuestStepId": { "type": "string", "x-idRegistry": "questSteps" }
+            }
+          }
+        }
+      }
+    }
+  }
+}

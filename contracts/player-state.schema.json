@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://dream-creater.local/contracts/player-state.schema.json",
+  "title": "Demo V2 Active Player State",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "health",
+    "primevalEssence",
+    "primevalStones",
+    "rankId",
+    "cultivationProgress",
+    "storedOverflow",
+    "attributes",
+    "buffs",
+    "debuffs"
+  ],
+  "properties": {
+    "health": { "$ref": "resource-pool.schema.json" },
+    "primevalEssence": { "$ref": "resource-pool.schema.json" },
+    "primevalStones": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 999999
+    },
+    "rankId": { "type": "string", "x-idRegistry": "cultivationRanks" },
+    "cultivationProgress": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 100
+    },
+    "storedOverflow": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 20
+    },
+    "attributes": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "strength",
+        "agility",
+        "perception",
+        "luck",
+        "willpower",
+        "theftMastery"
+      ],
+      "properties": {
+        "strength": { "type": "integer", "minimum": 0, "maximum": 100 },
+        "agility": { "type": "integer", "minimum": 0, "maximum": 100 },
+        "perception": { "type": "integer", "minimum": 0, "maximum": 100 },
+        "luck": { "type": "integer", "minimum": 0, "maximum": 100 },
+        "willpower": { "type": "integer", "minimum": 0, "maximum": 100 },
+        "theftMastery": { "type": "integer", "minimum": 0, "maximum": 100 }
+      }
+    },
+    "buffs": {
+      "type": "array",
+      "items": { "$ref": "buff-instance.schema.json" }
+    },
+    "debuffs": {
+      "type": "array",
+      "items": { "$ref": "debuff-instance.schema.json" }
+    }
+  }
+}

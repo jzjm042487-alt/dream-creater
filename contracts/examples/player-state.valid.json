@@ -1,0 +1,34 @@
+{
+  "health": {
+    "current": 82,
+    "maximum": 100
+  },
+  "primevalEssence": {
+    "current": 42,
+    "maximum": 60
+  },
+  "primevalStones": 18,
+  "rankId": "rank_one",
+  "cultivationProgress": 25,
+  "storedOverflow": 0,
+  "attributes": {
+    "strength": 20,
+    "agility": 24,
+    "perception": 25,
+    "luck": 30,
+    "willpower": 22,
+    "theftMastery": 18
+  },
+  "buffs": [
+    {
+      "id": "buff_training_focus",
+      "duration": "scene"
+    }
+  ],
+  "debuffs": [
+    {
+      "id": "debuff_wounded",
+      "duration": "untilRest"
+    }
+  ]
+}

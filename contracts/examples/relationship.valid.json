@@ -1,0 +1,6 @@
+{
+  "sourceCharacterId": "char_player",
+  "targetCharacterId": "char_fang_yuan",
+  "kind": "relation_rival",
+  "note": "A descriptive roster connection, not an affinity meter."
+}

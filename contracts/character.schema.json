@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://dream-creater.local/contracts/character.schema.json",
+  "title": "Demo V2 Character",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "displayName",
+    "publicIdentity",
+    "privateGoal",
+    "knownFacts",
+    "secrets",
+    "relationshipBaseline",
+    "speechPattern",
+    "availableEmotions"
+  ],
+  "properties": {
+    "id": { "type": "string", "x-idRegistry": "characters" },
+    "displayName": { "type": "string", "minLength": 1 },
+    "publicIdentity": { "type": "string", "minLength": 1 },
+    "privateGoal": { "type": "string", "minLength": 1 },
+    "knownFacts": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "secrets": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "relationshipBaseline": {
+      "type": "array",
+      "items": { "$ref": "relationship.schema.json" }
+    },
+    "speechPattern": { "type": "string", "minLength": 1 },
+    "availableEmotions": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "type": "string", "x-idRegistry": "emotions" }
+    }
+  }
+}
