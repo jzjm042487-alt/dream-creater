@@ -23,7 +23,8 @@
 
 换机时不要从默认 `main` 分支继续开发。当前活动基线是
 `integration/wave05-qingmao`，完整进度、分支状态、资产清单和环境恢复步骤见
-[`docs/handoff/README.md`](docs/handoff/README.md)。
+[`docs/handoff/README.md`](docs/handoff/README.md)。新的开发智能体应先读取
+根目录 [`AGENTS.md`](AGENTS.md)。
 
 ```powershell
 git clone https://github.com/jzjm042487-alt/dream-creater.git

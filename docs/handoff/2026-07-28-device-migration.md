@@ -49,6 +49,9 @@ npx playwright install chrome
 - 工作区没有修改。
 - `npm ci` 完全依据已提交的 `package-lock.json` 安装。
 
+普通克隆会先进入默认 `main`，该分支的 `README.md` 与 `AGENTS.md` 只负责引导切换。
+切到活动分支后，新智能体必须重新读取活动分支根目录的 `AGENTS.md`。
+
 不要复制旧设备的 `node_modules/` 或 `dist/`。本次归档后仓库 Git 数据约 130 MiB，
 安装依赖约 230 MiB，生产构建约 50 MiB；建议至少预留 1 GiB 空间。
 

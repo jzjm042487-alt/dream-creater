@@ -4,7 +4,7 @@
 
 当前活动分支：`integration/wave05-qingmao`
 
-迁移检查点：`wave0.5-handoff-20260728`
+迁移检查点：`wave0.5-handoff-20260728-r2`
 
 ## 必读文件
 
@@ -23,6 +23,9 @@
 
 本目录负责交接，不取代游戏设计权威。跨角色和 Wave 1 的最高约束仍是
 [`2026-07-28-wave05-integration-contract.md`](../superpowers/specs/2026-07-28-wave05-integration-contract.md)。
+
+新智能体应先读取仓库根目录的 `AGENTS.md`。GitHub 默认 `main` 已放置跳转说明，
+普通克隆后会引导切换到活动分支。
 
 新设备只需克隆 Git 仓库并切换到活动分支即可恢复代码、剧情、契约、索引和已提交美术。
 `node_modules/`、`dist/`、日志、测试结果、浏览器本地存档和小说原文不在 Git 中。
