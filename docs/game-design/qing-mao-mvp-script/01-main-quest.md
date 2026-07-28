@@ -142,7 +142,7 @@ END
 
 [失败]
 [族务执事]
-“族册证明你是谁，不证明族里欠你什么。先登记，旧账等你开窍后凭功绩申请。别把两件事混在
+“族册证明你是谁，不证明族里欠你什么。先登记，旧账等你开窍后凭差役记录申请。别把两件事混在
 一起。”
 
 [写入]
@@ -429,18 +429,18 @@ END
 
 [选择 B]
 [玩家]
-“若起步慢，我能不能用任务功绩换取额外元石和蛊虫？”
+“若起步慢，我能不能通过家族差役换取额外元石和蛊虫？”
 
 [判定]
 none
 
 [学堂家老]
-“能。采集、巡查、照看蛊材都有功绩。学堂不会因为资质低把门关死，也不会因为资质高替你完成
+“能。采集、巡查、照看蛊材都有明确报酬。学堂不会因为资质低把门关死，也不会因为资质高替你完成
 差役。”
 
 [写入]
 world.flags.awakening_briefed = true
-player.knowledge.merit_tasks = true
+player.knowledge.clan_commission_rules = true
 npc.academy_elder.met_player = true
 npc.academy_elder.relationship_state = "normal"
 
@@ -1221,7 +1221,7 @@ on_expire：none
 
 [选择 A]
 [玩家]
-“我跟族中队伍。先建立稳定功绩和同队记录。”
+“我跟族中队伍。先建立稳定的差役和同队记录。”
 
 [判定]
 none

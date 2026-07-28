@@ -1,3 +1,8 @@
+export {
+  calculateTheftChance,
+  getDeterministicPercent,
+} from "../game/rules/theftChance.js";
+
 export const PORTRAIT_BASE = "/assets/game/portraits";
 export const CHIBI_BASE = "/assets/game/characters/chibi";
 export const ENVIRONMENT_BASE = "/assets/game/environments";
@@ -105,7 +110,7 @@ export const GU_WORMS = [
     feed: "暮蝉蜕",
     feeding: 18,
     nextFeed: "1 日内",
-    effect: "收束气息，提高潜行与偷盗成功率。",
+    effect: "收束气息，便于隐蔽移动与脱离视线。",
     mark: "匿",
   },
   {
@@ -502,7 +507,7 @@ export const SOURCE_OPPORTUNITIES = [
     provenance: "original",
     provenanceLabel: "原作记录",
     reachable: true,
-    method: "趁库存调拨时以功绩换取，也可在持有者身边尝试偷盗。",
+    method: "趁库存调拨时以元石购买，也可在持有者身边尝试偷盗。",
     reward: "白豕蛊，一猪之力。",
     consequence: "其他同届会转而争夺替代蛊虫。",
     summary: "族中竞争会制造短暂的库存调拨窗口。",
@@ -659,7 +664,7 @@ export const RIVALS = [
     status: "active",
     statusLabel: "活跃",
     relation: "漠脉竞争者",
-    record: "争夺学堂功绩与家族资源。",
+    record: "争夺学堂名次与家族资源。",
     portrait: `${CHIBI_BASE}/chibi_npc_caravan_manager.png`,
   },
   {
@@ -705,9 +710,24 @@ export const THEFT_TARGETS = [
     level: 1,
     portrait: `${CHIBI_BASE}/chibi_fang_yuan.png`,
     items: [
-      { id: "fang-stones", name: "元石袋", description: "约有 6 枚元石" },
-      { id: "bamboo-flask", name: "青竹酒壶", description: "洞口事件用品" },
-      { id: "moon-petal", name: "月兰花瓣", description: "月光蛊食料" },
+      {
+        id: "fang-stones",
+        name: "元石袋",
+        description: "约有 6 枚元石",
+        itemClass: "ordinary",
+      },
+      {
+        id: "bamboo-flask",
+        name: "青竹酒壶",
+        description: "洞口事件用品",
+        itemClass: "ordinary",
+      },
+      {
+        id: "moon-petal",
+        name: "月兰花瓣",
+        description: "月光蛊食料",
+        itemClass: "ordinary",
+      },
     ],
   },
   {
@@ -717,16 +737,21 @@ export const THEFT_TARGETS = [
     level: 2,
     portrait: `${PORTRAIT_BASE}/portrait_npc_clan_steward_normal.png`,
     items: [
-      { id: "store-key", name: "蛊室侧门钥匙", description: "可开启侧门" },
-      { id: "steward-stones", name: "元石袋", description: "约有 18 枚元石" },
+      {
+        id: "store-key",
+        name: "蛊室侧门钥匙",
+        description: "可开启侧门",
+        itemClass: "secured",
+      },
+      {
+        id: "steward-stones",
+        name: "元石袋",
+        description: "约有 18 枚元石",
+        itemClass: "ordinary",
+      },
     ],
   },
 ];
-
-export function calculateTheftChance({ luck, theft, levelGap }) {
-  const chance = 25 + theft * 0.6 + (luck - 50) * 0.3 + levelGap * 8;
-  return Math.max(5, Math.min(95, Math.round(chance)));
-}
 
 export const DIALOGUE_CHOICES = [
   {
@@ -752,7 +777,7 @@ export const DAY_END_ACTIONS = [
     title: "休息",
     icon: "bed",
     gain: "恢复生命与真元",
-    detail: "安稳睡到次日，补满行动点。",
+    detail: "安稳睡到次日，以完整状态开始新的一天。",
   },
   {
     id: "cultivate",
@@ -859,6 +884,8 @@ export const DEMO_STATE = {
     theftTargetId: "fang-yuan",
     theftItemId: "fang-stones",
     theftResult: "",
+    theftAttemptedTargetIds: [],
+    stolenItemIds: [],
     acquiredItems: [],
     battleAction: "",
     dayEndAction: "rest",
@@ -883,13 +910,13 @@ export const DEMO_STATE = {
     aperture: "丙等一",
     health: { current: 84, max: 100 },
     essence: { current: 31, max: 47 },
-    ap: { current: 2, max: 3 },
     stones: 18,
-    merit: 16,
     cultivation: 43,
     combatExperience: 62,
     theftRank: "梁上手",
     theftMastery: 68,
+    theftSeed: "qingmao-ui-demo-theft-v1",
+    theftRandomCursor: 0,
     attributes: ROLL_CARDS[0].attributes,
     buffs: [
       {
@@ -903,7 +930,7 @@ export const DEMO_STATE = {
         id: "hidden-breath",
         name: "匿息",
         layer: "增益",
-        effect: "本次偷盗成功率提高。",
+        effect: "气息收束，更难被远处目标察觉。",
         tone: "good",
       },
       {

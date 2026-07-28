@@ -352,6 +352,12 @@ test("keeps optional Fang Yuan barks on ordinary NPC facts", () => {
   }
 });
 
+test("does not reintroduce numeric clan merit as player state", () => {
+  const source = targetFiles.map(readScript).join("\n");
+
+  assert.equal(source.includes("player.resources.clan_merit"), false);
+});
+
 test("uses globally unique canonical record headers", () => {
   const records = recordFiles.flatMap(parseRecords);
   const seen = new Set();

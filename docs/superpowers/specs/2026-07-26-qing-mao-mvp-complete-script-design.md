@@ -1,10 +1,10 @@
 # 《蛊真人：天外盗剧本》青茅山精简 MVP 完整剧本规格
 
 版本：`2.0`
-状态：制作基线
+状态：已被 `2026-07-27-qing-mao-mvp-stateful-dialogue-script-design.md` 取代，仅保留历史参考
 
-唯一规则源：
-`docs/superpowers/specs/2026-07-27-qing-mao-simplified-mvp-design.md`
+活动集成契约：
+`docs/superpowers/specs/2026-07-28-wave05-integration-contract.md`
 
 生产文本：
 `docs/game-design/qing-mao-mvp-script/`

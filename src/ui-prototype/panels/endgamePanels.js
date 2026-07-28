@@ -123,7 +123,7 @@ function renderEndings(state) {
         id: "UI17",
         eyebrow: "自由选择 / 离山存档",
         title: "青茅山篇终局",
-        summary: "走到章节终点后直接选择下一条路线，不用补刷关系、功绩或属性。",
+        summary: "走到章节终点后直接选择下一条路线。",
         tools: iconButton("download", "导出人物存档", "export-save"),
       })}
       <div class="free-endings-layout panel-scroll">

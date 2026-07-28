@@ -28,6 +28,7 @@ export function loadRegistry() {
     opportunities: ids.stableIds.opportunities,
     battles: ids.stableIds.battles,
     shops: ids.stableIds.shops,
+    playerAttributes: ids.systemIds.playerAttributes,
     wildernessMaps: ids.systemIds.wildernessMaps,
     graphNodes: ids.systemIds.graphNodes,
     ordinaryRoutes: ids.systemIds.ordinaryRoutes,
@@ -154,6 +155,22 @@ export function validateWildernessGraph(map) {
   for (const route of map.hiddenRoutes) {
     if (map.availableOrdinaryDestinations.includes(route.locationId)) {
       errors.push(`$.hiddenRoutes.${route.id}.locationId must not be an ordinary destination`);
+    }
+    if (route.discoveryCondition.type === "nodeAndAttributeThreshold") {
+      for (const field of ["requiredNodeId", "attributeId", "minimumValue"]) {
+        if (!(field in route.discoveryCondition)) {
+          errors.push(`$.hiddenRoutes.${route.id}.discoveryCondition.${field} is required`);
+        }
+      }
+    }
+    if (route.discoveryCondition.type === "routeSequence") {
+      for (const field of ["requiredNodeId", "attributeId", "minimumValue"]) {
+        if (field in route.discoveryCondition) {
+          errors.push(
+            `$.hiddenRoutes.${route.id}.discoveryCondition.${field} is not allowed for routeSequence`
+          );
+        }
+      }
     }
     if (route.discoveryCondition.requiredNodeId && !nodeIds.has(route.discoveryCondition.requiredNodeId)) {
       errors.push(`$.hiddenRoutes.${route.id}.discoveryCondition.requiredNodeId unknown graph node`);

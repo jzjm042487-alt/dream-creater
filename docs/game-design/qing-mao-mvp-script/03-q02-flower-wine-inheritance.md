@@ -1009,12 +1009,12 @@ on_expire：none
 none
 
 [族务执事]
-“清单核对无误。发现功绩入账，入口在今夜后封闭。以后若要查族史，用你的记录编号申请。”
+“清单核对无误。八枚元石的发现报酬入账，入口在今夜后封闭。以后若要查族史，用你的记录编号申请。”
 
 [写入]
 quest.q02.stage = "completed"
 quest.q02.result = "completed"
-player.resources.clan_merit += 8
+player.resources.primeval_stones += 8
 npc.clan_steward.known_facts.q02_settled = true
 
 [结束]
@@ -1022,20 +1022,20 @@ END
 
 [选择 B]
 [玩家]
-“我撤回共有主张，未交付物仍归我，并接受较低功绩。”
+“我撤回共有主张，未交付物仍归我，并接受较低报酬。”
 
 [判定]
 交涉 + 市井通达，对抗难度 72
 
 [成功]
 [族务执事]
-“可以，前提是入口和族史副本留下。功绩减半，个人物品不追缴。”
+“可以，前提是入口和族史副本留下。报酬减为四枚元石，个人物品不追缴。”
 
 [写入]
 quest.q02.claim = "player"
 quest.q02.stage = "completed"
 quest.q02.result = "completed"
-player.resources.clan_merit += 4
+player.resources.primeval_stones += 4
 
 [结束]
 END
@@ -1047,7 +1047,7 @@ END
 [写入]
 quest.q02.stage = "completed"
 quest.q02.result = "completed"
-player.resources.clan_merit += 8
+player.resources.primeval_stones += 8
 
 [结束]
 END
@@ -1089,7 +1089,7 @@ none
 quest.q02.stage = "completed"
 quest.q02.result = "completed"
 world.flags.clan_history_copy_submitted = true
-player.resources.clan_merit += 4
+player.resources.primeval_stones += 4
 
 [结束]
 END
@@ -1196,7 +1196,7 @@ on_expire：none
 none
 
 [学堂家老]
-“记下了。没有惩罚，也没有发现功绩。”
+“记下了。没有惩罚，也没有发现报酬。”
 
 [写入]
 world.flags.q02_refusal_acknowledged = true

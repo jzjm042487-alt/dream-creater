@@ -68,7 +68,6 @@ export class GameUI {
     document.querySelector("[data-essence]").textContent =
       `${state.player.essence}/${state.player.maxEssence}`;
     document.querySelector("[data-stones]").textContent = state.player.stones;
-    document.querySelector("[data-alert]").textContent = state.fangYuan.alert;
     document.querySelector("[data-testid='clock']").textContent =
       `${dayLabel(state.clock.day)} · ${PERIODS[state.clock.tick] || "夜深"}`;
 
@@ -98,13 +97,8 @@ export class GameUI {
       })
     );
 
-    const stance = {
-      ignore: "尚未在意你",
-      observe: "正在观察你",
-      test: "准备试探你",
-    };
     document.querySelector("[data-fang-stance]").textContent =
-      `${stance[state.fangYuan.stance] || "敌意渐生"} · ${state.fangYuan.alert}`;
+      describeFangYuanReaction(state.fangYuan);
   }
 
   setSceneName(name) {
@@ -220,6 +214,19 @@ export class GameUI {
       button.addEventListener("pointerleave", release);
     });
   }
+}
+
+function describeFangYuanReaction(fangYuan) {
+  if (Object.values(fangYuan.directConflicts || {}).some(Boolean)) {
+    return "与你发生过直接冲突";
+  }
+  if (fangYuan.knownFacts?.playerHasWineWorm) {
+    return "知道你持有酒虫";
+  }
+  if (fangYuan.knownFacts?.playerCompetesForWineWorm) {
+    return "已将你视为竞争者";
+  }
+  return "尚未在意你";
 }
 
 function getQuestSteps(state) {

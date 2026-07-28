@@ -11,7 +11,9 @@
 2. 用直接标签切换正常、外衣失窃和贴身物品失窃状态。
 3. 不扩大状态模拟，同时给偷盗结果清楚、克制的即时反馈。
 
-唯一规则源为 `docs/superpowers/specs/2026-07-27-qing-mao-simplified-mvp-design.md`。UI 接入由 `2026-07-27-qing-mao-mvp-visual-ui-action-production-design.md` 约束。发生冲突时，以唯一规则源为准。
+系统规则源为 `docs/superpowers/specs/2026-07-27-qing-mao-simplified-mvp-design.md`，
+跨角色边界以 `2026-07-28-wave05-integration-contract.md` 为准。UI 接入由
+`2026-07-27-qing-mao-mvp-visual-ui-action-production-design.md` 约束。
 
 本轮不创建、修改、重命名或移动任何图片。
 

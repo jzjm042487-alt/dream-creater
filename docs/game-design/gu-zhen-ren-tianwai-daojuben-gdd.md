@@ -6,7 +6,9 @@
 
 本文解释青茅山精简 MVP 的整体体验、系统协作方式和内容边界。
 `docs/superpowers/specs/2026-07-27-qing-mao-simplified-mvp-design.md`
-是唯一产品规则源；本文与其冲突时，以总契约为准。
+是系统与玩法规则源；跨角色权威层级以
+`docs/superpowers/specs/2026-07-28-wave05-integration-contract.md`
+为准。本文与二者冲突时，以 Wave 0.5 集成契约为准。
 
 ### 1.2 一句话体验
 

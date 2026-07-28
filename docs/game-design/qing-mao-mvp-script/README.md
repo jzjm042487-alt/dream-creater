@@ -2,7 +2,8 @@
 
 本目录是青茅山 Demo 的叙事生产包。它以
 `docs/superpowers/specs/2026-07-27-qing-mao-mvp-stateful-dialogue-script-design.md`
-为设计依据，负责主线、支线、NPC 状态对话、场景交互与日期推进内容。
+为设计依据，负责主线、支线、NPC 状态对话、场景交互与日期推进内容。跨角色边界以
+`docs/superpowers/specs/2026-07-28-wave05-integration-contract.md` 为准。
 
 ## 权威边界
 
@@ -25,13 +26,13 @@
 
 | 文件 | 内容 |
 | --- | --- |
-| `00-production-overview.md` | 生产范围、记录格式、变量与交付约定 |
+| `00-quest-overview.md` | 任务范围、系统流程与完整走查 |
 | `01-main-quest.md` | D00-D30 主线记录 |
-| `02-side-quest-q01.md` | Q01 支线记录 |
-| `03-side-quest-q02.md` | Q02 支线记录 |
-| `04-side-quest-q03.md` | Q03 支线记录 |
-| `05-side-quest-q04.md` | Q04 支线记录 |
-| `06-side-quest-q05.md` | Q05 支线记录 |
+| `02-q01-wine-worm.md` | Q01 酒虫支线记录 |
+| `03-q02-flower-wine-inheritance.md` | Q02 花酒遗藏支线记录 |
+| `04-q03-jia-jin-sheng-case.md` | Q03 贾金生支线记录 |
+| `05-q04-nine-leaf-vitality-grass.md` | Q04 九叶生机草支线记录 |
+| `06-q05-qing-shu-fate.md` | Q05 青书死局支线记录 |
 | `07-npc-state-dialogue.md` | NPC 状态、关系和世界反馈对话 |
 | `08-schedules-states-rewards.md` | 日程、状态、奖励与回收规则 |
 
@@ -44,10 +45,11 @@
 每条记录使用以下头字段：
 
 ```text
-type
-id
-owner
-location
+类型
+ID
+所属
+拥有者
+地点
 available_from
 expires_after
 priority
@@ -58,25 +60,28 @@ once
 on_expire
 ```
 
-字段可以省略不适用项，但 `type`、`id`、`owner`、`location` 和 `priority` 必须存在。`id` 在整个生产包内唯一。
+所有字段都必须存在；不适用项写 `none`。`ID` 必须与二级标题一致，并在整个生产包内唯一。
 
 ## 优先级
 
 | 优先级 | 用途 |
-| --- | --- |
-| `critical` | 当前主线唯一推进记录 |
-| `main` | 主线推进、关键分歧和主线补偿 |
-| `side` | 可过期支线与角色机会 |
-| `ambient` | 世界反馈、闲谈和重复短句 |
+| ---: | --- |
+| `100` | 当前时段结束后失效的最后提醒 |
+| `80` | 当前主线的新记录 |
+| `70` | 成功、失败、拒绝或错过后的首次回应 |
+| `60` | 当前支线的新记录 |
+| `30` | 已完成任务的重复状态回应 |
+| `10` | 日常重复台词 |
 
-同一对象同时满足多条记录时，优先显示高优先级记录；同优先级按更具体的条件优先，再按文件顺序稳定选择。
+同一对象同时满足多条记录时，优先显示高优先级记录；最高优先级并列时显示各记录的 `topic`，
+并按 ID 升序稳定排列。
 
 ## 日期与不断档
 
 - 日期只开放或关闭记录，不自动播放剧情。
 - 推进日期前应结算当日到期内容并写入结果状态。
 - 主线关键机会错过后必须生成补偿路径，不能要求读档。
-- 只有 D30 的紧急离寨属于强制世界结算；它仍需给玩家一个可执行的离场选择。
+- 只有超过 D30_evening 仍未离山时，紧急流亡可以作为强制世界结算自动写入。
 
 ## 验证
 

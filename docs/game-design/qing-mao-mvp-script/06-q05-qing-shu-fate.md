@@ -137,7 +137,7 @@ END
 none
 
 [青书副手]
-“可以。没有任务报酬，证据有效便记普通功绩。”
+“可以。没有行动报酬，提交的有效线索会单独登记。”
 
 [写入]
 quest.q05.stage = "evidence_gathering"
@@ -623,20 +623,20 @@ once：true
 on_expire：none
 
 [兵库保管员]
-“青书队的临时配额只够三件：护腕、信号索和一面折盾。全拿要留下功绩押金，任务后归还可退。”
+“青书队的临时配额只够三件：护腕、信号索和一面折盾。全拿要留下五枚元石押金，任务后归还可退。”
 
 [选择 A]
 [玩家]
-“三件都领，押金从我的功绩扣。归还时按编号验收。”
+“三件都领，我付五枚元石押金。归还时按编号验收。”
 
 [判定]
-none
+player.resources.primeval_stones >= 5
 
 [兵库保管员]
 “编号记下了。少一件按全价赔，战损要有队伍记录。”
 
 [写入]
-player.resources.clan_merit -= 5
+player.resources.primeval_stones -= 5
 player.inventory += "ITEM_Q05_ARMORY_SET"
 quest.q05.preparation_flags += "armory_gear"
 quest.q05.preparation_count += 1
@@ -1235,7 +1235,7 @@ END
 none
 
 [古月青书]
-“可以。你放弃个人护符，换两点额外队伍功绩。选择写进结算，不会在离山时重新出现一枚。”
+“可以。你放弃个人护符，换两枚额外元石。选择写进结算，不会在离山时重新出现一枚。”
 
 [写入]
 player.inventory += "ITEM_QING_SHU_TOKEN"
@@ -1243,7 +1243,7 @@ player.inventory += "ITEM_QING_SHU_SUPPORT"
 item.unique.ITEM_QING_SHU_TOKEN.owner = "player"
 item.unique.ITEM_GREEN_VINE_CHARM.owner = "missed_permanently"
 item.unique.ITEM_QING_SHU_SUPPORT.owner = "player"
-player.resources.clan_merit += 2
+player.resources.primeval_stones += 2
 
 [结束]
 END
@@ -1412,16 +1412,16 @@ END
 
 [选择 B]
 [玩家]
-“把我提交证据的普通功绩结清。”
+“把我提交线索的调查报酬结清。”
 
 [判定]
 none
 
 [古月青书]
-“两点调查功绩，不含行动奖励。”
+“两枚元石的调查报酬，不含行动奖励。”
 
 [写入]
-player.resources.clan_merit += 2
+player.resources.primeval_stones += 2
 
 [结束]
 END
@@ -1473,10 +1473,10 @@ END
 none
 
 [青书副手]
-“两点普通调查功绩，不含行动奖励。”
+“两枚元石的普通调查报酬，不含行动奖励。”
 
 [写入]
-player.resources.clan_merit += 2
+player.resources.primeval_stones += 2
 
 [结束]
 END
@@ -1579,16 +1579,16 @@ END
 
 [选择 B]
 [玩家]
-“我只领取已验证证据的普通功绩。”
+“我只领取已验证线索的普通调查报酬。”
 
 [判定]
 none
 
 [古月青书]
-“证据功绩两点，与救援结果分开。”
+“线索报酬两枚元石，与救援结果分开。”
 
 [写入]
-player.resources.clan_merit += 2
+player.resources.primeval_stones += 2
 
 [结束]
 END
@@ -1633,16 +1633,16 @@ END
 
 [选择 B]
 [玩家]
-“只领取已核验证据的普通功绩。”
+“只领取已核验证据的普通调查报酬。”
 
 [判定]
 none
 
 [青书副手]
-“两点调查功绩，与未参加的行动分开。”
+“两枚元石的调查报酬，与未参加的行动分开。”
 
 [写入]
-player.resources.clan_merit += 2
+player.resources.primeval_stones += 2
 
 [结束]
 END

@@ -111,9 +111,23 @@
             "additionalProperties": false,
             "required": ["type"],
             "properties": {
-              "type": { "type": "string", "enum": ["routeSequence", "nodeAndFlag"] },
-              "requiredNodeId": { "type": "string", "x-idRegistry": "graphNodes" },
-              "requiredFlag": { "type": "string", "pattern": "^[a-zA-Z0-9_.:-]+$" }
+              "type": {
+                "type": "string",
+                "enum": ["routeSequence", "nodeAndAttributeThreshold"]
+              },
+              "requiredNodeId": {
+                "type": "string",
+                "x-idRegistry": "graphNodes"
+              },
+              "attributeId": {
+                "type": "string",
+                "x-idRegistry": "playerAttributes"
+              },
+              "minimumValue": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 100
+              }
             }
           },
           "eventDeltaId": { "type": "string", "x-idRegistry": "eventDeltas" }

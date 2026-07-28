@@ -8,6 +8,7 @@ import { fileURLToPath } from "node:url";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const VALIDATOR = path.join(ROOT, "scripts", "validate-content.mjs");
+const BALANCE = path.join(ROOT, "systems", "balance", "demo-v2.json");
 
 test("simplified contract examples validate", () => {
   const files = [
@@ -21,6 +22,69 @@ test("simplified contract examples validate", () => {
 
   const result = runValidator(files);
   assert.equal(result.status, 0, result.stderr || result.stdout);
+});
+
+test("theft-cache discovery uses a structured mastery threshold", () => {
+  const balance = JSON.parse(fs.readFileSync(BALANCE, "utf8"));
+  const theftCache = balance.hiddenRoutes.find(({ id }) => id === "route_qm_theft_cache");
+
+  assert.deepEqual(theftCache.discoveryCondition, {
+    type: "nodeAndAttributeThreshold",
+    requiredNodeId: "node_qm_theft_cache",
+    attributeId: "theftMastery",
+    minimumValue: 20
+  });
+
+  const result = runValidator([BALANCE]);
+  assert.equal(result.status, 0, result.stderr || result.stdout);
+});
+
+test("wilderness contract rejects legacy derived-flag thresholds", () => {
+  const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "qingmao-wilderness-"));
+
+  try {
+    const balance = JSON.parse(fs.readFileSync(BALANCE, "utf8"));
+    const theftCache = balance.hiddenRoutes.find(({ id }) => id === "route_qm_theft_cache");
+    theftCache.discoveryCondition = {
+      type: "nodeAndFlag",
+      requiredNodeId: "node_qm_theft_cache",
+      requiredFlag: "flags.theftRankAtLeast1"
+    };
+
+    const filePath = path.join(tempDir, "wilderness-map.invalid.json");
+    fs.writeFileSync(filePath, `${JSON.stringify(balance, null, 2)}\n`, "utf8");
+
+    const result = runValidator([filePath]);
+    assert.notEqual(result.status, 0, "legacy derived flags must not satisfy attribute gates");
+    assert.match(
+      `${result.stdout}\n${result.stderr}`,
+      /\$\.hiddenRoutes\[1\]\.discoveryCondition/
+    );
+  } finally {
+    fs.rmSync(tempDir, { recursive: true, force: true });
+  }
+});
+
+test("wilderness contract requires every structured threshold field", () => {
+  const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "qingmao-wilderness-"));
+
+  try {
+    const balance = JSON.parse(fs.readFileSync(BALANCE, "utf8"));
+    const theftCache = balance.hiddenRoutes.find(({ id }) => id === "route_qm_theft_cache");
+    delete theftCache.discoveryCondition.minimumValue;
+
+    const filePath = path.join(tempDir, "wilderness-map.invalid.json");
+    fs.writeFileSync(filePath, `${JSON.stringify(balance, null, 2)}\n`, "utf8");
+
+    const result = runValidator([filePath]);
+    assert.notEqual(result.status, 0, "attribute thresholds must declare their minimum value");
+    assert.match(
+      `${result.stdout}\n${result.stderr}`,
+      /\$\.hiddenRoutes\.route_qm_theft_cache\.discoveryCondition\.minimumValue is required/
+    );
+  } finally {
+    fs.rmSync(tempDir, { recursive: true, force: true });
+  }
 });
 
 test("temporary invalid authoring files fail at exact field paths and are removed", () => {

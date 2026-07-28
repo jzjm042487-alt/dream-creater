@@ -99,7 +99,7 @@ export class GameStateStore {
 
   reset() {
     this.state = createInitialState();
-    this.journal = ["新的推演开始。方源仍在按原有轨迹行动。"];
+    this.journal = ["新的推演开始。酒虫仍在客栈商贩手中。"];
     this.emit();
   }
 
@@ -132,7 +132,9 @@ function questActionMessage(actionId, state) {
       ? "你借方源制造的混乱，先一步取走酒虫。"
       : "尾随露出破绽，方源开始留意你。",
     "train-at-academy": "学堂修行结束，你领到当日补贴。",
-    "ordinary-theft": "市集里少了四块元石，无人看清是谁。",
+    "ordinary-theft": state.flags.ordinaryTheftSucceeded
+      ? "市集里少了四块元石，无人看清是谁。"
+      : "这次伸手没有得手。",
     "buy-wine-worm": "元石交割，酒虫归你。",
     "tavern-conflict": state.wineWorm.owner === "player"
       ? "争执遮住众人视线，酒虫已经换了主人。"

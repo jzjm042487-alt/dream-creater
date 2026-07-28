@@ -25,7 +25,6 @@ export function resolveTimedPlayerAction(state, cost, applyPlayerResult) {
 export function sleepToNextDay(state) {
   const carriedWineWorm =
     state.wineWorm.owner === "player" && state.wineWorm.status === "unhidden";
-  const alert = Math.min(100, state.fangYuan.alert + (carriedWineWorm ? 8 : 0));
 
   return {
     ...state,
@@ -38,11 +37,16 @@ export function sleepToNextDay(state) {
       hp: state.player.maxHp,
       essence: state.player.maxEssence,
     },
-    fangYuan: {
-      ...state.fangYuan,
-      alert,
-      stance: alert >= 40 ? "test" : alert >= 20 ? "observe" : "ignore",
-    },
+    fangYuan: carriedWineWorm
+      ? {
+          ...state.fangYuan,
+          relationshipState: "conflict",
+          knownFacts: {
+            ...state.fangYuan.knownFacts,
+            playerHasWineWorm: true,
+          },
+        }
+      : state.fangYuan,
   };
 }
 

@@ -96,6 +96,17 @@ test("opens a one-roll theft picker from the scene", async ({ page }) => {
   await expect(page.getByText(/成功率 \d+%/)).toBeVisible();
   await page.locator('[data-action="attempt-theft"]').first().click();
   await expect(page.locator("[data-theft-result]")).toBeVisible();
+
+  const savedCursor = await page.evaluate(() => {
+    const saved = JSON.parse(localStorage.getItem("tianwai-mvp-save"));
+    return saved.player.theftRandomCursor;
+  });
+  expect(savedCursor).toBe(1);
+
+  await page.getByRole("button", { name: "关闭偷盗" }).click();
+  await nearbyActions.getByRole("button", { name: "偷盗" }).click();
+  await expect(page.getByText("已结算：本次进入不能再次尝试")).toBeVisible();
+  await expect(page.locator('[data-action="attempt-theft"]')).toHaveCount(0);
 });
 
 test("moves freely inside the village and reveals nearby actions", async ({

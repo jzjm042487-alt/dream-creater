@@ -16,6 +16,11 @@ const defaultState = {
     stones: 6,
     cultivation: 0,
     theftRank: 1,
+    rankIndex: 1,
+    luck: 55,
+    theftMastery: 84,
+    theftSeed: "qingmao-phaser-theft-0",
+    theftRandomCursor: 0,
     stats: {
       agility: 3,
       insight: 3,
@@ -23,8 +28,9 @@ const defaultState = {
     },
   },
   fangYuan: {
-    alert: 8,
-    stance: "ignore",
+    relationshipState: "stranger",
+    knownFacts: {},
+    directConflicts: {},
   },
   wineWorm: {
     owner: "merchant",
@@ -59,6 +65,14 @@ export function createInitialState(overrides = {}) {
     fangYuan: {
       ...defaultState.fangYuan,
       ...overrides.fangYuan,
+      knownFacts: {
+        ...defaultState.fangYuan.knownFacts,
+        ...overrides.fangYuan?.knownFacts,
+      },
+      directConflicts: {
+        ...defaultState.fangYuan.directConflicts,
+        ...overrides.fangYuan?.directConflicts,
+      },
     },
     wineWorm: {
       ...defaultState.wineWorm,

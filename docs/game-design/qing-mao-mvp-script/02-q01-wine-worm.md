@@ -568,25 +568,26 @@ once：true
 on_expire：none
 
 [族库保管员]
-“位置是你报的，酒虫却生在酒肆地界。按族规，野蛊先归族库鉴定；你可以领发现功绩，也可以撤回
+“位置是你报的，酒虫却生在酒肆地界。按族规，野蛊先归族库鉴定；你可以领发现奖励，也可以撤回
 报告，自己承担捕捉风险。”
 
 [选择 A]
 [玩家]
-“交族库。请把发现人、地点和功绩写进正式账，不接受口头记功。”
+“交族库。请把发现人、地点和奖励写进正式账，不接受口头许诺。”
 
 [判定]
 none
 
 [族库保管员]
-“可以。账上记你三点功绩和一次野蛊发现。酒虫由族库收走，你以后可以凭功绩申请，但它不会为你
-保留。”
+“可以。账上记你一次野蛊发现，当场发三枚元石。酒虫由族库收走；以后公开发放时你仍可按流程
+申请，但它不会为你保留。”
 
 [写入]
 item.unique.GU_WINE_WORM.owner = "clan"
 quest.q01.stage = "completed"
 quest.q01.result = "clan_custody"
-player.resources.clan_merit += 3
+player.resources.primeval_stones += 3
+player.knowledge.q01_wine_worm_discovery_record = true
 npc.clan_storekeeper.transactions.wine_worm = true
 
 [结束]

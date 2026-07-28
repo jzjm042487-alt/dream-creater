@@ -6,7 +6,9 @@
 存档要求。
 
 `docs/superpowers/specs/2026-07-27-qing-mao-simplified-mvp-design.md`
-是唯一产品规则源。本文只把总契约展开到可实现、可测试的程度，不建立
+是偷盗玩法规则源；跨角色边界以
+`docs/superpowers/specs/2026-07-28-wave05-integration-contract.md` 为准。
+本文只把总契约展开到可实现、可测试的程度，不建立
 第二套规则。
 
 偷盗是玩家自身的技能体系：

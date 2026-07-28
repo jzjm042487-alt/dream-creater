@@ -6,6 +6,15 @@ export const UI_GROUPS = [
   { id: "settlement", label: "结算与离山" },
 ];
 
+export const RUNTIME_PANEL_TO_PROTOTYPE = Object.freeze({
+  panel_character: "UI02",
+  panel_aperture: "UI04",
+  panel_inventory: "UI05",
+  panel_quest: "UI07",
+  panel_talent_roster: "UI10",
+  panel_canon_lookup: "UI08",
+});
+
 export const UI_PANELS = [
   {
     id: "UI00",

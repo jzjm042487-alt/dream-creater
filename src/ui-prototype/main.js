@@ -21,6 +21,7 @@ import {
   calculateTheftChance,
   filterSourceOpportunities,
   findNearbyTownTarget,
+  getDeterministicPercent,
   moveTownPosition,
 } from "./mockState.js";
 import { UI_GROUPS, UI_PANELS, getPanel } from "./panelRegistry.js";
@@ -92,11 +93,47 @@ function resolveTheftTarget(targetId) {
     level,
     portrait: rival.portrait,
     items: [
-      { id: `${rival.id}-stones`, name: "元石袋", description: "随身修炼资源" },
-      { id: `${rival.id}-gu-food`, name: "常用蛊材", description: `${rival.gu}的食料` },
-      { id: `${rival.id}-token`, name: "随身令牌", description: "当前身份凭证" },
+      {
+        id: `${rival.id}-stones`,
+        name: "元石袋",
+        description: "随身修炼资源",
+        itemClass: "ordinary",
+      },
+      {
+        id: `${rival.id}-gu-food`,
+        name: "常用蛊材",
+        description: `${rival.gu}的食料`,
+        itemClass: "ordinary",
+      },
+      {
+        id: `${rival.id}-token`,
+        name: "随身令牌",
+        description: "当前身份凭证",
+        itemClass: "secured",
+      },
     ],
   };
+}
+
+function ensureTheftState() {
+  if (!Array.isArray(state.ui.theftAttemptedTargetIds)) {
+    state.ui.theftAttemptedTargetIds = [];
+  }
+  if (!Array.isArray(state.ui.stolenItemIds)) {
+    state.ui.stolenItemIds = [];
+  }
+  if (typeof state.player.theftSeed !== "string" || !state.player.theftSeed) {
+    state.player.theftSeed = "qingmao-ui-demo-theft-v1";
+  }
+  if (!Number.isInteger(state.player.theftRandomCursor)) {
+    state.player.theftRandomCursor = 0;
+  }
+}
+
+function availableTheftItems(target) {
+  ensureTheftState();
+  const stolenItemIds = new Set(state.ui.stolenItemIds);
+  return target.items.filter(({ id }) => !stolenItemIds.has(id));
 }
 
 function renderPanel(panelId) {
@@ -171,16 +208,6 @@ function renderTopBar(panel) {
         <span>${world.location}</span>
       </div>
       <div class="hud-resources" aria-label="玩家资源">
-        <div class="hud-resource resource-ap" title="本时段行动次数">
-          <span>行动</span>
-          <strong>${player.ap.current}/${player.ap.max}</strong>
-          <i>
-            ${Array.from(
-              { length: player.ap.max },
-              (_, index) => `<b class="${index < player.ap.current ? "is-full" : ""}"></b>`
-            ).join("")}
-          </i>
-        </div>
         <div class="hud-resource resource-health" title="生命">
           ${icon("heart-pulse")}
           <span><small>生命</small><strong>${player.health.current}</strong></span>
@@ -281,17 +308,22 @@ function renderTheftModal() {
   }
 
   const target = resolveTheftTarget(state.ui.theftTargetId);
+  const availableItems = availableTheftItems(target);
   const selectedItem =
-    target.items.find(({ id }) => id === state.ui.theftItemId) ?? target.items[0];
+    availableItems.find(({ id }) => id === state.ui.theftItemId) ??
+    availableItems[0];
+  const attempted = state.ui.theftAttemptedTargetIds.includes(target.id);
   const luck =
     state.player.attributes.find(({ id }) => id === "luck")?.value ?? 50;
-  const theft =
-    state.player.attributes.find(({ id }) => id === "theft")?.value ?? 50;
-  const chance = calculateTheftChance({
-    luck,
-    theft,
-    levelGap: state.player.level - target.level,
-  });
+  const chance = selectedItem
+    ? calculateTheftChance({
+        luck,
+        theftMastery: state.player.theftMastery,
+        playerRankIndex: state.player.level,
+        targetRankIndex: target.level,
+        itemClass: selectedItem.itemClass,
+      })
+    : 0;
 
   return `
     <div class="theft-modal-backdrop" data-action="close-theft">
@@ -319,10 +351,14 @@ function renderTheftModal() {
           <div class="theft-picker">
             <div class="section-title">
               <span>${icon("package-search")} 可偷盗内容</span>
-              ${statusBadge(`成功率 ${chance}%`, chance >= 60 ? "good" : chance >= 30 ? "warning" : "danger")}
+              ${
+                selectedItem
+                  ? statusBadge(`成功率 ${chance}%`, chance >= 60 ? "good" : chance >= 30 ? "warning" : "danger")
+                  : statusBadge("无可用目标", "neutral")
+              }
             </div>
             <div class="theft-item-list">
-              ${target.items
+              ${availableItems
                 .map(
                   (item) => `
                     <button
@@ -341,7 +377,7 @@ function renderTheftModal() {
             </div>
             <div class="theft-chance-note">
               ${icon("dices")}
-              <span>概率由气运、盗道与双方境界差计算，任何角色都至少保留 5% 成功率。</span>
+              <span>概率由气运、盗道、双方境界差与物品类别计算，合法目标至少保留 15% 成功率。</span>
             </div>
             ${
               state.ui.theftResult
@@ -351,6 +387,20 @@ function renderTheftModal() {
                     <strong>${state.ui.theftResult}</strong>
                   </div>
                 `
+                : attempted
+                  ? `
+                    <div class="theft-result is-failure" data-theft-result>
+                      ${icon("circle-minus")}
+                      <strong>本次进入已完成判定</strong>
+                    </div>
+                  `
+                  : !selectedItem
+                    ? `
+                      <div class="theft-result" data-theft-result>
+                        ${icon("package-x")}
+                        <strong>没有剩余可偷盗物品</strong>
+                      </div>
+                    `
                 : `
                   <button class="primary-command full-command" type="button" data-action="attempt-theft">
                     ${icon("hand")} 偷取 ${selectedItem.name}
@@ -388,6 +438,7 @@ function renderApp() {
   if (townMoveAnimation) {
     cancelTownMovement();
   }
+  ensureTheftState();
   const panel = getPanel(state.ui.selectedPanel);
 
   root.innerHTML = `
@@ -993,13 +1044,15 @@ function handlePanelAction(action, target) {
     case "open-theft": {
       const requestedId = target.dataset.theftTargetId || "fang-yuan";
       const theftTarget = resolveTheftTarget(requestedId);
+      const theftItems = availableTheftItems(theftTarget);
+      const attempted = state.ui.theftAttemptedTargetIds.includes(theftTarget.id);
       if (state.ui.selectedPanel === "UI12") {
         state.ui.townAction = "steal";
         state.ui.townEmotion = "focused";
       }
       state.ui.theftTargetId = theftTarget.id;
-      state.ui.theftItemId = theftTarget.items[0].id;
-      state.ui.theftResult = "";
+      state.ui.theftItemId = theftItems[0]?.id ?? "";
+      state.ui.theftResult = attempted ? "已结算：本次进入不能再次尝试" : "";
       state.ui.theftOpen = true;
       renderApp();
       break;
@@ -1018,20 +1071,37 @@ function handlePanelAction(action, target) {
       break;
     case "attempt-theft": {
       const theftTarget = resolveTheftTarget(state.ui.theftTargetId);
+      ensureTheftState();
+      if (state.ui.theftAttemptedTargetIds.includes(theftTarget.id)) {
+        flash("本次进入已经尝试过该目标");
+        break;
+      }
+      const theftItems = availableTheftItems(theftTarget);
       const item =
-        theftTarget.items.find(({ id }) => id === state.ui.theftItemId) ??
-        theftTarget.items[0];
+        theftItems.find(({ id }) => id === state.ui.theftItemId) ??
+        theftItems[0];
+      if (!item) {
+        flash("该目标没有剩余可偷盗物品");
+        break;
+      }
       const luck =
         state.player.attributes.find(({ id }) => id === "luck")?.value ?? 50;
-      const theft =
-        state.player.attributes.find(({ id }) => id === "theft")?.value ?? 50;
       const chance = calculateTheftChance({
         luck,
-        theft,
-        levelGap: state.player.level - theftTarget.level,
+        theftMastery: state.player.theftMastery,
+        playerRankIndex: state.player.level,
+        targetRankIndex: theftTarget.level,
+        itemClass: item.itemClass,
       });
-      const success = Math.random() * 100 < chance;
+      const roll = getDeterministicPercent(
+        state.player.theftSeed,
+        state.player.theftRandomCursor
+      );
+      const success = roll < chance;
+      state.player.theftRandomCursor += 1;
+      state.ui.theftAttemptedTargetIds.push(theftTarget.id);
       if (success) {
+        state.ui.stolenItemIds.push(item.id);
         state.ui.acquiredItems.push(item.name);
         state.ui.theftResult = `成功：${item.name}已放入行囊`;
         state.ui.townEmotion = "confident";
@@ -1039,6 +1109,7 @@ function handlePanelAction(action, target) {
         state.ui.theftResult = `失败：${theftTarget.name}察觉了你的动作`;
         state.ui.townEmotion = "tense";
       }
+      localStorage.setItem("tianwai-mvp-save", JSON.stringify(state));
       renderApp();
       break;
     }
@@ -1093,7 +1164,8 @@ function handlePanelAction(action, target) {
       }
       state.world.day += 1;
       state.world.time = "卯正";
-      state.player.ap.current = state.player.ap.max;
+      state.ui.theftAttemptedTargetIds = [];
+      state.ui.theftResult = "";
       rerenderAndFlash(`第 ${state.world.day} 日开始`, "good");
       break;
     }

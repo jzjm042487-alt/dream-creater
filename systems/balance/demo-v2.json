@@ -153,9 +153,10 @@
       "locationId": "loc_theft_cache",
       "sequence": ["right", "left", "forward", "left", "forward", "left"],
       "discoveryCondition": {
-        "type": "nodeAndFlag",
+        "type": "nodeAndAttributeThreshold",
         "requiredNodeId": "node_qm_theft_cache",
-        "requiredFlag": "flags.theftRankAtLeast1"
+        "attributeId": "theftMastery",
+        "minimumValue": 20
       },
       "eventDeltaId": "delta_theft_cache_looted"
     }

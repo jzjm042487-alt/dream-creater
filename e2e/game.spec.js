@@ -7,6 +7,8 @@ test("loads the walkable world and moves the player", async ({ page }) => {
   await expect(page.getByTestId("scene-name")).toHaveText("青茅山");
   await expect(page.getByTestId("clock")).toContainText("第一日");
   await expect(page.locator("canvas")).toBeVisible();
+  await expect(page.locator("[data-alert]")).toHaveCount(0);
+  await expect(page.locator("[data-fang-stance]")).toHaveText("尚未在意你");
 
   const initialX = Number(
     await page.getByTestId("game-root").getAttribute("data-player-x")

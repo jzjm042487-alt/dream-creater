@@ -399,7 +399,7 @@ on_expire：none
 
 [药堂家老]
 “九叶的所有权可以按证据裁定，也可以直接交药堂统管。自留意味着你承担喂养、征集与家族追问；
-上缴则换功绩、稳定生机叶份额和一次保命药。”
+上缴则换元石报酬、稳定生机叶份额和一次保命药。”
 
 [选择 A]
 [玩家]
@@ -747,7 +747,7 @@ END
 none
 
 [事实结果]
-“九叶生机草进入药堂培养圃。药堂成为唯一持有人，玩家进入功绩与保护奖励结算。”
+“九叶生机草进入药堂培养圃。药堂成为唯一持有人，玩家进入元石与保护奖励结算。”
 
 [写入]
 player.inventory -= "GU_NINE_LEAF"
@@ -901,7 +901,7 @@ once：true
 on_expire：none
 
 [药堂家老]
-“最终持有人已经登记为 `{nine_leaf_owner}`。自留者承担喂养和征集；上缴者领取功绩、生机叶份额
+“最终持有人已经登记为 `{nine_leaf_owner}`。自留者承担喂养和征集；上缴者领取元石、生机叶份额
 和一次保命药。选择不会复制第二只九叶。”
 
 [选择 A]
@@ -925,18 +925,18 @@ END
 
 [选择 B]
 [玩家]
-“九叶交药堂，按约结算功绩、生机叶份额和保命药。”
+“九叶交药堂，按约结算元石、生机叶份额和保命药。”
 
 [判定]
 none
 
 [药堂家老]
-“九叶归药堂。你得十二点功绩、三片生机叶和一份封脉保命药；以后不再承担喂养。”
+“九叶归药堂。你得十二枚元石、三片生机叶和一份封脉保命药；以后不再承担喂养。”
 
 [写入]
 player.inventory -= "GU_NINE_LEAF"
 item.unique.GU_NINE_LEAF.owner = "medicine_hall"
-player.resources.clan_merit += 12
+player.resources.primeval_stones += 12
 player.inventory += "ITEM_LIFE_LEAF_3"
 player.inventory += "ITEM_MEDICINE_PROTECTION"
 item.unique.ITEM_MEDICINE_PROTECTION.owner = "player"
@@ -1023,7 +1023,7 @@ once：true
 on_expire：none
 
 [药堂家老]
-“第二十四日晚所有权窗口关闭。九叶按当时控制关系进入狼潮征集，玩家未形成有效主张。功绩、
+“第二十四日晚所有权窗口关闭。九叶按当时控制关系进入狼潮征集，玩家未形成有效主张。元石报酬、
 保命药和个人持有路线全部关闭。”
 
 [选择 A]

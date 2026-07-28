@@ -156,6 +156,14 @@
     ]
   },
   "systemIds": {
+    "playerAttributes": [
+      "strength",
+      "agility",
+      "perception",
+      "luck",
+      "willpower",
+      "theftMastery"
+    ],
     "wildernessMaps": ["map_qingmao_wilderness_v2"],
     "graphNodes": [
       "node_qm_entry",

@@ -50,3 +50,15 @@ test("sleep advances to the next morning and restores health and essence", () =>
   assert.equal(next.player.hp, 40);
   assert.equal(next.player.essence, 20);
 });
+
+test("an exposed wine worm becomes an ordinary Fang Yuan known fact", () => {
+  const state = createInitialState({
+    wineWorm: { owner: "player", status: "unhidden", failedAttempts: 0 },
+  });
+
+  const next = sleepToNextDay(state);
+
+  assert.equal("alert" in next.fangYuan, false);
+  assert.equal(next.fangYuan.knownFacts.playerHasWineWorm, true);
+  assert.equal(next.fangYuan.relationshipState, "conflict");
+});

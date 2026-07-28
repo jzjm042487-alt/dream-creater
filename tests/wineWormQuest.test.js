@@ -13,7 +13,9 @@ test("route A acquires the wine worm through the patrol sheet and correct jar", 
 
   assert.equal(state.wineWorm.owner, "player");
   assert.equal(state.wineWorm.status, "unhidden");
-  assert.equal(state.fangYuan.alert, 30);
+  assert.equal("alert" in state.fangYuan, false);
+  assert.deepEqual(state.fangYuan.knownFacts, {});
+  assert.equal(state.player.theftRandomCursor, 2);
 });
 
 test("route B consumes one two-point action and pays for the distraction", () => {
@@ -29,7 +31,10 @@ test("route B consumes one two-point action and pays for the distraction", () =>
   assert.equal(next.clock.tick, 5);
   assert.equal(next.player.stones, 4);
   assert.equal(next.wineWorm.owner, "player");
-  assert.equal(next.fangYuan.alert, 32);
+  assert.equal("alert" in next.fangYuan, false);
+  assert.equal(next.fangYuan.relationshipState, "rival");
+  assert.equal(next.fangYuan.knownFacts.playerCompetesForWineWorm, true);
+  assert.equal(next.player.theftRandomCursor, 1);
 });
 
 test("route C can fund the purchase without combat", () => {
@@ -43,10 +48,31 @@ test("route C can fund the purchase without combat", () => {
   assert.equal(state.clock.day, 2);
   assert.equal(state.player.stones, 0);
   assert.equal(state.wineWorm.owner, "player");
-  assert.equal(state.fangYuan.alert, 21);
+  assert.equal("alert" in state.fangYuan, false);
+  assert.equal(state.player.theftRandomCursor, 1);
 });
 
-test("a partial first attempt reveals the guest room instead of blocking the quest", () => {
+test("a failed ordinary theft consumes the daily target without awarding stones", () => {
+  const state = createInitialState({
+    player: {
+      luck: 0,
+      theftMastery: 0,
+    },
+  });
+
+  const next = resolveWineWormAction(state, "ordinary-theft");
+
+  assert.equal(next.player.stones, state.player.stones);
+  assert.equal(next.flags.ordinaryTheftSucceeded, false);
+  assert.equal(next.flags.ordinaryTheftDay, state.clock.day);
+  assert.equal(next.player.theftRandomCursor, 1);
+  assert.throws(
+    () => resolveWineWormAction(next, "ordinary-theft"),
+    /already been attempted/
+  );
+});
+
+test("a failed first attempt reveals the guest room instead of blocking the quest", () => {
   const state = createInitialState();
 
   const next = resolveWineWormAction(state, "steal-back-room");
@@ -55,12 +81,14 @@ test("a partial first attempt reveals the guest room instead of blocking the que
   assert.equal(next.wineWorm.status, "guest-room");
   assert.equal(next.wineWorm.failedAttempts, 1);
   assert.equal(next.flags.guestRoomKey, true);
+  assert.equal(next.player.theftRandomCursor, 1);
 });
 
 test("a second failed acquisition transfers the wine worm to Fang Yuan", () => {
   const state = createInitialState({
     player: {
-      stats: { agility: 0, insight: 0, caution: 0 },
+      luck: 0,
+      theftMastery: 0,
     },
     wineWorm: {
       owner: "merchant",
@@ -73,4 +101,7 @@ test("a second failed acquisition transfers the wine worm to Fang Yuan", () => {
 
   assert.equal(next.wineWorm.owner, "fangYuan");
   assert.equal(next.wineWorm.failedAttempts, 2);
+  assert.equal(next.fangYuan.relationshipState, "conflict");
+  assert.equal(next.fangYuan.directConflicts.tavernWineWorm, true);
+  assert.equal(next.player.theftRandomCursor, 1);
 });

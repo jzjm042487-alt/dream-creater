@@ -109,7 +109,6 @@ player.traits.<registered_id>: true / false
 player.inventory: set<ITEM_IDS>
 player.knowledge.<registered_id>: true / false
 player.resources.primeval_stones: integer >= 0
-player.resources.clan_merit: integer
 
 npc.<NPC_ID>.alive: true / false
 npc.<NPC_ID>.met_player: true / false
@@ -442,7 +441,6 @@ player.traits.<registered_id>: boolean
 player.inventory: set<ITEM_IDS>
 player.knowledge.<registered_id>: boolean
 player.resources.primeval_stones: nonnegative integer
-player.resources.clan_merit: integer
 
 npc.<NPC_ID>.alive: boolean
 npc.<NPC_ID>.met_player: boolean

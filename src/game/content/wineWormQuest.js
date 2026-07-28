@@ -2,7 +2,7 @@ import {
   resolveTimedPlayerAction,
   sleepToNextDay,
 } from "../rules/timeRules.js";
-import { calculateTheftResult } from "../rules/theftRules.js";
+import { resolveTheftRoll } from "../rules/theftChance.js";
 
 export function resolveWineWormAction(state, actionId, context = {}) {
   if (actionId === "observe-clerk") {
@@ -17,19 +17,22 @@ export function resolveWineWormAction(state, actionId, context = {}) {
   }
 
   if (actionId === "steal-patrol-sheet") {
-    const result = theftCheck(state, 8, state.flags.clerkObserved ? 2 : 0);
-    return resolveTimedPlayerAction(state, 2, (current) => ({
-      ...withAlert(current, result.band === "failure" ? 6 : 4),
-      clues: addUnique(
-        current.clues,
-        result.band === "success" ? "patrol-sheet" : "patrol-window-hint"
-      ),
-      flags: {
-        ...current.flags,
-        patrolSheet: result.band === "success",
-        patrolHint: result.band === "partial",
-      },
-    }));
+    const result = theftCheck(state, "secured", 0);
+    return resolveTimedPlayerAction(state, 2, (current) => {
+      const rolled = withTheftCursor(current, result);
+      return {
+        ...rolled,
+        clues: addUnique(
+          rolled.clues,
+          result.success ? "patrol-sheet" : "patrol-window-hint"
+        ),
+        flags: {
+          ...rolled.flags,
+          patrolSheet: result.success,
+          patrolHint: !result.success,
+        },
+      };
+    });
   }
 
   if (actionId === "confirm-wine-jar") {
@@ -44,16 +47,10 @@ export function resolveWineWormAction(state, actionId, context = {}) {
   }
 
   if (actionId === "steal-back-room") {
-    const preparation =
-      (state.flags.patrolSheet ? 2 : state.flags.patrolHint ? 1 : 0) +
-      (state.flags.correctWineJar ? 2 : 0);
-    const result = theftCheck(state, 9, preparation);
+    const result = theftCheck(state, "secured", 0);
 
     return resolveTimedPlayerAction(state, 2, (current) =>
-      resolveMerchantAttempt(current, result, {
-        successAlert: 18,
-        failureAlert: 10,
-      })
+      resolveMerchantAttempt(withTheftCursor(current, result), result)
     );
   }
 
@@ -64,26 +61,28 @@ export function resolveWineWormAction(state, actionId, context = {}) {
 
     if (!followedAllCheckpoints || !keptDistance) {
       return resolveTimedPlayerAction(state, 2, (current) =>
-        withAlert(current, 8)
+        withFangYuanConflict(current, "playerFollowedMe")
       );
     }
     if (state.player.stones < 2) {
       throw new Error("Two primeval stones are required for the distraction.");
     }
 
-    const result = theftCheck(state, 11, 5);
+    const result = theftCheck(state, "ordinary", 0);
     return resolveTimedPlayerAction(state, 2, (current) => {
       const paid = {
-        ...current,
+        ...withTheftCursor(current, result),
         player: {
           ...current.player,
+          theftRandomCursor: result.nextCursor,
           stones: current.player.stones - 2,
         },
       };
-      return resolveMerchantAttempt(paid, result, {
-        successAlert: 24,
-        failureAlert: 10,
-      });
+      return withFangYuanFact(
+        resolveMerchantAttempt(paid, result),
+        "playerCompetesForWineWorm",
+        result.success ? "rival" : "conflict"
+      );
     });
   }
 
@@ -111,19 +110,24 @@ export function resolveWineWormAction(state, actionId, context = {}) {
 
   if (actionId === "ordinary-theft") {
     if (state.flags.ordinaryTheftDay === state.clock.day) {
-      throw new Error("The daily theft target is already alert.");
+      throw new Error("The daily theft target has already been attempted.");
     }
-    return resolveTimedPlayerAction(state, 2, (current) => ({
-      ...withAlert(current, 3),
-      player: {
-        ...current.player,
-        stones: current.player.stones + 4,
-      },
-      flags: {
-        ...current.flags,
-        ordinaryTheftDay: current.clock.day,
-      },
-    }));
+    const result = theftCheck(state, "ordinary", 0);
+    return resolveTimedPlayerAction(state, 2, (current) => {
+      const rolled = withTheftCursor(current, result);
+      return {
+        ...rolled,
+        player: {
+          ...rolled.player,
+          stones: rolled.player.stones + (result.success ? 4 : 0),
+        },
+        flags: {
+          ...rolled.flags,
+          ordinaryTheftDay: current.clock.day,
+          ordinaryTheftSucceeded: result.success,
+        },
+      };
+    });
   }
 
   if (actionId === "buy-wine-worm") {
@@ -138,16 +142,13 @@ export function resolveWineWormAction(state, actionId, context = {}) {
       throw new Error("Not enough primeval stones.");
     }
     return resolveTimedPlayerAction(state, 2, (current) =>
-      acquireWineWorm(
-        {
-          ...current,
-          player: {
-            ...current.player,
-            stones: current.player.stones - price,
-          },
+      acquireWineWorm({
+        ...current,
+        player: {
+          ...current.player,
+          stones: current.player.stones - price,
         },
-        10
-      )
+      })
     );
   }
 
@@ -155,19 +156,20 @@ export function resolveWineWormAction(state, actionId, context = {}) {
     if (state.player.stones < 2) {
       throw new Error("Two primeval stones are required to start the conflict.");
     }
-    const result = theftCheck(state, 9, 2);
+    const result = theftCheck(state, "secured", 0);
     return resolveTimedPlayerAction(state, 2, (current) => {
       const paid = {
-        ...current,
+        ...withTheftCursor(current, result),
         player: {
           ...current.player,
+          theftRandomCursor: result.nextCursor,
           stones: current.player.stones - 2,
         },
       };
-      return resolveMerchantAttempt(paid, result, {
-        successAlert: 18,
-        failureAlert: 10,
-      });
+      return withFangYuanConflict(
+        resolveMerchantAttempt(paid, result),
+        "tavernWineWorm"
+      );
     });
   }
 
@@ -178,26 +180,27 @@ export function resolveWineWormAction(state, actionId, context = {}) {
   throw new Error(`Unknown wine worm action: ${actionId}`);
 }
 
-function theftCheck(state, difficulty, preparation) {
-  return calculateTheftResult({
-    theftRank: state.player.theftRank,
-    agility: state.player.stats.agility,
-    insight: state.player.stats.insight,
-    caution: state.player.stats.caution,
-    preparation,
-    difficulty,
+function theftCheck(state, itemClass, targetRankIndex) {
+  return resolveTheftRoll({
+    seed: state.player.theftSeed,
+    cursor: state.player.theftRandomCursor,
+    luck: state.player.luck,
+    theftMastery: state.player.theftMastery,
+    playerRankIndex: state.player.rankIndex,
+    targetRankIndex,
+    itemClass,
   });
 }
 
-function resolveMerchantAttempt(state, result, alertDelta) {
-  if (result.band === "success") {
-    return acquireWineWorm(state, alertDelta.successAlert);
+function resolveMerchantAttempt(state, result) {
+  if (result.success) {
+    return acquireWineWorm(state);
   }
 
   const failedAttempts = state.wineWorm.failedAttempts + 1;
   if (failedAttempts >= 2) {
     return {
-      ...withAlert(state, alertDelta.failureAlert),
+      ...state,
       wineWorm: {
         ...state.wineWorm,
         owner: "fangYuan",
@@ -208,7 +211,7 @@ function resolveMerchantAttempt(state, result, alertDelta) {
   }
 
   return {
-    ...withAlert(state, alertDelta.failureAlert),
+    ...state,
     wineWorm: {
       ...state.wineWorm,
       owner: "merchant",
@@ -217,14 +220,14 @@ function resolveMerchantAttempt(state, result, alertDelta) {
     },
     flags: {
       ...state.flags,
-      guestRoomKey: result.band === "partial",
+      guestRoomKey: true,
     },
   };
 }
 
-function acquireWineWorm(state, alertDelta) {
+function acquireWineWorm(state) {
   return {
-    ...withAlert(state, alertDelta),
+    ...state,
     wineWorm: {
       ...state.wineWorm,
       owner: "player",
@@ -234,14 +237,40 @@ function acquireWineWorm(state, alertDelta) {
   };
 }
 
-function withAlert(state, delta) {
-  const alert = Math.min(100, state.fangYuan.alert + delta);
+function withTheftCursor(state, result) {
+  return {
+    ...state,
+    player: {
+      ...state.player,
+      theftRandomCursor: result.nextCursor,
+    },
+  };
+}
+
+function withFangYuanFact(state, factId, relationshipState) {
   return {
     ...state,
     fangYuan: {
       ...state.fangYuan,
-      alert,
-      stance: alert >= 40 ? "test" : alert >= 20 ? "observe" : "ignore",
+      relationshipState,
+      knownFacts: {
+        ...state.fangYuan.knownFacts,
+        [factId]: true,
+      },
+    },
+  };
+}
+
+function withFangYuanConflict(state, conflictId) {
+  return {
+    ...state,
+    fangYuan: {
+      ...state.fangYuan,
+      relationshipState: "conflict",
+      directConflicts: {
+        ...state.fangYuan.directConflicts,
+        [conflictId]: true,
+      },
     },
   };
 }

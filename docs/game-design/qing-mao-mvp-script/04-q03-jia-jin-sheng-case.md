@@ -1279,7 +1279,7 @@ END
 none
 
 [贾富]
-“可以提交线索，不能把拒绝过的任务倒签成完成。线索另记功绩。”
+“可以提交线索，不能把拒绝过的任务倒签成完成。线索另记一笔报酬。”
 
 [写入]
 player.knowledge.q03_post_refusal_tip_allowed = true

@@ -13,7 +13,10 @@ test("version two state starts outside Gu Yue village with the approved resource
   assert.equal(state.player.hp, 40);
   assert.equal(state.player.essence, 20);
   assert.equal(state.player.stones, 6);
-  assert.equal(state.fangYuan.alert, 8);
+  assert.equal("alert" in state.fangYuan, false);
+  assert.equal(state.fangYuan.relationshipState, "stranger");
+  assert.deepEqual(state.fangYuan.knownFacts, {});
+  assert.deepEqual(state.fangYuan.directConflicts, {});
   assert.equal(state.wineWorm.owner, "merchant");
   assert.equal(state.wineWorm.status, "carried");
 });

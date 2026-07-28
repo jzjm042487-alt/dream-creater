@@ -3,7 +3,10 @@ import { existsSync, readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { test } from "node:test";
 import { PNG } from "pngjs";
-import { UI_PANELS } from "../src/ui-prototype/panelRegistry.js";
+import {
+  RUNTIME_PANEL_TO_PROTOTYPE,
+  UI_PANELS
+} from "../src/ui-prototype/panelRegistry.js";
 import {
   calculateTheftChance,
   DEMO_STATE,
@@ -13,6 +16,7 @@ import {
   TOWN_INTERACTABLES,
   WILDERNESS_NODES,
   filterSourceOpportunities,
+  getDeterministicPercent,
   isTownPositionWalkable,
   moveTownPosition,
 } from "../src/ui-prototype/mockState.js";
@@ -68,14 +72,40 @@ test("registers only the simplified MVP panels", () => {
   );
 });
 
+test("maps every semantic runtime panel to one prototype view", () => {
+  const ids = JSON.parse(
+    readFileSync(`${repoRoot}contracts/demo-v2-ids.json`, "utf8")
+  );
+  const runtimePanelIds = ids.systemIds.panelIds;
+  const prototypePanelIds = new Set(UI_PANELS.map(({ id }) => id));
+
+  assert.deepEqual(RUNTIME_PANEL_TO_PROTOTYPE, {
+    panel_character: "UI02",
+    panel_aperture: "UI04",
+    panel_inventory: "UI05",
+    panel_quest: "UI07",
+    panel_talent_roster: "UI10",
+    panel_canon_lookup: "UI08"
+  });
+  assert.deepEqual(
+    Object.keys(RUNTIME_PANEL_TO_PROTOTYPE).sort(),
+    [...runtimePanelIds].sort()
+  );
+  assert.ok(
+    Object.values(RUNTIME_PANEL_TO_PROTOTYPE).every((id) =>
+      prototypePanelIds.has(id)
+    )
+  );
+});
+
 test("starts from the Day 8 wine-worm interception showcase", () => {
   assert.equal(DEMO_STATE.world.day, 8);
   assert.equal(DEMO_STATE.world.act, 2);
   assert.equal(DEMO_STATE.world.location, "花酒行者洞口");
-  assert.equal(DEMO_STATE.player.ap.current, 2);
-  assert.equal(DEMO_STATE.player.ap.max, 3);
   assert.equal(DEMO_STATE.ui.selectedPanel, "UI08");
   assert.equal(DEMO_STATE.player.attributes.length, 9);
+  assert.equal("ap" in DEMO_STATE.player, false);
+  assert.equal("merit" in DEMO_STATE.player, false);
   assert.equal("fatigue" in DEMO_STATE.player, false);
   assert.equal("exposure" in DEMO_STATE.player, false);
   assert.equal("debt" in DEMO_STATE.player, false);
@@ -185,22 +215,74 @@ test("treats Fang Yuan as one killable rival among several talents", () => {
 
 test("gives every character a non-zero one-roll theft chance", () => {
   assert.equal(
-    calculateTheftChance({ luck: 0, theft: 0, levelGap: -99 }),
-    5
+    calculateTheftChance({
+      luck: 50,
+      theftMastery: 50,
+      playerRankIndex: 1,
+      targetRankIndex: 1,
+      itemClass: "ordinary",
+    }),
+    65
   );
   assert.equal(
-    calculateTheftChance({ luck: 100, theft: 100, levelGap: 99 }),
+    calculateTheftChance({
+      luck: 0,
+      theftMastery: 0,
+      playerRankIndex: 0,
+      targetRankIndex: 3,
+      itemClass: "secured",
+    }),
+    15
+  );
+  assert.equal(
+    calculateTheftChance({
+      luck: 100,
+      theftMastery: 100,
+      playerRankIndex: 3,
+      targetRankIndex: 0,
+      itemClass: "ordinary",
+    }),
     95
   );
   assert.ok(
-    calculateTheftChance({ luck: 55, theft: 81, levelGap: 1 }) >
-      calculateTheftChance({ luck: 55, theft: 81, levelGap: -1 })
+    calculateTheftChance({
+      luck: 55,
+      theftMastery: 81,
+      playerRankIndex: 2,
+      targetRankIndex: 1,
+      itemClass: "ordinary",
+    }) >
+      calculateTheftChance({
+        luck: 55,
+        theftMastery: 81,
+        playerRankIndex: 1,
+        targetRankIndex: 2,
+        itemClass: "ordinary",
+      })
   );
+});
+
+test("persists deterministic theft randomness without Math.random", () => {
+  const first = getDeterministicPercent("wave05-theft-seed", 0);
+  const repeated = getDeterministicPercent("wave05-theft-seed", 0);
+  const next = getDeterministicPercent("wave05-theft-seed", 1);
+
+  assert.equal(first, repeated);
+  assert.notEqual(first, next);
+  assert.ok(first >= 0 && first < 100);
+  assert.equal(DEMO_STATE.player.theftSeed, "qingmao-ui-demo-theft-v1");
+  assert.equal(DEMO_STATE.player.theftRandomCursor, 0);
+  assert.deepEqual(DEMO_STATE.ui.theftAttemptedTargetIds, []);
+  assert.deepEqual(DEMO_STATE.ui.stolenItemIds, []);
+
+  const main = readFileSync(`${repoRoot}src/ui-prototype/main.js`, "utf8");
+  assert.equal(main.includes("Math.random()"), false);
 });
 
 test("removed systems no longer appear in UI production modules", () => {
   const files = [
     "src/ui-prototype/main.js",
+    "src/ui-prototype/mockState.js",
     "src/ui-prototype/panelRegistry.js",
     "src/ui-prototype/panels/creationPanels.js",
     "src/ui-prototype/panels/worldPanels.js",
@@ -218,6 +300,8 @@ test("removed systems no longer appear in UI production modules", () => {
     "所有权记录",
     "证据板",
     "回溯修正",
+    "行动点",
+    "功绩",
   ]) {
     assert.equal(source.includes(removedCopy), false, `${removedCopy} must be removed`);
   }

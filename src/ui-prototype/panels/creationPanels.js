@@ -294,8 +294,8 @@ function renderPlayerState(state) {
           </div>
           <div class="ledger-strip compact-ledger-strip">
             <div><span>元石</span><strong>${player.stones}</strong></div>
-            <div><span>功绩</span><strong>${player.merit}</strong></div>
-            <div><span>行动点</span><strong>${player.ap.current}/${player.ap.max}</strong></div>
+            <div><span>境界</span><strong>${player.rank}</strong></div>
+            <div><span>空窍</span><strong>${player.aperture}</strong></div>
             <div><span>盗道</span><strong>${player.theftMastery}</strong></div>
           </div>
           <div class="attribute-summary">

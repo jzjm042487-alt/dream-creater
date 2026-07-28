@@ -7,6 +7,7 @@
 
 上位规则仍是
 `docs/superpowers/specs/2026-07-27-qing-mao-simplified-mvp-design.md`。
+跨角色边界以 `2026-07-28-wave05-integration-contract.md` 为准。
 本文只细化其 `8 x 6` 战斗，不改变以下既定规则：
 
 - 玩家每回合最多移动一次并执行一个动作。

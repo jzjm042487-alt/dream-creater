@@ -2,6 +2,7 @@
 
 ## Authority
 
+- Wave 0.5 integration: `docs/superpowers/specs/2026-07-28-wave05-integration-contract.md`
 - Product rules: `docs/superpowers/specs/2026-07-27-qing-mao-simplified-mvp-design.md`
 - ID registry: `contracts/demo-v2-ids.json`
 - Active player state: `contracts/player-state.schema.json`

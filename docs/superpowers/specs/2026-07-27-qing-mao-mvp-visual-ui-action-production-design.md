@@ -2,10 +2,15 @@
 
 版本：`1.0-simplified`
 
-状态：Wave B / Task 4 实施契约。
+状态：Wave 0.5 视觉参考与原型表现规格。
+
+跨角色权威层级以 `2026-07-28-wave05-integration-contract.md` 为准。本文后文的
+`UIxx` 是历史画板标签，不是剧情或存档 ID；当前可试玩视图以
+`src/ui-prototype/panelRegistry.js` 为准，运行时语义面板通过
+`RUNTIME_PANEL_TO_PROTOTYPE` 映射。
 
 ## 1. 文档地位
-本规格只定义青茅山精简 MVP 的活动界面、视觉反馈与动作接入。唯一规则源为：
+本规格只定义青茅山精简 MVP 的活动界面、视觉反馈与动作接入。系统规则源为：
 
 - `docs/superpowers/specs/2026-07-27-qing-mao-simplified-mvp-design.md`
 
@@ -13,7 +18,8 @@
 
 - `docs/superpowers/plans/2026-07-27-simplified-qing-mao-mvp.md`
 
-成年角色三态细节由 `2026-07-26-character-state-portrait-ui-design.md` 补充。发生冲突时，先服从唯一规则源，再服从本规格。
+成年角色三态细节由 `2026-07-26-character-state-portrait-ui-design.md` 补充。
+发生冲突时，先服从 Wave 0.5 集成契约，再服从系统规则源与本规格。
 
 本轮边界：
 
@@ -68,7 +74,7 @@
 - `UI18` 没有独立导航入口，偷盗清单与结果都在同一覆盖层完成。
 - 启动载入是过渡画面，不注册为活动面板。
 - 角色初始信息属于开局数据，不保留重 Roll 面板。
-- 新面板必须先修改唯一规则源，不能由实现方临时增加。
+- 新的运行时语义面板必须先修改系统规则源与 Wave 0.5 映射，不能由实现方临时增加。
 
 ## 4. 全局导航与布局
 地图状态允许直接打开角色空窍、行囊炼制、当前任务、天骄名册、原著查询和暂停页。
