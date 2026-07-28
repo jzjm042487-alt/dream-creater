@@ -1,0 +1,110 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-07-28T12:18:36.208Z",
+  "node": "v24.11.1",
+  "platform": "win32-x64",
+  "warmupsPerDifficulty": 100,
+  "measuredPerDifficulty": 1000,
+  "caseCount": 13,
+  "cases": [
+    {
+      "battleId": "B-D07-01",
+      "buildId": "reference_balanced",
+      "policyId": "player_policy_aggressive"
+    },
+    {
+      "battleId": "B-D10-01",
+      "buildId": "reference_balanced",
+      "policyId": "player_policy_aggressive"
+    },
+    {
+      "battleId": "B-D17-01",
+      "buildId": "reference_balanced",
+      "policyId": "player_policy_aggressive"
+    },
+    {
+      "battleId": "B-D19-01",
+      "buildId": "reference_balanced",
+      "policyId": "player_policy_aggressive"
+    },
+    {
+      "battleId": "B-D21-01",
+      "buildId": "reference_balanced",
+      "policyId": "player_policy_aggressive"
+    },
+    {
+      "battleId": "B-D24-01",
+      "buildId": "reference_balanced",
+      "policyId": "player_policy_aggressive"
+    },
+    {
+      "battleId": "B-D26-01",
+      "buildId": "reference_balanced",
+      "policyId": "player_policy_aggressive"
+    },
+    {
+      "battleId": "B-D27-01",
+      "buildId": "reference_balanced",
+      "policyId": "player_policy_aggressive"
+    },
+    {
+      "battleId": "B-D29-01",
+      "buildId": "reference_balanced",
+      "policyId": "player_policy_aggressive"
+    },
+    {
+      "battleId": "B-Q02-01",
+      "buildId": "reference_balanced",
+      "policyId": "player_policy_aggressive"
+    },
+    {
+      "battleId": "B-Q03-01",
+      "buildId": "reference_balanced",
+      "policyId": "player_policy_aggressive"
+    },
+    {
+      "battleId": "B-Q04-01",
+      "buildId": "reference_balanced",
+      "policyId": "player_policy_aggressive"
+    },
+    {
+      "battleId": "B-Q05-01",
+      "buildId": "reference_balanced",
+      "policyId": "player_policy_aggressive"
+    }
+  ],
+  "difficulties": {
+    "ai_difficulty_beginner": {
+      "p50Ms": 2.2681,
+      "p95Ms": 4.4301,
+      "maxMs": 7.9369,
+      "leafP50": 24,
+      "leafP95": 57,
+      "leafMax": 57
+    },
+    "ai_difficulty_standard": {
+      "p50Ms": 2.1747,
+      "p95Ms": 4.1357,
+      "maxMs": 27.1144,
+      "leafP50": 24,
+      "leafP95": 57,
+      "leafMax": 57
+    },
+    "ai_difficulty_hard": {
+      "p50Ms": 25.5026,
+      "p95Ms": 64.4345,
+      "maxMs": 184.7187,
+      "leafP50": 48,
+      "leafP95": 48,
+      "leafMax": 48
+    },
+    "ai_difficulty_prodigy": {
+      "p50Ms": 103.4104,
+      "p95Ms": 181.1893,
+      "maxMs": 426.0809,
+      "leafP50": 288,
+      "leafP95": 288,
+      "leafMax": 288
+    }
+  }
+}
