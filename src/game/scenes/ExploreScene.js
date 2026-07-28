@@ -17,6 +17,30 @@ export class ExploreScene extends Phaser.Scene {
   create(data = {}) {
     this.store = this.registry.get("store");
     this.ui = this.registry.get("ui");
+    const requestedBattleId = new URLSearchParams(
+      window.location.search
+    ).get("battleId");
+    const activeBattle = this.store.getActiveBattle();
+    if (activeBattle) {
+      this.scene.start("battle", {
+        battleId: activeBattle.battleId
+      });
+      return;
+    }
+    if (
+      requestedBattleId &&
+      !data.ignoreTestBattle &&
+      !window.__TIANWAI_TEST_BATTLE_STARTED__
+    ) {
+      window.__TIANWAI_TEST_BATTLE_STARTED__ = true;
+      this.scene.start("battle", {
+        battleId: requestedBattleId,
+        variantId:
+          new URLSearchParams(window.location.search).get("variantId") ||
+          "default"
+      });
+      return;
+    }
     this.currentInteractable = null;
     this.lastPositionUpdate = 0;
     this.mapId = data.mapId || this.store.getState().scene.id || "world";
@@ -374,7 +398,11 @@ export class ExploreScene extends Phaser.Scene {
           label: "踏入林地迎战",
           disabled: alreadyCleared || state.clock.tick > 10,
           reason: state.clock.tick > 10 ? "天色太晚，战斗至少需要两个时段" : "",
-          run: () => this.scene.start("battle", { kind: "forest", returnMap: "world" }),
+          run: () =>
+            this.scene.start("battle", {
+              battleId: "B-D17-01",
+              variantId: "default"
+            }),
         },
         { label: "绕开" },
       ],
@@ -393,8 +421,8 @@ export class ExploreScene extends Phaser.Scene {
             disabled: state.clock.tick > 10,
             run: () =>
               this.scene.start("battle", {
-                kind: "fangYuan",
-                returnMap: "village",
+                battleId: "B-D19-01",
+                variantId: "default"
               }),
           },
           { label: "暂避锋芒" },

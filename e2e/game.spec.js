@@ -82,13 +82,32 @@ test("forest encounter opens the tactical battle and accepts a turn", async ({
   await interactAt(page, 635, 510);
   await page.getByRole("button", { name: "踏入林地迎战" }).click();
 
-  await expect(page.getByTestId("scene-name")).toHaveText("竹林猎场");
-  await expect(page.getByRole("button", { name: "守势" })).toBeVisible();
-  await expect(page.locator("[data-battle-status]")).toContainText("山豕 28/28");
+  await expect(page.getByTestId("scene-name")).toHaveText(
+    "战斗 B-D17-01"
+  );
+  await expect(
+    page.getByRole("button", { name: "防御", exact: true })
+  ).toBeVisible();
+  await expect(page.locator("[data-battle-status]")).toContainText(
+    "敌1 40/40"
+  );
 
-  await page.getByRole("button", { name: "守势" }).click();
+  await page
+    .getByRole("button", { name: "防御", exact: true })
+    .click();
 
-  await expect(page.locator("[data-battle-status]")).toContainText("你 40/40 命");
+  await expect
+    .poll(() =>
+      page.evaluate(
+        () =>
+          window.__TIANWAI_GAME__.game.scene.getScene("battle")
+            .lastEnemySummaries.length
+      )
+    )
+    .toBe(1);
+  await expect(page.locator("[data-battle-status]")).toContainText(
+    "第2回合"
+  );
 });
 
 async function interactAt(page, x, y) {

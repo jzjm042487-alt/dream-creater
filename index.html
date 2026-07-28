@@ -40,6 +40,19 @@
           </div>
 
           <nav class="system-actions" aria-label="系统操作">
+            <label class="difficulty-setting">
+              <span>敌方</span>
+              <select
+                data-battle-difficulty
+                aria-label="敌方战斗难度"
+                title="敌方战斗难度"
+              >
+                <option value="ai_difficulty_beginner">入门</option>
+                <option value="ai_difficulty_standard">标准</option>
+                <option value="ai_difficulty_hard">困难</option>
+                <option value="ai_difficulty_prodigy">天骄</option>
+              </select>
+            </label>
             <button type="button" data-quest-toggle title="查看当前机缘">缘</button>
             <button type="button" data-save title="保存进度">存</button>
             <button type="button" data-load title="读取进度">读</button>
@@ -85,7 +98,14 @@
         </section>
 
         <section class="battle-panel" data-battle-panel hidden>
-          <div class="battle-readout" data-battle-status></div>
+          <div class="battle-summary">
+            <div class="battle-readout" data-battle-status></div>
+            <span
+              class="battle-difficulty"
+              data-battle-difficulty-label
+              data-testid="battle-difficulty"
+            ></span>
+          </div>
           <div class="battle-actions" data-battle-actions></div>
         </section>
 

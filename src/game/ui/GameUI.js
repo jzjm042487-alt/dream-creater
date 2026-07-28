@@ -37,7 +37,13 @@ export class GameUI {
     this.render(this.store.getState());
   }
 
-  bindSystemActions({ onSave, onLoad, onReset, onAdvanceTick }) {
+  bindSystemActions({
+    onSave,
+    onLoad,
+    onReset,
+    onAdvanceTick,
+    onDifficultyChange
+  }) {
     document.querySelector("[data-save]").addEventListener("click", onSave);
     document.querySelector("[data-load]").addEventListener("click", onLoad);
     document.querySelector("[data-reset]").addEventListener("click", onReset);
@@ -47,6 +53,11 @@ export class GameUI {
     document
       .querySelector("[data-advance-tick]")
       .addEventListener("click", onAdvanceTick);
+    document
+      .querySelector("[data-battle-difficulty]")
+      .addEventListener("change", (event) =>
+        onDifficultyChange(event.target.value)
+      );
 
     if (new URLSearchParams(window.location.search).has("testMode")) {
       document.querySelector("[data-test-controls]").hidden = false;
@@ -63,14 +74,25 @@ export class GameUI {
   }
 
   render(state) {
+    const legacyPlayer = state.player ?? {
+      hp: state.mvp.player.health.current,
+      maxHp: state.mvp.player.health.maximum,
+      essence: state.mvp.player.primevalEssence.current,
+      maxEssence: state.mvp.player.primevalEssence.maximum,
+      stones: state.mvp.player.primevalStones
+    };
     document.querySelector("[data-hp]").textContent =
-      `${state.player.hp}/${state.player.maxHp}`;
+      `${legacyPlayer.hp}/${legacyPlayer.maxHp}`;
     document.querySelector("[data-essence]").textContent =
-      `${state.player.essence}/${state.player.maxEssence}`;
-    document.querySelector("[data-stones]").textContent = state.player.stones;
-    document.querySelector("[data-alert]").textContent = state.fangYuan.alert;
+      `${legacyPlayer.essence}/${legacyPlayer.maxEssence}`;
+    document.querySelector("[data-stones]").textContent =
+      legacyPlayer.stones;
+    document.querySelector("[data-alert]").textContent =
+      state.fangYuan?.alert ?? 0;
     document.querySelector("[data-testid='clock']").textContent =
       `${dayLabel(state.clock.day)} · ${PERIODS[state.clock.tick] || "夜深"}`;
+    document.querySelector("[data-battle-difficulty]").value =
+      state.mvp.settings.battleDifficultyId;
 
     const ownerText = {
       merchant: "酒虫仍在客栈商贩手中",
@@ -171,9 +193,17 @@ export class GameUI {
     }, 2600);
   }
 
-  showBattleControls(status, actions) {
+  showBattleControls(
+    status,
+    actions,
+    { difficultyLabel = "", waiting = false } = {}
+  ) {
     this.battlePanel.hidden = false;
     document.querySelector("[data-battle-status]").textContent = status;
+    document.querySelector(
+      "[data-battle-difficulty-label]"
+    ).textContent = difficultyLabel;
+    this.battlePanel.dataset.waiting = String(waiting);
     const container = document.querySelector("[data-battle-actions]");
     container.replaceChildren(
       ...actions.map((action) => {

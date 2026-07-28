@@ -175,6 +175,7 @@ button:disabled {
 
 .system-actions {
   display: flex;
+  align-items: center;
   gap: 5px;
 }
 
@@ -183,6 +184,26 @@ button:disabled {
   height: 34px;
   padding: 0;
   color: #d8c7a5;
+}
+
+.difficulty-setting {
+  display: flex;
+  height: 34px;
+  align-items: center;
+  gap: 5px;
+  padding: 0 6px;
+  border: 1px solid #4d5d53;
+  background: rgba(255, 255, 255, 0.04);
+  color: #9fb0a5;
+  font-size: 10px;
+}
+
+.difficulty-setting select {
+  width: 64px;
+  border: 0;
+  background: #17201b;
+  color: #eadfc8;
+  font: inherit;
 }
 
 .quest-rail {
@@ -412,7 +433,22 @@ button:disabled {
 .battle-readout {
   color: #e9dcc2;
   font-size: 13px;
-  white-space: nowrap;
+  line-height: 1.45;
+}
+
+.battle-summary {
+  display: grid;
+  min-width: 280px;
+  gap: 3px;
+}
+
+.battle-difficulty {
+  color: #c8aa67;
+  font-size: 11px;
+}
+
+.battle-difficulty::before {
+  content: "敌方难度 · ";
 }
 
 .battle-actions {
@@ -509,7 +545,7 @@ button:disabled {
   }
 
   .game-stage {
-    width: 100vw;
+    width: min(100vw, calc(100vh * 16 / 9));
     border: 0;
   }
 
@@ -517,6 +553,35 @@ button:disabled {
     grid-template-columns: minmax(125px, 1fr) auto auto;
     gap: 8px;
     padding: 6px 8px;
+  }
+
+  .difficulty-setting span {
+    display: none;
+  }
+
+  .difficulty-setting {
+    padding: 0 3px;
+  }
+
+  .difficulty-setting select {
+    width: 54px;
+  }
+
+  .battle-panel {
+    right: 8px;
+    bottom: 8px;
+    left: 8px;
+    align-items: stretch;
+    gap: 8px;
+  }
+
+  .battle-summary {
+    min-width: 0;
+  }
+
+  .battle-actions {
+    max-height: 92px;
+    overflow-y: auto;
   }
 
   .clock {
@@ -569,6 +634,10 @@ button:disabled {
 
   .touch-controls {
     display: grid;
+  }
+
+  .game-shell[data-battle-id] .touch-controls {
+    display: none;
   }
 }
 

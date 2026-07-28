@@ -45,7 +45,7 @@ ui.bindSystemActions({
   onLoad: () => {
     try {
       store.load();
-      restartExplore();
+      restartCurrentScene();
       ui.showToast("存档已读取。");
     } catch (error) {
       ui.showToast(error.message, "danger");
@@ -53,7 +53,7 @@ ui.bindSystemActions({
   },
   onReset: () => {
     store.reset();
-    restartExplore();
+    restartCurrentScene();
     ui.showToast("新的推演已经开始。");
   },
   onAdvanceTick: () => {
@@ -63,11 +63,26 @@ ui.bindSystemActions({
       ui.showToast(error.message, "danger");
     }
   },
+  onDifficultyChange: (difficultyId) => {
+    try {
+      store.setBattleDifficulty(difficultyId);
+      ui.showToast("敌方难度将在下一场战斗生效。");
+    } catch (error) {
+      ui.showToast(error.message, "danger");
+    }
+  }
 });
 
-function restartExplore() {
+function restartCurrentScene() {
   game.scene.stop("battle");
   game.scene.stop("explore");
+  const activeBattle = store.getActiveBattle();
+  if (activeBattle) {
+    game.scene.start("battle", {
+      battleId: activeBattle.battleId
+    });
+    return;
+  }
   const state = store.getState();
   game.scene.start("explore", {
     mapId: state.scene.id,
