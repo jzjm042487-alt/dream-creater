@@ -10,6 +10,11 @@ export function createAiSnapshot(state) {
     state.player.revealedActionIds || []
   );
   const publicItemActions = clone(state.player.publicItemActions || []);
+  const publicPlayerActionIds = uniqueStrings([
+    ...revealedActionIds,
+    ...publicItemActions.map((entry) => entry.actionId),
+    ...SYSTEM_ACTION_IDS
+  ]);
   const publicActionIds = new Set([
     ...revealedActionIds,
     ...publicItemActions.map((entry) => entry.actionId),
@@ -31,7 +36,7 @@ export function createAiSnapshot(state) {
     board: clone(state.board),
     player: {
       ...copyPublicUnitFields(state.player),
-      actionIds: [...revealedActionIds],
+      actionIds: publicPlayerActionIds,
       statuses: clone(state.player.statuses || []),
       cooldowns: filterPublicCooldowns(
         state.player.cooldowns || [],
