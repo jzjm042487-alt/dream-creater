@@ -13,7 +13,7 @@ test("battle catalogs contain every locked action, profile, encounter, and fixtu
   const matrix = readJson("systems/balance/battle-ai-matrix.json");
   const ids = readJson("contracts/demo-v2-ids.json");
 
-  assert.equal(actions.actions.length, 13);
+  assert.equal(actions.actions.length, 17);
   assert.equal(profiles.profiles.length, 7);
   assert.equal(encounters.encounters.length, 13);
   assert.equal(matrix.encounters.length, 13);

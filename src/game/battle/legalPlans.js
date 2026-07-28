@@ -160,15 +160,13 @@ function enumerateDestinationPlans(state, actor, destination, occupiedCells) {
     }
   }
 
-  if (plans.length === 0) {
-    const passAction =
-      state.content.actions.battle_action_pass ??
-      actor.actionIds
-        .map((actionId) => state.content.actions[actionId])
-        .find((action) => action?.type === "pass");
-    if (passAction) {
-      plans.push(createPlan(actor, destination, passAction, null, null));
-    }
+  const passAction =
+    state.content.actions.battle_action_pass ??
+    actor.actionIds
+      .map((actionId) => state.content.actions[actionId])
+      .find((action) => action?.type === "pass");
+  if (passAction) {
+    plans.push(createPlan(actor, destination, passAction, null, null));
   }
 
   return plans;

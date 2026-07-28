@@ -31,7 +31,7 @@
           "attributes": { "strength": 20, "perception": 30 },
           "defenses": { "physical": 1, "gu": 1 },
           "actionIds": [
-            "battle_action_basic_melee",
+            "battle_action_enemy_melee_light",
             "battle_action_moonblade",
             "battle_action_defend"
           ]
@@ -69,12 +69,12 @@
           "unitId": "B-D10-01.enemy.1",
           "profileId": "ai_profile_melee_pursuer",
           "spawn": { "x": 6, "y": 3 },
-          "maxHealth": 38,
+          "maxHealth": 40,
           "maxEssence": 0,
           "move": 2,
           "attributes": { "strength": 40, "perception": 10 },
-          "defenses": { "physical": 2, "gu": 1 },
-          "actionIds": ["battle_action_basic_melee"]
+          "defenses": { "physical": 2, "gu": 2 },
+          "actionIds": ["battle_action_enemy_melee_light"]
         }
       ],
       "enemyUnitOrder": ["B-D10-01.enemy.1"],
@@ -115,7 +115,7 @@
           "attributes": { "strength": 40, "perception": 10 },
           "defenses": { "physical": 4, "gu": 2 },
           "actionIds": [
-            "battle_action_basic_melee",
+            "battle_action_enemy_melee_light",
             "battle_action_enemy_shell_guard"
           ]
         }
@@ -152,15 +152,14 @@
           "unitId": "B-D19-01.enemy.1",
           "profileId": "ai_profile_duelist",
           "spawn": { "x": 6, "y": 3 },
-          "maxHealth": 50,
-          "maxEssence": 15,
+          "maxHealth": 48,
+          "maxEssence": 12,
           "move": 3,
           "attributes": { "strength": 40, "perception": 55 },
           "defenses": { "physical": 3, "gu": 3 },
           "actionIds": [
-            "battle_action_basic_melee",
-            "battle_action_moonblade",
-            "battle_action_defend"
+            "battle_action_enemy_melee_standard",
+            "battle_action_enemy_charge"
           ]
         }
       ],
@@ -196,13 +195,13 @@
           "unitId": "B-D21-01.enemy.1",
           "profileId": "ai_profile_charger",
           "spawn": { "x": 6, "y": 3 },
-          "maxHealth": 38,
+          "maxHealth": 48,
           "maxEssence": 8,
           "move": 3,
           "attributes": { "strength": 50, "perception": 20 },
           "defenses": { "physical": 2, "gu": 1 },
           "actionIds": [
-            "battle_action_basic_melee",
+            "battle_action_enemy_melee_standard",
             "battle_action_enemy_charge"
           ]
         }
@@ -245,13 +244,14 @@
           "unitId": "B-D24-01.enemy.1",
           "profileId": "ai_profile_ranged_skirmisher",
           "spawn": { "x": 6, "y": 3 },
-          "maxHealth": 38,
-          "maxEssence": 12,
+          "maxHealth": 39,
+          "maxEssence": 9,
           "move": 3,
-          "attributes": { "strength": 20, "perception": 50 },
-          "defenses": { "physical": 1, "gu": 2 },
+          "attributes": { "strength": 60, "perception": 75 },
+          "defenses": { "physical": 3, "gu": 4 },
           "actionIds": [
             "battle_action_basic_melee",
+            "battle_action_enemy_ranged_basic",
             "battle_action_enemy_ranged_strike",
             "battle_action_defend"
           ]
@@ -295,13 +295,13 @@
           "unitId": "B-D26-01.enemy.1",
           "profileId": "ai_profile_pack_hunter",
           "spawn": { "x": 6, "y": 3 },
-          "maxHealth": 24,
+          "maxHealth": 31,
           "maxEssence": 4,
           "move": 3,
-          "attributes": { "strength": 20, "perception": 20 },
+          "attributes": { "strength": 0, "perception": 20 },
           "defenses": { "physical": 1, "gu": 1 },
           "actionIds": [
-            "battle_action_basic_melee",
+            "battle_action_enemy_melee_standard",
             "battle_action_enemy_charge"
           ]
         },
@@ -309,13 +309,13 @@
           "unitId": "B-D26-01.enemy.2",
           "profileId": "ai_profile_pack_hunter",
           "spawn": { "x": 6, "y": 1 },
-          "maxHealth": 24,
+          "maxHealth": 31,
           "maxEssence": 4,
           "move": 3,
-          "attributes": { "strength": 20, "perception": 20 },
+          "attributes": { "strength": 0, "perception": 20 },
           "defenses": { "physical": 1, "gu": 1 },
           "actionIds": [
-            "battle_action_basic_melee",
+            "battle_action_enemy_melee_standard",
             "battle_action_enemy_charge"
           ]
         }
@@ -352,13 +352,13 @@
           "unitId": "B-D27-01.enemy.1",
           "profileId": "ai_profile_charger",
           "spawn": { "x": 6, "y": 3 },
-          "maxHealth": 42,
+          "maxHealth": 48,
           "maxEssence": 8,
           "move": 3,
           "attributes": { "strength": 60, "perception": 20 },
           "defenses": { "physical": 2, "gu": 1 },
           "actionIds": [
-            "battle_action_basic_melee",
+            "battle_action_enemy_melee_standard",
             "battle_action_enemy_charge"
           ]
         }
@@ -408,13 +408,13 @@
           "unitId": "B-D29-01.enemy.1",
           "profileId": "ai_profile_boss_hunter",
           "spawn": { "x": 6, "y": 3 },
-          "maxHealth": 68,
+          "maxHealth": 73,
           "maxEssence": 24,
           "move": 3,
           "attributes": { "strength": 70, "perception": 50 },
-          "defenses": { "physical": 4, "gu": 4 },
+          "defenses": { "physical": 4, "gu": 2 },
           "actionIds": [
-            "battle_action_basic_melee",
+            "battle_action_enemy_melee_heavy",
             "battle_action_boss_gather_force",
             "battle_action_boss_pounce",
             "battle_action_defend"
@@ -470,7 +470,7 @@
           "attributes": { "strength": 50, "perception": 10 },
           "defenses": { "physical": 5, "gu": 3 },
           "actionIds": [
-            "battle_action_basic_melee",
+            "battle_action_enemy_melee_standard",
             "battle_action_enemy_shell_guard"
           ]
         }
@@ -519,13 +519,14 @@
           "unitId": "B-Q03-01.enemy.1",
           "profileId": "ai_profile_duelist",
           "spawn": { "x": 6, "y": 3 },
-          "maxHealth": 40,
-          "maxEssence": 12,
+          "maxHealth": 44,
+          "maxEssence": 9,
           "move": 3,
-          "attributes": { "strength": 40, "perception": 40 },
-          "defenses": { "physical": 2, "gu": 2 },
+          "attributes": { "strength": 40, "perception": 100 },
+          "defenses": { "physical": 5, "gu": 1 },
           "actionIds": [
-            "battle_action_basic_melee",
+            "battle_action_enemy_melee_light",
+            "battle_action_enemy_ranged_basic",
             "battle_action_enemy_ranged_strike",
             "battle_action_defend"
           ]
@@ -570,12 +571,13 @@
           "unitId": "B-Q04-01.enemy.1",
           "profileId": "ai_profile_ranged_skirmisher",
           "spawn": { "x": 6, "y": 3 },
-          "maxHealth": 36,
-          "maxEssence": 12,
+          "maxHealth": 42,
+          "maxEssence": 9,
           "move": 3,
-          "attributes": { "strength": 10, "perception": 50 },
-          "defenses": { "physical": 1, "gu": 1 },
+          "attributes": { "strength": 10, "perception": 90 },
+          "defenses": { "physical": 5, "gu": 1 },
           "actionIds": [
+            "battle_action_enemy_ranged_basic",
             "battle_action_enemy_ranged_strike",
             "battle_action_defend"
           ]
@@ -621,13 +623,13 @@
           "unitId": "B-Q05-01.enemy.1",
           "profileId": "ai_profile_pack_hunter",
           "spawn": { "x": 6, "y": 3 },
-          "maxHealth": 24,
+          "maxHealth": 31,
           "maxEssence": 4,
           "move": 3,
-          "attributes": { "strength": 20, "perception": 20 },
+          "attributes": { "strength": 0, "perception": 20 },
           "defenses": { "physical": 1, "gu": 1 },
           "actionIds": [
-            "battle_action_basic_melee",
+            "battle_action_enemy_melee_standard",
             "battle_action_enemy_charge"
           ]
         },
@@ -635,13 +637,13 @@
           "unitId": "B-Q05-01.enemy.2",
           "profileId": "ai_profile_pack_hunter",
           "spawn": { "x": 6, "y": 1 },
-          "maxHealth": 24,
+          "maxHealth": 31,
           "maxEssence": 4,
           "move": 3,
-          "attributes": { "strength": 20, "perception": 20 },
+          "attributes": { "strength": 0, "perception": 20 },
           "defenses": { "physical": 1, "gu": 1 },
           "actionIds": [
-            "battle_action_basic_melee",
+            "battle_action_enemy_melee_standard",
             "battle_action_enemy_charge"
           ]
         }

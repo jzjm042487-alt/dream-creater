@@ -1,5 +1,4 @@
-import { enumerateLegalTurnPlans } from "./legalPlans.js";
-import { manhattan } from "./ranges.js";
+import { isActionTargetInRange, manhattan } from "./ranges.js";
 import { applyDefendReduction, calculateDamage } from "./simulator.js";
 import { findBattleUnit } from "./state.js";
 
@@ -9,6 +8,13 @@ const TERMINAL_SCORES = Object.freeze({
   victory: -100_000
 });
 const REPEAT_CATEGORIES = new Set(["defend", "reposition", "pass"]);
+const MAX_DAMAGE_CACHE = new WeakMap();
+const IMMEDIATE_DAMAGE_WEIGHT_BY_DIFFICULTY = Object.freeze({
+  ai_difficulty_beginner: -24,
+  ai_difficulty_standard: 0,
+  ai_difficulty_hard: 24,
+  ai_difficulty_prodigy: 48
+});
 
 export function buildEvaluationFeatures(context) {
   validateContext(context);
@@ -98,8 +104,27 @@ export function evaluateBattleState(context) {
     Math.round(features.resourceReserve * weights.resourceReserve) +
     Math.round(features.coordination * weights.coordination) +
     (action?.aiUtilityAdjustment ?? 0) +
-    intentAdjustment(context, features, profile, action)
+    intentAdjustment(context, features, profile, action) +
+    difficultyDamageAdjustment(context)
   );
+}
+
+function difficultyDamageAdjustment(context) {
+  const weight =
+    IMMEDIATE_DAMAGE_WEIGHT_BY_DIFFICULTY[
+      context.rootBeforeSnapshot.difficultyId
+    ] ?? 0;
+  if (weight === 0) return 0;
+  const playerUnitId = context.rootBeforeSnapshot.player.unitId;
+  const immediateDamage = (
+    context.branchSteps[0]?.settlementSummary?.hpChanges || []
+  )
+    .filter(
+      (change) =>
+        change.unitId === playerUnitId && change.delta < 0
+    )
+    .reduce((total, change) => total - change.delta, 0);
+  return weight * immediateDamage;
 }
 
 export function compareEnemyDecisions(left, right) {
@@ -158,7 +183,14 @@ function intentAdjustment(context, features, profile, action) {
         ? 120
         : 0;
     case "reposition":
-      return features.rangeFit > rootBeforeFeature(context, "rangeFit")
+      return (
+        features.rangeFit > rootBeforeFeature(context, "rangeFit") ||
+        rootPreferredRangeGap(context, context.leafAfterSnapshot) <
+          rootPreferredRangeGap(
+            context,
+            context.rootBeforeSnapshot
+          )
+      )
         ? 100
         : 0;
     case "defend":
@@ -193,18 +225,47 @@ function rootBeforeFeature(context, featureName) {
   })[featureName];
 }
 
+function rootPreferredRangeGap(context, snapshot) {
+  const actor = findBattleUnit(snapshot, context.rootActorUnitId);
+  if (actor.hp <= 0 || snapshot.player.hp <= 0) {
+    return Number.POSITIVE_INFINITY;
+  }
+  return preferredRangeGap(
+    actor,
+    snapshot.player,
+    getRootProfile(context)
+  );
+}
+
 function maximumDamage(snapshot, actorUnitId, targetUnitId) {
   if (snapshot.result) return 0;
+  let snapshotCache = MAX_DAMAGE_CACHE.get(snapshot);
+  if (!snapshotCache) {
+    snapshotCache = new Map();
+    MAX_DAMAGE_CACHE.set(snapshot, snapshotCache);
+  }
+  const cacheKey = `${actorUnitId}\0${targetUnitId}`;
+  if (snapshotCache.has(cacheKey)) {
+    return snapshotCache.get(cacheKey);
+  }
   const actor = findBattleUnit(snapshot, actorUnitId);
   const target = findBattleUnit(snapshot, targetUnitId);
-  if (actor.hp <= 0 || target.hp <= 0) return 0;
+  if (actor.hp <= 0 || target.hp <= 0) {
+    snapshotCache.set(cacheKey, 0);
+    return 0;
+  }
 
-  const { plans } = enumerateLegalTurnPlans(snapshot, actorUnitId);
   let maximum = 0;
-  for (const plan of plans) {
-    if (plan.action.targetUnitId !== targetUnitId) continue;
-    const action = snapshot.content.actions[plan.action.actionId];
-    if (!action?.damage) continue;
+  for (const actionId of actor.actionIds) {
+    const action = snapshot.content.actions[actionId];
+    if (
+      !action?.damage ||
+      action.targetSide !== "opponent" ||
+      !isActionAvailableForThreat(snapshot, actor, action) ||
+      !hasReachableAttackPosition(snapshot, actor, target, action)
+    ) {
+      continue;
+    }
     let damage = calculateDamage(actor, target, action);
     if (
       target.statuses.some(
@@ -217,19 +278,126 @@ function maximumDamage(snapshot, actorUnitId, targetUnitId) {
     }
     maximum = Math.max(maximum, damage);
   }
+  snapshotCache.set(cacheKey, maximum);
   return maximum;
 }
 
+function hasReachableAttackPosition(snapshot, actor, target, action) {
+  const occupied = livingUnits(snapshot)
+    .filter((unit) => unit.unitId !== actor.unitId)
+    .map((unit) => unit.position);
+  const lineOccupied = livingUnits(snapshot)
+    .filter(
+      (unit) =>
+        unit.unitId !== actor.unitId &&
+        unit.unitId !== target.unitId
+    )
+    .map((unit) => unit.position);
+  const blocked = new Set(
+    snapshot.board.blockedCells.map((cell) => cellKey(cell))
+  );
+  const occupiedKeys = new Set(occupied.map((cell) => cellKey(cell)));
+  const queue = [{ ...actor.position, distance: 0 }];
+  const visited = new Set([cellKey(actor.position)]);
+
+  for (let index = 0; index < queue.length; index += 1) {
+    const current = queue[index];
+    if (
+      isActionTargetInRange(
+        action,
+        snapshot.board,
+        lineOccupied,
+        current,
+        target.position
+      )
+    ) {
+      return true;
+    }
+    if (current.distance >= actor.move) continue;
+    for (const [dx, dy] of [
+      [0, -1],
+      [-1, 0],
+      [1, 0],
+      [0, 1]
+    ]) {
+      const next = {
+        x: current.x + dx,
+        y: current.y + dy,
+        distance: current.distance + 1
+      };
+      const key = cellKey(next);
+      if (
+        visited.has(key) ||
+        next.x < 0 ||
+        next.x >= snapshot.board.width ||
+        next.y < 0 ||
+        next.y >= snapshot.board.height ||
+        blocked.has(key) ||
+        occupiedKeys.has(key)
+      ) {
+        continue;
+      }
+      visited.add(key);
+      queue.push(next);
+    }
+  }
+  return false;
+}
+
+function isActionAvailableForThreat(snapshot, actor, action) {
+  if (actor.essence < action.essenceCost) return false;
+  if (
+    actor.cooldowns.some(
+      (cooldown) =>
+        cooldown.actionId === action.id &&
+        cooldown.remainingTurns > 0
+    )
+  ) {
+    return false;
+  }
+  const statusIds = new Set(
+    actor.statuses.map((status) => status.statusId)
+  );
+  if (action.requiresStatusId && !statusIds.has(action.requiresStatusId)) {
+    return false;
+  }
+  if (action.forbiddenStatusId && statusIds.has(action.forbiddenStatusId)) {
+    return false;
+  }
+  if (
+    action.type === "item" &&
+    !actor.publicItemActions?.some(
+      (item) =>
+        item.actionId === action.id && item.remainingUses > 0
+    )
+  ) {
+    return false;
+  }
+  if (
+    action.revealAudibleHiddenUnits &&
+    !opposingLivingUnits(snapshot, actor).some(
+      (unit) => unit.audibleHidden
+    )
+  ) {
+    return false;
+  }
+  return true;
+}
+
 function rangeFit(actor, player, profile) {
+  return Math.max(0, 1 - 0.25 * preferredRangeGap(actor, player, profile));
+}
+
+function preferredRangeGap(actor, player, profile) {
   const distance = manhattan(actor.position, player.position);
   const preferred = profile.preferredRange;
-  const gap =
+  return (
     distance < preferred.minimum
       ? preferred.minimum - distance
       : distance > preferred.maximum
         ? distance - preferred.maximum
-        : 0;
-  return Math.max(0, 1 - 0.25 * gap);
+        : 0
+  );
 }
 
 function controlBalance(snapshot) {
@@ -287,6 +455,24 @@ function mainDirection(position, playerPosition) {
   return dy < 0 ? "up" : "down";
 }
 
+function livingUnits(snapshot) {
+  return [snapshot.player, ...snapshot.enemies].filter(
+    (unit) => unit.hp > 0
+  );
+}
+
+function opposingLivingUnits(snapshot, actor) {
+  return actor.side === "player"
+    ? snapshot.enemies.filter((unit) => unit.hp > 0)
+    : snapshot.player.hp > 0
+      ? [snapshot.player]
+      : [];
+}
+
+function cellKey(cell) {
+  return `${cell.x},${cell.y}`;
+}
+
 function isProgressCandidate(candidate, snapshot, actorUnitId) {
   if (
     dealsPositiveDamage(candidate.settlementSummary) ||
@@ -301,12 +487,12 @@ function isProgressCandidate(candidate, snapshot, actorUnitId) {
   if (!after) return false;
   const actor = findBattleUnit(snapshot, actorUnitId);
   const profile = snapshot.content.profiles[actor.profileId];
+  const afterActor = findBattleUnit(after, actorUnitId);
   return (
-    rangeFit(
-      findBattleUnit(after, actorUnitId),
-      after.player,
-      profile
-    ) > rangeFit(actor, snapshot.player, profile)
+    rangeFit(afterActor, after.player, profile) >
+      rangeFit(actor, snapshot.player, profile) ||
+    preferredRangeGap(afterActor, after.player, profile) <
+      preferredRangeGap(actor, snapshot.player, profile)
   );
 }
 

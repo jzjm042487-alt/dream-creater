@@ -13,13 +13,46 @@
       "aiUtilityAdjustment": 0
     },
     {
+      "id": "battle_action_enemy_melee_light",
+      "type": "basicAttack",
+      "category": "damage",
+      "targetSide": "opponent",
+      "range": { "kind": "melee", "minimum": 1, "maximum": 1, "blockedByUnits": false },
+      "essenceCost": 0,
+      "cooldownTurns": 0,
+      "damage": { "kind": "physical", "basePower": 9, "usesAttribute": true },
+      "aiUtilityAdjustment": 0
+    },
+    {
+      "id": "battle_action_enemy_melee_standard",
+      "type": "basicAttack",
+      "category": "damage",
+      "targetSide": "opponent",
+      "range": { "kind": "melee", "minimum": 1, "maximum": 1, "blockedByUnits": false },
+      "essenceCost": 0,
+      "cooldownTurns": 0,
+      "damage": { "kind": "physical", "basePower": 11, "usesAttribute": true },
+      "aiUtilityAdjustment": 0
+    },
+    {
+      "id": "battle_action_enemy_melee_heavy",
+      "type": "basicAttack",
+      "category": "damage",
+      "targetSide": "opponent",
+      "range": { "kind": "melee", "minimum": 1, "maximum": 1, "blockedByUnits": false },
+      "essenceCost": 0,
+      "cooldownTurns": 0,
+      "damage": { "kind": "physical", "basePower": 14, "usesAttribute": true },
+      "aiUtilityAdjustment": 0
+    },
+    {
       "id": "battle_action_defend",
       "type": "defend",
       "category": "defend",
       "targetSide": "self",
       "range": { "kind": "self", "minimum": 0, "maximum": 0, "blockedByUnits": false },
       "essenceCost": 0,
-      "cooldownTurns": 0,
+      "cooldownTurns": 2,
       "statusEffect": {
         "id": "battle_status_defending",
         "duration": "scene",
@@ -28,7 +61,7 @@
       },
       "incomingDamageDivisor": 2,
       "minimumIncomingDamage": 1,
-      "aiUtilityAdjustment": 0
+      "aiUtilityAdjustment": -1
     },
     {
       "id": "battle_action_retreat",
@@ -56,10 +89,10 @@
       "type": "skill",
       "category": "damage",
       "targetSide": "opponent",
-      "range": { "kind": "line3", "minimum": 1, "maximum": 3, "blockedByUnits": true },
+      "range": { "kind": "line3", "minimum": 1, "maximum": 5, "blockedByUnits": true },
       "essenceCost": 3,
       "cooldownTurns": 0,
-      "damage": { "kind": "gu", "basePower": 8, "usesAttribute": true },
+      "damage": { "kind": "gu", "basePower": 14, "usesAttribute": true },
       "aiUtilityAdjustment": 0
     },
     {
@@ -123,6 +156,17 @@
       "essenceCost": 3,
       "cooldownTurns": 1,
       "damage": { "kind": "gu", "basePower": 7, "usesAttribute": true },
+      "aiUtilityAdjustment": 0
+    },
+    {
+      "id": "battle_action_enemy_ranged_basic",
+      "type": "basicAttack",
+      "category": "damage",
+      "targetSide": "opponent",
+      "range": { "kind": "range3", "minimum": 1, "maximum": 3, "blockedByUnits": false },
+      "essenceCost": 0,
+      "cooldownTurns": 0,
+      "damage": { "kind": "gu", "basePower": 10, "usesAttribute": true },
       "aiUtilityAdjustment": 0
     },
     {

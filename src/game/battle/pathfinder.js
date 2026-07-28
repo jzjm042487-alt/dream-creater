@@ -16,47 +16,34 @@ export function findDistance(board, occupiedCells, start, end) {
     return { reachable: true, distance: 0 };
   }
 
-  const path = queryEasyStar(board, occupiedCells, start, end);
+  const path = createEasyStarQuery(
+    board,
+    occupiedCells,
+    start
+  )(start, end);
   return path
     ? { reachable: true, distance: path.length - 1 }
     : { reachable: false };
 }
 
 export function findCanonicalPath(board, occupiedCells, start, end) {
-  const initial = findDistance(board, occupiedCells, start, end);
-  if (!initial.reachable) return { reachable: false };
-
-  const path = [[start.x, start.y]];
-  let current = { x: start.x, y: start.y };
-  let remaining = initial.distance;
-
-  while (remaining > 0) {
-    let next = null;
-    for (const direction of DIRECTION_ORDER) {
-      const candidate = {
-        x: current.x + direction.dx,
-        y: current.y + direction.dy
-      };
-      if (!isWalkable(board, occupiedCells, candidate, start)) continue;
-      const result = findDistance(board, occupiedCells, candidate, end);
-      if (result.reachable && result.distance === remaining - 1) {
-        next = candidate;
-        break;
-      }
-    }
-    if (!next) {
-      throw new Error("canonical path reconstruction lost a shortest-path step");
-    }
-    path.push([next.x, next.y]);
-    current = next;
-    remaining -= 1;
+  validateQuery(board, occupiedCells, start, end);
+  if (!inside(board, end) || isBlocked(board, end)) {
+    return { reachable: false };
   }
-
-  return {
-    reachable: true,
-    cost: initial.distance,
-    path
-  };
+  const easyStarPath = createEasyStarQuery(
+    board,
+    occupiedCells,
+    start
+  )(start, end);
+  if (!easyStarPath) return { reachable: false };
+  return reconstructCanonicalPath(
+    board,
+    occupiedCells,
+    start,
+    end,
+    easyStarPath.length - 1
+  );
 }
 
 export function listReachableDestinations(board, occupiedCells, start, move) {
@@ -66,12 +53,21 @@ export function listReachableDestinations(board, occupiedCells, start, move) {
   }
 
   const destinations = [];
+  const query = createEasyStarQuery(board, occupiedCells, start);
   for (let y = 0; y < board.height; y += 1) {
     for (let x = 0; x < board.width; x += 1) {
       const destination = { x, y };
       if (!isWalkable(board, occupiedCells, destination, start)) continue;
-      const result = findCanonicalPath(board, occupiedCells, start, destination);
-      if (!result.reachable || result.cost > move) continue;
+      if (manhattan(start, destination) > move) continue;
+      const easyStarPath = query(start, destination);
+      if (!easyStarPath || easyStarPath.length - 1 > move) continue;
+      const result = reconstructCanonicalPath(
+        board,
+        occupiedCells,
+        start,
+        destination,
+        easyStarPath.length - 1
+      );
       destinations.push({
         x,
         y,
@@ -92,7 +88,7 @@ export function listReachableDestinations(board, occupiedCells, start, move) {
   return destinations;
 }
 
-function queryEasyStar(board, occupiedCells, start, end) {
+function createEasyStarQuery(board, occupiedCells, actorStart) {
   const easyStar = new EasyStar.js();
   easyStar.enableSync();
   easyStar.setGrid(
@@ -105,16 +101,93 @@ function queryEasyStar(board, occupiedCells, start, end) {
   easyStar.setAcceptableTiles([0]);
 
   for (const cell of occupiedCells) {
-    if (sameCell(cell, start)) continue;
+    if (sameCell(cell, actorStart)) continue;
     easyStar.avoidAdditionalPoint(cell.x, cell.y);
   }
 
-  let resolvedPath;
-  easyStar.findPath(start.x, start.y, end.x, end.y, (path) => {
-    resolvedPath = path;
-  });
-  easyStar.calculate();
-  return resolvedPath ?? null;
+  return (start, end) => {
+    let resolvedPath;
+    easyStar.findPath(start.x, start.y, end.x, end.y, (path) => {
+      resolvedPath = path;
+    });
+    easyStar.calculate();
+    return resolvedPath ?? null;
+  };
+}
+
+function reconstructCanonicalPath(
+  board,
+  occupiedCells,
+  start,
+  end,
+  expectedDistance
+) {
+  if (sameCell(start, end)) {
+    return { reachable: true, cost: 0, path: [[start.x, start.y]] };
+  }
+  const distances = buildDistanceMap(
+    board,
+    occupiedCells,
+    end,
+    start
+  );
+  const startDistance = distances.get(cellKey(start));
+  if (startDistance !== expectedDistance) {
+    throw new Error("EasyStar and canonical distance map disagree");
+  }
+
+  const path = [[start.x, start.y]];
+  let current = { ...start };
+  let remaining = expectedDistance;
+  while (remaining > 0) {
+    const next = DIRECTION_ORDER.map((direction) => ({
+      x: current.x + direction.dx,
+      y: current.y + direction.dy
+    })).find(
+      (candidate) =>
+        isWalkable(board, occupiedCells, candidate, start) &&
+        distances.get(cellKey(candidate)) === remaining - 1
+    );
+    if (!next) {
+      throw new Error(
+        "canonical path reconstruction lost a shortest-path step"
+      );
+    }
+    path.push([next.x, next.y]);
+    current = next;
+    remaining -= 1;
+  }
+  return { reachable: true, cost: expectedDistance, path };
+}
+
+function buildDistanceMap(
+  board,
+  occupiedCells,
+  origin,
+  actorStart
+) {
+  const distances = new Map([[cellKey(origin), 0]]);
+  const queue = [{ ...origin }];
+  for (let index = 0; index < queue.length; index += 1) {
+    const current = queue[index];
+    const nextDistance = distances.get(cellKey(current)) + 1;
+    for (const direction of DIRECTION_ORDER) {
+      const next = {
+        x: current.x + direction.dx,
+        y: current.y + direction.dy
+      };
+      const key = cellKey(next);
+      if (
+        distances.has(key) ||
+        !isWalkable(board, occupiedCells, next, actorStart)
+      ) {
+        continue;
+      }
+      distances.set(key, nextDistance);
+      queue.push(next);
+    }
+  }
+  return distances;
 }
 
 function validateQuery(board, occupiedCells, start, end) {
@@ -165,6 +238,14 @@ function isPoint(value) {
 
 function sameCell(left, right) {
   return left.x === right.x && left.y === right.y;
+}
+
+function manhattan(left, right) {
+  return Math.abs(left.x - right.x) + Math.abs(left.y - right.y);
+}
+
+function cellKey(point) {
+  return `${point.x},${point.y}`;
 }
 
 function pathDirectionRanks(path) {

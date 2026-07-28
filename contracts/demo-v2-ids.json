@@ -232,6 +232,9 @@
     ],
     "battleActions": [
       "battle_action_basic_melee",
+      "battle_action_enemy_melee_light",
+      "battle_action_enemy_melee_standard",
+      "battle_action_enemy_melee_heavy",
       "battle_action_defend",
       "battle_action_retreat",
       "battle_action_pass",
@@ -241,6 +244,7 @@
       "battle_action_vitality_leaf",
       "battle_action_enemy_charge",
       "battle_action_enemy_ranged_strike",
+      "battle_action_enemy_ranged_basic",
       "battle_action_enemy_shell_guard",
       "battle_action_boss_gather_force",
       "battle_action_boss_pounce"

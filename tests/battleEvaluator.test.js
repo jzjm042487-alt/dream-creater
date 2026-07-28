@@ -233,6 +233,35 @@ test("action and intent adjustments are added to integer utility", () => {
   );
 });
 
+test("difficulty weights immediate enemy damage monotonically", () => {
+  const profile = makeProfile({ weights: zeroWeights() });
+  const scores = [
+    "ai_difficulty_beginner",
+    "ai_difficulty_standard",
+    "ai_difficulty_hard",
+    "ai_difficulty_prodigy"
+  ].map((difficultyId) => {
+    const root = makeSparseSnapshot(profile);
+    const leaf = makeSparseSnapshot(profile, { playerHp: 90 });
+    root.difficultyId = difficultyId;
+    leaf.difficultyId = difficultyId;
+    const step = makeStep();
+    step.settlementSummary.hpChanges = [
+      { unitId: "player", delta: -10 }
+    ];
+    return evaluateBattleState(
+      makeContext(root, leaf, {
+        rootProfileId: profile.id,
+        branchSteps: [step]
+      })
+    );
+  });
+
+  assert.ok(scores[0] < scores[1]);
+  assert.ok(scores[1] < scores[2]);
+  assert.ok(scores[2] < scores[3]);
+});
+
 test("enemy and player tie-breaks are stable and opposite", () => {
   const candidates = [
     decision("z-pass", 10, {

@@ -114,6 +114,7 @@ test("battle state resolves variants and initializes deterministic public fields
   assert.deepEqual(state.player.statuses, []);
   assert.deepEqual(state.player.cooldowns, []);
   assert.deepEqual(state.recentActionCategoriesByUnitId, {
+    player: [],
     "B-D24-01.enemy.1": []
   });
   assert.deepEqual(state.player.revealedActionIds, [
@@ -221,6 +222,12 @@ test("retreat uses only reachable edge cells and pass is an explicit fallback", 
       destination.x === 7 ||
       destination.y === 0 ||
       destination.y === 5
+    ),
+    true
+  );
+  assert.equal(
+    playerPlans.some(
+      (plan) => plan.action.actionId === "battle_action_pass"
     ),
     true
   );

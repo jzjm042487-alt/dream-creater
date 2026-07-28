@@ -74,6 +74,42 @@ test("melee pursuer takes the canonical route around obstacles then attacks", ()
   );
 });
 
+test("a distant melee enemy still closes the raw preferred-range gap", () => {
+  const snapshot = makeRealSnapshot({
+    profileId: "ai_profile_guardian",
+    enemy: {
+      spawn: { x: 6, y: 3 },
+      maxHealth: 40,
+      maxEssence: 0,
+      move: 2,
+      actionIds: ["battle_action_basic_melee"]
+    },
+    player: {
+      hp: 40,
+      position: { x: 0, y: 0 }
+    }
+  });
+  const beforeDistance =
+    Math.abs(
+      snapshot.enemies[0].position.x - snapshot.player.position.x
+    ) +
+    Math.abs(
+      snapshot.enemies[0].position.y - snapshot.player.position.y
+    );
+
+  const result = chooseEnemyPlan(snapshot);
+  const afterDistance =
+    Math.abs(
+      result.plan.destination.x - snapshot.player.position.x
+    ) +
+    Math.abs(
+      result.plan.destination.y - snapshot.player.position.y
+    );
+
+  assert.equal(result.intent, "reposition");
+  assert.ok(afterDistance < beforeDistance);
+});
+
 test("ranged skirmisher creates distance while retaining an attack", () => {
   const snapshot = makeRealSnapshot({
     profileId: "ai_profile_ranged_skirmisher",

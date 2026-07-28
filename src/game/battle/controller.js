@@ -21,6 +21,11 @@ export function commitPlayerPlan(state, plan, dependencies = {}) {
 
   const simulation = deps.simulate(state, legalPlan);
   const next = simulation.snapshot;
+  appendActionCategory(
+    next,
+    state.player.unitId,
+    simulation.settlementSummary.actionCategory
+  );
   if (!next.result) {
     next.phase = "enemy";
     next.activeEnemyUnitId = firstLivingEnemyId(next);

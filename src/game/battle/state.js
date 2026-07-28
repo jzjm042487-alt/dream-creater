@@ -63,7 +63,10 @@ export function createBattleState({
     enemyUnitOrder,
     activeEnemyUnitId,
     recentActionCategoriesByUnitId: Object.fromEntries(
-      enemyUnitOrder.map((unitId) => [unitId, []])
+      [player.unitId, ...enemyUnitOrder].map((unitId) => [
+        unitId,
+        []
+      ])
     ),
     difficultyId,
     aiSeed,

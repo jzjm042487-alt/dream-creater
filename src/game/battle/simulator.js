@@ -442,5 +442,9 @@ function opposingLivingUnits(state, actor) {
 }
 
 function clone(value) {
-  return JSON.parse(JSON.stringify(value));
+  const { content, ...mutableState } = value;
+  return {
+    ...JSON.parse(JSON.stringify(mutableState)),
+    content
+  };
 }
