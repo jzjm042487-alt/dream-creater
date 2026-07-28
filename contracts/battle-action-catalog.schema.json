@@ -1,0 +1,97 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Tactical battle action catalog",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["version", "actions"],
+  "properties": {
+    "version": { "type": "integer", "enum": [1] },
+    "actions": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "type",
+          "category",
+          "targetSide",
+          "range",
+          "essenceCost",
+          "cooldownTurns",
+          "aiUtilityAdjustment"
+        ],
+        "properties": {
+          "id": { "type": "string", "x-idRegistry": "battleActions" },
+          "type": {
+            "type": "string",
+            "enum": ["basicAttack", "defend", "retreat", "pass", "skill", "item", "boss"]
+          },
+          "category": {
+            "type": "string",
+            "x-idRegistry": "battleActionCategories"
+          },
+          "targetSide": {
+            "type": "string",
+            "enum": ["self", "opponent"]
+          },
+          "range": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["kind", "minimum", "maximum", "blockedByUnits"],
+            "properties": {
+              "kind": {
+                "type": "string",
+                "enum": ["self", "melee", "range3", "line3", "radius1"]
+              },
+              "minimum": { "type": "integer", "minimum": 0, "maximum": 12 },
+              "maximum": { "type": "integer", "minimum": 0, "maximum": 12 },
+              "blockedByUnits": { "type": "boolean" }
+            }
+          },
+          "essenceCost": { "type": "integer", "minimum": 0, "maximum": 100 },
+          "cooldownTurns": { "type": "integer", "minimum": 0, "maximum": 20 },
+          "damage": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["kind", "usesAttribute"],
+            "properties": {
+              "kind": { "type": "string", "enum": ["physical", "gu"] },
+              "basePower": { "type": "integer", "minimum": 0, "maximum": 100 },
+              "fixedDamage": { "type": "integer", "minimum": 0, "maximum": 100 },
+              "usesAttribute": { "type": "boolean" }
+            }
+          },
+          "statusEffect": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "durationTurns", "aiControlValue"],
+            "properties": {
+              "id": { "type": "string", "x-idRegistry": "battleStatuses" },
+              "durationTurns": { "type": "integer", "minimum": 1, "maximum": 20 },
+              "aiControlValue": { "type": "integer", "minimum": 0, "maximum": 100 },
+              "physicalDefenseBonus": { "type": "integer", "minimum": 0, "maximum": 100 },
+              "guDefenseBonus": { "type": "integer", "minimum": 0, "maximum": 100 }
+            }
+          },
+          "requiresStatusId": {
+            "type": "string",
+            "x-idRegistry": "battleStatuses"
+          },
+          "consumesStatusId": {
+            "type": "string",
+            "x-idRegistry": "battleStatuses"
+          },
+          "fixedHealing": { "type": "integer", "minimum": 1, "maximum": 100 },
+          "consumePublicItemUse": { "type": "boolean" },
+          "revealAudibleHiddenUnits": { "type": "boolean" },
+          "requiresEdge": { "type": "boolean" },
+          "incomingDamageDivisor": { "type": "integer", "minimum": 2, "maximum": 10 },
+          "minimumIncomingDamage": { "type": "integer", "minimum": 0, "maximum": 100 },
+          "aiUtilityAdjustment": { "type": "integer", "minimum": -100, "maximum": 100 }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,76 @@
+{
+  "version": 1,
+  "encounters": [
+    {
+      "battleId": "B-D07-01",
+      "recommendedRankId": "rank_one",
+      "recommendedEntryVariantId": "default",
+      "builds": [
+        {
+          "buildId": "reference_minimum",
+          "rankId": "rank_one",
+          "maxHealth": 36,
+          "maxEssence": 16,
+          "move": 3,
+          "attributes": { "strength": 15, "perception": 20 },
+          "defenses": { "physical": 0, "gu": 0 },
+          "actionIds": [
+            "battle_action_basic_melee",
+            "battle_action_moonblade",
+            "battle_action_defend",
+            "battle_action_retreat",
+            "battle_action_pass"
+          ],
+          "publicItemUses": []
+        },
+        {
+          "buildId": "reference_balanced",
+          "rankId": "rank_one",
+          "maxHealth": 40,
+          "maxEssence": 20,
+          "move": 3,
+          "attributes": { "strength": 20, "perception": 30 },
+          "defenses": { "physical": 1, "gu": 1 },
+          "actionIds": [
+            "battle_action_basic_melee",
+            "battle_action_moonblade",
+            "battle_action_defend",
+            "battle_action_retreat",
+            "battle_action_pass"
+          ],
+          "publicItemUses": []
+        },
+        {
+          "buildId": "reference_specialist",
+          "rankId": "rank_one",
+          "maxHealth": 38,
+          "maxEssence": 24,
+          "move": 3,
+          "attributes": { "strength": 10, "perception": 45 },
+          "defenses": { "physical": 0, "gu": 2 },
+          "actionIds": [
+            "battle_action_basic_melee",
+            "battle_action_moonblade",
+            "battle_action_defend",
+            "battle_action_retreat",
+            "battle_action_pass"
+          ],
+          "publicItemUses": []
+        }
+      ],
+      "policies": [
+        "player_policy_aggressive",
+        "player_policy_kiting",
+        "player_policy_defensive",
+        "player_policy_conserving",
+        "player_policy_retreat_aware"
+      ],
+      "targets": {
+        "minimumVictories": 3,
+        "maximumVictories": 5,
+        "maximumVictoryRound": 12,
+        "maximumStallRate": 0.1
+      }
+    }
+  ]
+}

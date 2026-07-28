@@ -1,0 +1,88 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Tactical battle AI profile catalog",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["version", "profiles"],
+  "properties": {
+    "version": { "type": "integer", "enum": [1] },
+    "profiles": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "preferredRange",
+          "lowHealthRatio",
+          "lowEssenceRatio",
+          "weights",
+          "behaviorTree"
+        ],
+        "properties": {
+          "id": { "type": "string", "x-idRegistry": "battleAiProfiles" },
+          "preferredRange": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["minimum", "maximum"],
+            "properties": {
+              "minimum": { "type": "integer", "minimum": 0, "maximum": 12 },
+              "maximum": { "type": "integer", "minimum": 0, "maximum": 12 }
+            }
+          },
+          "lowHealthRatio": { "type": "number", "minimum": 0, "maximum": 1 },
+          "lowEssenceRatio": { "type": "number", "minimum": 0, "maximum": 1 },
+          "weights": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "targetLoss",
+              "teamSurvival",
+              "immediateThreat",
+              "exposure",
+              "rangeFit",
+              "control",
+              "resourceReserve",
+              "coordination"
+            ],
+            "properties": {
+              "targetLoss": { "type": "integer", "minimum": 0, "maximum": 1000 },
+              "teamSurvival": { "type": "integer", "minimum": 0, "maximum": 1000 },
+              "immediateThreat": { "type": "integer", "minimum": 0, "maximum": 1000 },
+              "exposure": { "type": "integer", "minimum": 0, "maximum": 1000 },
+              "rangeFit": { "type": "integer", "minimum": 0, "maximum": 1000 },
+              "control": { "type": "integer", "minimum": 0, "maximum": 1000 },
+              "resourceReserve": { "type": "integer", "minimum": 0, "maximum": 1000 },
+              "coordination": { "type": "integer", "minimum": 0, "maximum": 1000 }
+            }
+          },
+          "behaviorTree": {
+            "$ref": "battle-behavior-node.schema.json"
+          },
+          "phases": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["key", "minimumHpRatio", "maximumHpRatio"],
+              "properties": {
+                "key": {
+                  "type": "string",
+                  "pattern": "^[a-z][a-z0-9_]*$"
+                },
+                "minimumHpRatio": { "type": "number", "minimum": 0, "maximum": 1 },
+                "maximumHpRatio": { "type": "number", "minimum": 0, "maximum": 1 },
+                "phaseActionId": {
+                  "type": "string",
+                  "x-idRegistry": "battleActions"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

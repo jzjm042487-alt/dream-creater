@@ -1,0 +1,25 @@
+{
+  "version": 1,
+  "actions": [
+    {
+      "id": "battle_action_basic_melee",
+      "type": "basicAttack",
+      "category": "damage",
+      "targetSide": "opponent",
+      "range": {
+        "kind": "melee",
+        "minimum": 1,
+        "maximum": 1,
+        "blockedByUnits": false
+      },
+      "essenceCost": 0,
+      "cooldownTurns": 0,
+      "damage": {
+        "kind": "physical",
+        "basePower": 6,
+        "usesAttribute": true
+      },
+      "aiUtilityAdjustment": 0
+    }
+  ]
+}

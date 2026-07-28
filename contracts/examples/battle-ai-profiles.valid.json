@@ -1,0 +1,48 @@
+{
+  "version": 1,
+  "profiles": [
+    {
+      "id": "ai_profile_melee_pursuer",
+      "preferredRange": {
+        "minimum": 1,
+        "maximum": 1
+      },
+      "lowHealthRatio": 0.3,
+      "lowEssenceRatio": 0.25,
+      "weights": {
+        "targetLoss": 400,
+        "teamSurvival": 100,
+        "immediateThreat": 220,
+        "exposure": 80,
+        "rangeFit": 180,
+        "control": 50,
+        "resourceReserve": 30,
+        "coordination": 40
+      },
+      "behaviorTree": {
+        "type": "root",
+        "child": {
+          "type": "selector",
+          "children": [
+            {
+              "type": "sequence",
+              "children": [
+                { "type": "condition", "call": "CanFinish" },
+                {
+                  "type": "action",
+                  "call": "SetIntent",
+                  "args": ["finish"]
+                }
+              ]
+            },
+            {
+              "type": "action",
+              "call": "SetIntent",
+              "args": ["reposition"]
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

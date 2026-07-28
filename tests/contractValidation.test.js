@@ -16,7 +16,11 @@ test("simplified contract examples validate", () => {
     "relationship.valid.json",
     "quest.valid.json",
     "dialogue.valid.json",
-    "event.valid.json"
+    "event.valid.json",
+    "battle-actions.valid.json",
+    "battle-ai-profiles.valid.json",
+    "battle-encounters.valid.json",
+    "battle-balance-matrix.valid.json"
   ].map((name) => path.join(ROOT, "contracts", "examples", name));
 
   const result = runValidator(files);
@@ -428,6 +432,141 @@ function invalidFixtures() {
       },
       expected: [
         "$.resolvedByCharacterId is only allowed when status is resolved"
+      ]
+    },
+    {
+      name: "battle-actions.invalid.json",
+      value: {
+        version: 1,
+        actions: [
+          {
+            id: "battle_action_unknown",
+            type: "skill",
+            category: "control",
+            targetSide: "opponent",
+            range: {
+              kind: "line3",
+              minimum: 1,
+              maximum: 3,
+              blockedByUnits: true
+            },
+            essenceCost: 0,
+            cooldownTurns: 0,
+            statusEffect: {
+              id: "battle_status_defending",
+              durationTurns: 1
+            },
+            aiUtilityAdjustment: -101
+          }
+        ]
+      },
+      expected: [
+        "$.actions[0].id unknown battleActions id: battle_action_unknown",
+        "$.actions[0].aiUtilityAdjustment must be >= -100",
+        "$.actions[0].statusEffect.aiControlValue is required"
+      ]
+    },
+    {
+      name: "battle-ai-profiles.invalid.json",
+      value: {
+        version: 1,
+        profiles: [
+          {
+            id: "ai_profile_unknown",
+            preferredRange: { minimum: 1, maximum: 1 },
+            lowHealthRatio: 0.3,
+            lowEssenceRatio: 0.25,
+            weights: {
+              targetLoss: 1001,
+              teamSurvival: 100,
+              immediateThreat: 100,
+              exposure: 100,
+              rangeFit: 100,
+              control: 100,
+              resourceReserve: 100,
+              coordination: 100
+            },
+            behaviorTree: {
+              type: "root",
+              child: {
+                type: "action",
+                call: "SetIntent",
+                args: ["attack"]
+              }
+            },
+            phases: [
+              {
+                key: "healthy",
+                minimumHpRatio: 0.65,
+                maximumHpRatio: 1
+              },
+              {
+                key: "wounded",
+                minimumHpRatio: 0.5,
+                maximumHpRatio: 2,
+                phaseActionId: "battle_action_boss_gather_force"
+              }
+            ]
+          }
+        ]
+      },
+      expected: [
+        "$.profiles[0].id unknown battleAiProfiles id: ai_profile_unknown",
+        "$.profiles[0].weights.targetLoss must be <= 1000",
+        "$.profiles[0].phases[1].maximumHpRatio must be <= 1",
+        "$.profiles[0].phases[1] overlaps the previous phase"
+      ]
+    },
+    {
+      name: "battle-encounters.invalid.json",
+      value: {
+        version: 1,
+        encounters: [
+          {
+            battleId: "B-UNKNOWN",
+            tierId: "battle_tier_normal",
+            board: {
+              width: 8,
+              height: 6,
+              blockedCells: [
+                { x: 8, y: 1, kind: "rock" }
+              ]
+            },
+            entryVariants: [
+              {
+                variantId: "default",
+                mode: "battle",
+                playerSpawn: { x: 1, y: 4 },
+                startingPhase: "player"
+              }
+            ],
+            enemies: [
+              {
+                unitId: "B-UNKNOWN.enemy.1",
+                profileId: "ai_profile_unknown",
+                spawn: { x: 6, y: 1 },
+                maxHealth: 30,
+                maxEssence: 8,
+                move: 3,
+                attributes: { strength: 20, perception: 20 },
+                defenses: { physical: 1, gu: 1 },
+                actionIds: ["battle_action_basic_melee"]
+              }
+            ],
+            enemyUnitOrder: ["B-UNKNOWN.enemy.1"],
+            resultPolicy: {
+              simultaneousZero: "playerVictory",
+              allowRetreat: true,
+              returnMode: "entryScene",
+              maxBalanceRounds: 20
+            }
+          }
+        ]
+      },
+      expected: [
+        "$.encounters[0].battleId unknown battles id: B-UNKNOWN",
+        "$.encounters[0].enemies[0].profileId unknown battleAiProfiles id: ai_profile_unknown",
+        "$.encounters[0].board.blockedCells[0].x must be <= 7"
       ]
     }
   ];

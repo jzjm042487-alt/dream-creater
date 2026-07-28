@@ -1,0 +1,52 @@
+{
+  "version": 1,
+  "encounters": [
+    {
+      "battleId": "B-D07-01",
+      "tierId": "battle_tier_tutorial",
+      "board": {
+        "width": 8,
+        "height": 6,
+        "blockedCells": []
+      },
+      "entryVariants": [
+        {
+          "variantId": "default",
+          "mode": "battle",
+          "playerSpawn": { "x": 1, "y": 4 },
+          "startingPhase": "player"
+        }
+      ],
+      "enemies": [
+        {
+          "unitId": "B-D07-01.enemy.1",
+          "profileId": "ai_profile_duelist",
+          "spawn": { "x": 6, "y": 1 },
+          "maxHealth": 32,
+          "maxEssence": 6,
+          "move": 3,
+          "attributes": {
+            "strength": 20,
+            "perception": 30
+          },
+          "defenses": {
+            "physical": 1,
+            "gu": 1
+          },
+          "actionIds": [
+            "battle_action_basic_melee",
+            "battle_action_moonblade",
+            "battle_action_defend"
+          ]
+        }
+      ],
+      "enemyUnitOrder": ["B-D07-01.enemy.1"],
+      "resultPolicy": {
+        "simultaneousZero": "playerVictory",
+        "allowRetreat": true,
+        "returnMode": "entryScene",
+        "maxBalanceRounds": 20
+      }
+    }
+  ]
+}

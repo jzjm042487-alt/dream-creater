@@ -44,6 +44,15 @@ export function loadRegistry() {
     statusDurations: ids.systemIds.statusDurations,
     dialogueChoiceActions: ids.systemIds.dialogueChoiceActions,
     panelIds: ids.systemIds.panelIds,
+    battleActions: ids.systemIds.battleActions,
+    battleStatuses: ids.systemIds.battleStatuses,
+    battleEncounterTiers: ids.systemIds.battleEncounterTiers,
+    battleAiDifficulties: ids.systemIds.battleAiDifficulties,
+    battleAiProfiles: ids.systemIds.battleAiProfiles,
+    battleAiIntents: ids.systemIds.battleAiIntents,
+    battleActionCategories: ids.systemIds.battleActionCategories,
+    battleBalanceReferenceBuilds: ids.systemIds.battleBalanceReferenceBuilds,
+    battleBalancePlayerPolicies: ids.systemIds.battleBalancePlayerPolicies,
     characterLifeStatuses: ids.systemIds.characterLifeStatuses,
     equipmentSlots: ids.systemIds.equipmentSlots,
     guAbilityFamilies: ids.systemIds.guAbilityFamilies,
@@ -88,6 +97,14 @@ export function validateContentValue(value, schemaPath, registry) {
     errors.push(...validateEventSemantics(value));
   } else if (schemaName === "opportunity.schema.json") {
     errors.push(...validateOpportunitySemantics(value));
+  } else if (schemaName === "battle-action-catalog.schema.json") {
+    errors.push(...validateBattleActionSemantics(value));
+  } else if (schemaName === "battle-ai-profile-catalog.schema.json") {
+    errors.push(...validateBattleProfileSemantics(value));
+  } else if (schemaName === "battle-encounter-catalog.schema.json") {
+    errors.push(...validateBattleEncounterSemantics(value, registry));
+  } else if (schemaName === "battle-balance-matrix.schema.json") {
+    errors.push(...validateBattleBalanceSemantics(value, registry));
   }
 
   return errors;
@@ -209,6 +226,27 @@ function relativeToAbsolute(facing, command) {
 export function schemaPathForContent(filePath) {
   const normalized = filePath.replaceAll("\\", "/");
   const base = path.basename(filePath);
+  if (
+    base.includes("battle-actions") ||
+    normalized.endsWith("/systems/battle/actions.json")
+  ) {
+    return path.join(CONTRACTS, "battle-action-catalog.schema.json");
+  }
+  if (
+    base.includes("battle-ai-profiles") ||
+    normalized.endsWith("/systems/battle/ai-profiles.json")
+  ) {
+    return path.join(CONTRACTS, "battle-ai-profile-catalog.schema.json");
+  }
+  if (
+    base.includes("battle-encounters") ||
+    normalized.endsWith("/systems/battle/encounters.json")
+  ) {
+    return path.join(CONTRACTS, "battle-encounter-catalog.schema.json");
+  }
+  if (base.includes("battle-balance-matrix")) {
+    return path.join(CONTRACTS, "battle-balance-matrix.schema.json");
+  }
   if (base.includes("player-state")) return path.join(CONTRACTS, "player-state.schema.json");
   if (normalized.includes("/characters/")) return path.join(CONTRACTS, "character.schema.json");
   if (normalized.includes("/quests/")) return path.join(CONTRACTS, "quest.schema.json");
@@ -406,6 +444,376 @@ function validateOpportunitySemantics(value) {
     return ["$.resolvedByCharacterId is only allowed when status is resolved"];
   }
   return [];
+}
+
+function validateBattleActionSemantics(value) {
+  if (!isPlainObject(value) || !Array.isArray(value.actions)) return [];
+  const errors = [];
+  const seenIds = new Set();
+
+  value.actions.forEach((action, index) => {
+    if (!isPlainObject(action)) return;
+    const actionPath = `$.actions[${index}]`;
+
+    if (typeof action.id === "string") {
+      if (seenIds.has(action.id)) {
+        errors.push(`${actionPath}.id duplicates ${action.id}`);
+      }
+      seenIds.add(action.id);
+    }
+
+    if (isPlainObject(action.range)) {
+      const { kind, minimum, maximum } = action.range;
+      if (Number.isInteger(minimum) && Number.isInteger(maximum) && minimum > maximum) {
+        errors.push(`${actionPath}.range.minimum must be <= ${actionPath}.range.maximum`);
+      }
+      if (kind === "self" && (minimum !== 0 || maximum !== 0)) {
+        errors.push(`${actionPath}.range self requires 0..0`);
+      }
+      if (kind === "melee" && (minimum !== 1 || maximum !== 1)) {
+        errors.push(`${actionPath}.range melee requires 1..1`);
+      }
+      if (
+        ["range3", "line3", "radius1"].includes(kind) &&
+        Number.isInteger(maximum) &&
+        maximum <= 0
+      ) {
+        errors.push(`${actionPath}.range.${kind} requires a positive maximum`);
+      }
+    }
+
+    if (isPlainObject(action.damage)) {
+      const hasBasePower = Number.isInteger(action.damage.basePower);
+      const hasFixedDamage = Number.isInteger(action.damage.fixedDamage);
+      if (hasBasePower === hasFixedDamage) {
+        errors.push(`${actionPath}.damage requires exactly one of basePower or fixedDamage`);
+      }
+      if (hasFixedDamage && action.damage.usesAttribute !== false) {
+        errors.push(`${actionPath}.damage.usesAttribute must be false for fixedDamage`);
+      }
+    }
+  });
+
+  return errors;
+}
+
+function validateBattleProfileSemantics(value) {
+  if (!isPlainObject(value) || !Array.isArray(value.profiles)) return [];
+  const errors = [];
+  const seenIds = new Set();
+
+  value.profiles.forEach((profile, profileIndex) => {
+    if (!isPlainObject(profile)) return;
+    const profilePath = `$.profiles[${profileIndex}]`;
+
+    if (typeof profile.id === "string") {
+      if (seenIds.has(profile.id)) {
+        errors.push(`${profilePath}.id duplicates ${profile.id}`);
+      }
+      seenIds.add(profile.id);
+    }
+
+    if (
+      isPlainObject(profile.preferredRange) &&
+      Number.isInteger(profile.preferredRange.minimum) &&
+      Number.isInteger(profile.preferredRange.maximum) &&
+      profile.preferredRange.minimum > profile.preferredRange.maximum
+    ) {
+      errors.push(`${profilePath}.preferredRange.minimum must be <= ${profilePath}.preferredRange.maximum`);
+    }
+
+    if (isPlainObject(profile.behaviorTree)) {
+      const treeState = { terminalIntentCount: 0 };
+      validateBehaviorNode(profile.behaviorTree, `${profilePath}.behaviorTree`, errors, treeState);
+      if (treeState.terminalIntentCount === 0) {
+        errors.push(`${profilePath}.behaviorTree must contain a terminal SetIntent action`);
+      }
+    }
+
+    if (Array.isArray(profile.phases)) {
+      const seenPhaseKeys = new Set();
+      profile.phases.forEach((phase, phaseIndex) => {
+        if (!isPlainObject(phase)) return;
+        const phasePath = `${profilePath}.phases[${phaseIndex}]`;
+        if (seenPhaseKeys.has(phase.key)) {
+          errors.push(`${phasePath}.key duplicates ${phase.key}`);
+        }
+        seenPhaseKeys.add(phase.key);
+
+        if (
+          typeof phase.minimumHpRatio === "number" &&
+          typeof phase.maximumHpRatio === "number" &&
+          phase.minimumHpRatio > phase.maximumHpRatio
+        ) {
+          errors.push(`${phasePath}.minimumHpRatio must be <= ${phasePath}.maximumHpRatio`);
+        }
+
+        const previous = profile.phases[phaseIndex - 1];
+        if (
+          isPlainObject(previous) &&
+          typeof previous.minimumHpRatio === "number" &&
+          typeof phase.maximumHpRatio === "number" &&
+          phase.maximumHpRatio > previous.minimumHpRatio
+        ) {
+          errors.push(`${phasePath} overlaps the previous phase`);
+        }
+      });
+    }
+
+    if (profile.id === "ai_profile_boss_hunter" && !Array.isArray(profile.phases)) {
+      errors.push(`${profilePath}.phases is required for ai_profile_boss_hunter`);
+    }
+    if (profile.id !== "ai_profile_boss_hunter" && "phases" in profile) {
+      errors.push(`${profilePath}.phases is only allowed for ai_profile_boss_hunter`);
+    }
+  });
+
+  return errors;
+}
+
+function validateBehaviorNode(node, nodePath, errors, state) {
+  if (!isPlainObject(node)) {
+    errors.push(`${nodePath} must be an object`);
+    return;
+  }
+
+  const allowedKeys = {
+    root: ["type", "child"],
+    selector: ["type", "children"],
+    sequence: ["type", "children"],
+    condition: ["type", "call"],
+    action: ["type", "call", "args"]
+  };
+  const allowedConditions = new Set([
+    "CanFinish",
+    "HasPhaseAction",
+    "ShouldDefend",
+    "ShouldConserve",
+    "HasEffectiveAttack"
+  ]);
+  const nodeType = node.type;
+
+  if (!(nodeType in allowedKeys)) {
+    errors.push(`${nodePath}.type must be root, selector, sequence, condition, or action`);
+    return;
+  }
+  for (const key of Object.keys(node)) {
+    if (!allowedKeys[nodeType].includes(key)) {
+      errors.push(`${nodePath}.${key} is not allowed for ${nodeType}`);
+    }
+  }
+
+  if (nodeType === "root") {
+    if (!("child" in node)) errors.push(`${nodePath}.child is required`);
+    else validateBehaviorNode(node.child, `${nodePath}.child`, errors, state);
+    return;
+  }
+
+  if (nodeType === "selector" || nodeType === "sequence") {
+    if (!Array.isArray(node.children) || node.children.length === 0) {
+      errors.push(`${nodePath}.children must contain at least one node`);
+      return;
+    }
+    node.children.forEach((child, index) => {
+      validateBehaviorNode(child, `${nodePath}.children[${index}]`, errors, state);
+    });
+    return;
+  }
+
+  if (nodeType === "condition") {
+    if (!allowedConditions.has(node.call)) {
+      errors.push(`${nodePath}.call is not an approved condition`);
+    }
+    return;
+  }
+
+  if (node.call !== "SetIntent") {
+    errors.push(`${nodePath}.call must be SetIntent`);
+    return;
+  }
+  if (!Array.isArray(node.args) || node.args.length !== 1) {
+    errors.push(`${nodePath}.args must contain exactly one intent`);
+    return;
+  }
+  state.terminalIntentCount += 1;
+}
+
+function validateBattleEncounterSemantics(value, registry) {
+  if (!isPlainObject(value) || !Array.isArray(value.encounters)) return [];
+  const errors = [];
+  const seenBattleIds = new Set();
+
+  value.encounters.forEach((encounter, encounterIndex) => {
+    if (!isPlainObject(encounter)) return;
+    const encounterPath = `$.encounters[${encounterIndex}]`;
+    if (seenBattleIds.has(encounter.battleId)) {
+      errors.push(`${encounterPath}.battleId duplicates ${encounter.battleId}`);
+    }
+    seenBattleIds.add(encounter.battleId);
+
+    const blockedKeys = new Set();
+    if (Array.isArray(encounter.board?.blockedCells)) {
+      encounter.board.blockedCells.forEach((cell, cellIndex) => {
+        if (!isPlainObject(cell)) return;
+        const key = battleCellKey(cell);
+        if (blockedKeys.has(key)) {
+          errors.push(`${encounterPath}.board.blockedCells[${cellIndex}] duplicates cell ${key}`);
+        }
+        blockedKeys.add(key);
+      });
+    }
+
+    const unitIds = new Set();
+    const unitCellKeys = new Set();
+    if (Array.isArray(encounter.enemies)) {
+      encounter.enemies.forEach((enemy, enemyIndex) => {
+        if (!isPlainObject(enemy)) return;
+        const enemyPath = `${encounterPath}.enemies[${enemyIndex}]`;
+        if (unitIds.has(enemy.unitId)) {
+          errors.push(`${enemyPath}.unitId duplicates ${enemy.unitId}`);
+        }
+        unitIds.add(enemy.unitId);
+
+        if (isPlainObject(enemy.spawn)) {
+          const key = battleCellKey(enemy.spawn);
+          if (blockedKeys.has(key)) {
+            errors.push(`${enemyPath}.spawn occupies blocked cell ${key}`);
+          }
+          if (unitCellKeys.has(key)) {
+            errors.push(`${enemyPath}.spawn duplicates occupied cell ${key}`);
+          }
+          unitCellKeys.add(key);
+        }
+      });
+
+      const usesPackHunter = encounter.enemies.some(
+        (enemy) => enemy?.profileId === "ai_profile_pack_hunter"
+      );
+      if (usesPackHunter && encounter.enemies.length !== 2) {
+        errors.push(`${encounterPath}.enemies ai_profile_pack_hunter requires exactly two enemies`);
+      }
+    }
+
+    if (Array.isArray(encounter.enemyUnitOrder)) {
+      const expectedOrder = Array.isArray(encounter.enemies)
+        ? encounter.enemies.map((enemy) => enemy.unitId)
+        : [];
+      if (JSON.stringify(encounter.enemyUnitOrder) !== JSON.stringify(expectedOrder)) {
+        errors.push(`${encounterPath}.enemyUnitOrder must exactly match enemy content order`);
+      }
+    }
+
+    if (Array.isArray(encounter.entryVariants)) {
+      const variantIds = new Set();
+      if (encounter.entryVariants[0]?.variantId !== "default") {
+        errors.push(`${encounterPath}.entryVariants[0].variantId must be default`);
+      }
+      encounter.entryVariants.forEach((variant, variantIndex) => {
+        if (!isPlainObject(variant)) return;
+        const variantPath = `${encounterPath}.entryVariants[${variantIndex}]`;
+        if (variantIds.has(variant.variantId)) {
+          errors.push(`${variantPath}.variantId duplicates ${variant.variantId}`);
+        }
+        variantIds.add(variant.variantId);
+
+        if (variant.mode === "battle") {
+          if (!isPlainObject(variant.playerSpawn)) {
+            errors.push(`${variantPath}.playerSpawn is required for mode battle`);
+          }
+          if (!("startingPhase" in variant)) {
+            errors.push(`${variantPath}.startingPhase is required for mode battle`);
+          }
+          if ("result" in variant) {
+            errors.push(`${variantPath}.result is not allowed for mode battle`);
+          }
+          if (isPlainObject(variant.playerSpawn)) {
+            const key = battleCellKey(variant.playerSpawn);
+            if (blockedKeys.has(key) || unitCellKeys.has(key)) {
+              errors.push(`${variantPath}.playerSpawn occupies blocked or unit cell ${key}`);
+            }
+          }
+        } else if (variant.mode === "directResult") {
+          if (!("result" in variant)) {
+            errors.push(`${variantPath}.result is required for mode directResult`);
+          }
+          if ("playerSpawn" in variant) {
+            errors.push(`${variantPath}.playerSpawn is not allowed for mode directResult`);
+          }
+          if ("startingPhase" in variant) {
+            errors.push(`${variantPath}.startingPhase is not allowed for mode directResult`);
+          }
+        }
+      });
+    }
+
+    if (
+      Array.isArray(encounter.enemies) &&
+      encounter.enemies.length === 2 &&
+      encounter.enemies.some((enemy) => enemy?.profileId !== "ai_profile_pack_hunter")
+    ) {
+      errors.push(`${encounterPath}.enemies two-enemy MVP encounters must use ai_profile_pack_hunter`);
+    }
+
+    if (registry && Array.isArray(encounter.enemyUnitOrder)) {
+      for (const [orderIndex, unitId] of encounter.enemyUnitOrder.entries()) {
+        if (!unitIds.has(unitId)) {
+          errors.push(`${encounterPath}.enemyUnitOrder[${orderIndex}] unknown encounter unit ${unitId}`);
+        }
+      }
+    }
+  });
+
+  return errors;
+}
+
+function validateBattleBalanceSemantics(value, registry) {
+  if (!isPlainObject(value) || !Array.isArray(value.encounters)) return [];
+  const errors = [];
+  const seenBattleIds = new Set();
+
+  value.encounters.forEach((entry, entryIndex) => {
+    if (!isPlainObject(entry)) return;
+    const entryPath = `$.encounters[${entryIndex}]`;
+    if (seenBattleIds.has(entry.battleId)) {
+      errors.push(`${entryPath}.battleId duplicates ${entry.battleId}`);
+    }
+    seenBattleIds.add(entry.battleId);
+
+    const buildIds = Array.isArray(entry.builds)
+      ? entry.builds.map((build) => build?.buildId)
+      : [];
+    if (
+      registry &&
+      JSON.stringify([...buildIds].sort()) !==
+        JSON.stringify([...registry.battleBalanceReferenceBuilds].sort())
+    ) {
+      errors.push(`${entryPath}.builds must contain every registered reference build exactly once`);
+    }
+
+    if (
+      registry &&
+      Array.isArray(entry.policies) &&
+      JSON.stringify([...entry.policies].sort()) !==
+        JSON.stringify([...registry.battleBalancePlayerPolicies].sort())
+    ) {
+      errors.push(`${entryPath}.policies must contain every registered player policy exactly once`);
+    }
+
+    if (
+      isPlainObject(entry.targets) &&
+      Number.isInteger(entry.targets.minimumVictories) &&
+      Number.isInteger(entry.targets.maximumVictories) &&
+      entry.targets.minimumVictories > entry.targets.maximumVictories
+    ) {
+      errors.push(`${entryPath}.targets.minimumVictories must be <= ${entryPath}.targets.maximumVictories`);
+    }
+  });
+
+  return errors;
+}
+
+function battleCellKey(cell) {
+  return `${cell.x},${cell.y}`;
 }
 
 function visit(value, schema, fieldPath, errors, registry, rootDir) {

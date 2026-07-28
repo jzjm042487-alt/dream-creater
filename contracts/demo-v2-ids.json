@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "id": "demo-v2-ids",
-  "version": 4,
+  "version": 5,
   "stableIds": {
     "characters": [
       "char_player",
@@ -229,6 +229,33 @@
       "panel_quest",
       "panel_talent_roster",
       "panel_canon_lookup"
+    ],
+    "battleActions": [
+      "battle_action_basic_melee",
+      "battle_action_defend",
+      "battle_action_retreat",
+      "battle_action_pass",
+      "battle_action_moonblade",
+      "battle_action_jade_skin",
+      "battle_action_earth_listen",
+      "battle_action_vitality_leaf",
+      "battle_action_enemy_charge",
+      "battle_action_enemy_ranged_strike",
+      "battle_action_enemy_shell_guard",
+      "battle_action_boss_gather_force",
+      "battle_action_boss_pounce"
+    ],
+    "battleStatuses": [
+      "battle_status_defending",
+      "battle_status_jade_skin",
+      "battle_status_shell_guard",
+      "battle_status_gathering_force"
+    ],
+    "battleEncounterTiers": [
+      "battle_tier_tutorial",
+      "battle_tier_normal",
+      "battle_tier_elite",
+      "battle_tier_boss"
     ],
     "battleAiDifficulties": [
       "ai_difficulty_beginner",

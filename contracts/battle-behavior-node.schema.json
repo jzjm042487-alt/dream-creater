@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Tactical battle behavior tree node",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["type"],
+  "properties": {
+    "type": {
+      "type": "string",
+      "enum": ["root", "selector", "sequence", "condition", "action"]
+    },
+    "child": {
+      "$ref": "battle-behavior-node.schema.json"
+    },
+    "children": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "battle-behavior-node.schema.json"
+      }
+    },
+    "call": {
+      "type": "string",
+      "enum": [
+        "CanFinish",
+        "HasPhaseAction",
+        "ShouldDefend",
+        "ShouldConserve",
+        "HasEffectiveAttack",
+        "SetIntent"
+      ]
+    },
+    "args": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 1,
+      "items": {
+        "type": "string",
+        "x-idRegistry": "battleAiIntents"
+      }
+    }
+  }
+}
