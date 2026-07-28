@@ -106,10 +106,17 @@ export function deriveBehaviorFacts(
 
 function currentPhaseActionId(profile, actor) {
   const hpRatio = actor.maxHp > 0 ? actor.hp / actor.maxHp : 0;
-  return profile.phases?.find(
-    (phase) =>
-      hpRatio >= phase.minimumHpRatio && hpRatio <= phase.maximumHpRatio
-  )?.phaseActionId;
+  return (profile.phases || [])
+    .filter(
+      (phase) =>
+        hpRatio >= phase.minimumHpRatio &&
+        hpRatio <= phase.maximumHpRatio
+    )
+    .sort(
+      (left, right) =>
+        left.maximumHpRatio - right.maximumHpRatio ||
+        left.minimumHpRatio - right.minimumHpRatio
+    )[0]?.phaseActionId;
 }
 
 function candidateSettlesResult(candidate, result) {

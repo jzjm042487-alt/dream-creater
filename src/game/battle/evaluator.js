@@ -215,7 +215,7 @@ function maximumDamage(snapshot, actorUnitId, targetUnitId) {
     ) {
       damage = applyDefendReduction(damage);
     }
-    maximum = Math.max(maximum, Math.min(target.hp, damage));
+    maximum = Math.max(maximum, damage);
   }
   return maximum;
 }
@@ -324,10 +324,17 @@ function appliesEffectiveControl(summary) {
 
 function currentPhaseActionId(profile, actor) {
   const ratio = actor.maxHp > 0 ? actor.hp / actor.maxHp : 0;
-  return profile.phases?.find(
-    (phase) =>
-      ratio >= phase.minimumHpRatio && ratio <= phase.maximumHpRatio
-  )?.phaseActionId;
+  return (profile.phases || [])
+    .filter(
+      (phase) =>
+        ratio >= phase.minimumHpRatio &&
+        ratio <= phase.maximumHpRatio
+    )
+    .sort(
+      (left, right) =>
+        left.maximumHpRatio - right.maximumHpRatio ||
+        left.minimumHpRatio - right.minimumHpRatio
+    )[0]?.phaseActionId;
 }
 
 function actionCategoryOf(candidate) {
